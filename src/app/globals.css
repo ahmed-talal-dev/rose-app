@@ -1,26 +1,142 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* ===== Primary (Rose/Red — Brand Color) ===== */
+  --color-primary-50: #FBEAEA;
+  --color-primary-100: #F3C5C7;
+  --color-primary-200: #EA9FA2;
+  --color-primary-300: #E07A7D;
+  --color-primary-400: #D75458;
+  --color-primary-500: #CD2E33;
+  --color-primary-600: #A6252A;
+  --color-primary-700: #741C21;
+  --color-primary-800: #501419;
+  --color-primary-900: #2C0C10;
+  --color-primary-950: #20090C;
+
+  /* ===== Red (Danger / Error) ===== */
+  --color-red-50: #FEF2F2;
+  --color-red-100: #FEE2E2;
+  --color-red-200: #FECACA;
+  --color-red-300: #FCA5A5;
+  --color-red-400: #F87171;
+  --color-red-500: #EF4444;
+  --color-red-600: #DC2626;
+  --color-red-700: #991B1B;
+  --color-red-800: #7F1D1D;
+  --color-red-900: #450A0A;
+
+  /* ===== Pink ===== */
+  --color-pink-50: #FFF0F8;
+  --color-pink-100: #FFD6EC;
+  --color-pink-200: #FFADDC;
+  --color-pink-300: #FF84CB;
+  --color-pink-400: #FF5BBA;
+  --color-pink-500: #F82BA9;
+  --color-pink-600: #D0198F;
+  --color-pink-700: #A41173;
+  --color-pink-800: #790A55;
+  --color-pink-900: #52043A;
+  --color-pink-950: #340021;
+
+  /* ===== Rose ===== */
+  --color-rose-50: #FFF1F5;
+  --color-rose-100: #FFE0E7;
+  --color-rose-200: #FFC2D0;
+  --color-rose-300: #FFA3B9;
+  --color-rose-400: #FF85A2;
+  --color-rose-500: #FF668B;
+  --color-rose-600: #E65073;
+  --color-rose-700: #CC3A5B;
+  --color-rose-800: #B32443;
+  --color-rose-900: #99102C;
+  --color-rose-950: #590414;
+
+  /* ===== Blue (Info) ===== */
+  --color-blue-50: #EFF6FF;
+  --color-blue-100: #DBEAFE;
+  --color-blue-200: #BEDBFF;
+  --color-blue-300: #8EC5FF;
+  --color-blue-400: #50A2FF;
+  --color-blue-500: #2B7FFF;
+  --color-blue-600: #155DFC;
+  --color-blue-700: #1447E6;
+  --color-blue-800: #193CB8;
+  --color-blue-900: #1C398E;
+  --color-blue-950: #162456;
+
+  /* ===== Green (Success) ===== */
+  --color-green-50: #ECFDF5;
+  --color-green-100: #D0FAE5;
+  --color-green-200: #A4F4CF;
+  --color-green-300: #5EE9B5;
+  --color-green-400: #00D492;
+  --color-green-500: #00BC7D;
+  --color-green-600: #009966;
+  --color-green-700: #007A55;
+  --color-green-800: #006045;
+  --color-green-900: #004F3B;
+  --color-green-950: #002C22;
+
+  /* ===== Yellow (Warning) ===== */
+  --color-yellow-50: #FEFCE8;
+  --color-yellow-100: #FEF9C3;
+  --color-yellow-200: #FEF08A;
+  --color-yellow-300: #FDE047;
+  --color-yellow-400: #FACC15;
+  --color-yellow-500: #EAB308;
+  --color-yellow-600: #CA8A04;
+  --color-yellow-700: #A16207;
+  --color-yellow-800: #854D0E;
+  --color-yellow-900: #713F12;
+  --color-yellow-950: #422006;
+
+  /* ===== Zinc / Neutral (Text & Backgrounds) ===== */
+  --color-zinc-50: #FAFAFA;
+  --color-zinc-100: #F4F4F5;
+  --color-zinc-200: #E4E4E7;
+  --color-zinc-300: #D4D4D8;
+  --color-zinc-400: #A1A1AA;
+  --color-zinc-500: #71717A;
+  --color-zinc-600: #52525B;
+  --color-zinc-700: #3F3F46;
+  --color-zinc-800: #27272A;
+  --color-zinc-900: #18181B;
+  --color-zinc-950: #09090B;
+
+  /* ===== Semantic Tokens ===== */
+  --color-background: #ffffff;
+  --color-foreground: #18181B;
+  --color-border: #E4E4E7;
+  --color-input: #E4E4E7;
+  --color-ring: #CD2E33;
+  --color-muted: #F4F4F5;
+  --color-muted-foreground: #71717A;
+
+  /* ===== Typography ===== */
+  --font-sans: 'Inter', 'Cairo', sans-serif;
+  --font-arabic: 'Cairo', sans-serif;
 }
 
+/* ===== Dark Mode ===== */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  @theme inline {
+    --color-background: #09090B;
+    --color-foreground: #FAFAFA;
+    --color-border: #27272A;
+    --color-input: #27272A;
+    --color-muted: #18181B;
+    --color-muted-foreground: #A1A1AA;
   }
 }
 
+/* ===== Base Styles ===== */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+* {
+  border-color: var(--color-border);
 }
