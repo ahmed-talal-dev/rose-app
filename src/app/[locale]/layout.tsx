@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { QueryProvider } from "@/shared/providers/query-provider";
 import { AuthProvider } from "@/shared/providers/session-provider";
+import { Toaster } from "@/shared/ui/sonner";
 
 type Props = {
     children: React.ReactNode;
@@ -26,6 +27,7 @@ export default async function LocaleLayout({ children, params }: Props) {
                     <AuthProvider>
                         <QueryProvider>
                             {children}
+                            <Toaster richColors position="top-right" />
                         </QueryProvider>
                     </AuthProvider>
                 </NextIntlClientProvider>
