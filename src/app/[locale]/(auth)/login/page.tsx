@@ -52,10 +52,10 @@ export default function LoginPage() {
             {/* Right — Image */}
             <div className="hidden lg:block relative bg-primary-900">
                 <Image
-                    src="/assets/images/login-bg.jpg"
+                    src="/cover.svg"
                     alt="Rose App"
                     fill
-                    className="object-cover"
+                    className="object-cover object-center"
                     priority
                 />
             </div>
