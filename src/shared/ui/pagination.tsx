@@ -3,6 +3,7 @@ import * as React from "react"
 import { cn } from "@/shared/lib/utils/index"
 import { Button } from "@/shared/ui/button"
 import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from "lucide-react"
+import Link from "next/link"
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
@@ -23,7 +24,7 @@ function PaginationContent({
   return (
     <ul
       data-slot="pagination-content"
-      className={cn("flex items-center gap-0.5", className)}
+      className={cn("flex items-center gap-1", className)}
       {...props}
     />
   )
@@ -42,19 +43,25 @@ function PaginationLink({
   className,
   isActive,
   size = "icon",
+  href,
   ...props
 }: PaginationLinkProps) {
   return (
     <Button
       asChild
-      variant={isActive ? "outline" : "ghost"}
+      variant={isActive ? "default" : "ghost"}
       size={size}
-      className={cn(className)}
+      className={cn(
+        isActive && "bg-primary-500 text-white hover:bg-primary-600",
+        className
+      )}
     >
-      <a
+
+      <Link
+        href={href || "#"}
         aria-current={isActive ? "page" : undefined}
         data-slot="pagination-link"
-        data-active={isActive}
+        data-active={isActive ? "true" : "false"}
         {...props}
       />
     </Button>
@@ -111,8 +118,7 @@ function PaginationEllipsis({
       )}
       {...props}
     >
-      <MoreHorizontalIcon
-      />
+      <MoreHorizontalIcon />
       <span className="sr-only">More pages</span>
     </span>
   )
