@@ -5,9 +5,12 @@ import { routing } from "@/i18n/routing";
 import { QueryProvider } from "@/shared/providers/query-provider";
 import { AuthProvider } from "@/shared/providers/session-provider";
 import { Toaster } from "@/shared/ui/sonner";
-import { Inter, Sarabun, Tajawal } from "next/font/google";
+import { Inter, Sarabun, Tajawal, Zain } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const inter = Inter({
+    subsets: ["latin"],
+    variable: "--font-inter"
+});
 const sarabun = Sarabun({
     subsets: ["latin"],
     weight: ["400", "500", "600", "700"],
@@ -16,7 +19,12 @@ const sarabun = Sarabun({
 const tajawal = Tajawal({
     subsets: ["arabic"],
     weight: ["300", "400", "700", "900"],
-    variable: "--font-Tajawal",
+    variable: "--font-tajawal",
+});
+const zain = Zain({
+    subsets: ["arabic"],
+    weight: ["300", "400", "700", "900"],
+    variable: "--font-zain",
 });
 
 type Props = {
@@ -37,9 +45,10 @@ export default async function LocaleLayout({ children, params }: Props) {
         <html
             lang={locale}
             dir={locale === "ar" ? "rtl" : "ltr"}
-            className={`${inter.variable} ${sarabun.variable} ${tajawal.variable}`}
+            className={`${inter.variable} ${sarabun.variable} ${tajawal.variable} ${zain.variable}`}
+            suppressHydrationWarning
         >
-            <body className="font-[var(--font-inter)]">
+            <body className={locale === "ar" ? "font-tajawal" : "font-inter"}>
                 <NextIntlClientProvider messages={messages}>
                     <AuthProvider>
                         <QueryProvider>

@@ -8,5 +8,37 @@
     "edit": "Edit",
     "search": "Search",
     "noResults": "No results found"
+  },
+  "auth": {
+    "login": {
+      "languageSwitch": "العربية",
+      "eyebrow": "Rose App",
+      "title": "Welcome back!",
+      "subtitle": "Sign in to manage your orders, wishlist, and saved details.",
+      "coverAlt": "Rose bouquet arrangement",
+      "coverTitle": "Fresh flowers, thoughtful gifts, and moments worth keeping.",
+      "coverSubtitle": "Continue to your account to keep every order and favorite bouquet close.",
+      "form": {
+        "emailLabel": "Email",
+        "emailPlaceholder": "user@example.com",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Enter your password",
+        "forgotPassword": "Forgot your password?",
+        "rememberMe": "Remember me",
+        "submit": "Login",
+        "submitting": "Logging in...",
+        "noAccount": "Don't have an account yet?",
+        "createAccount": "Create one now!",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
+        "success": "Logged in successfully!",
+        "invalidCredentials": "Invalid email or password",
+        "validation": {
+          "emailRequired": "Email is required",
+          "emailInvalid": "Invalid email address",
+          "passwordMin": "Password must be at least 8 characters"
+        }
+      }
+    }
   }
 }

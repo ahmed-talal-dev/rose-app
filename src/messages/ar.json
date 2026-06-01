@@ -8,5 +8,37 @@
     "edit": "تعديل",
     "search": "بحث",
     "noResults": "لا توجد نتائج"
+  },
+  "auth": {
+    "login": {
+      "languageSwitch": "English",
+      "eyebrow": "روز",
+      "title": "أهلا بعودتك",
+      "subtitle": "سجل دخولك لمتابعة طلباتك وقائمة المفضلة وبياناتك المحفوظة.",
+      "coverAlt": "تنسيق باقة ورد",
+      "coverTitle": "ورود طازجة، هدايا لطيفة، ولحظات تستحق أن تبقى.",
+      "coverSubtitle": "ادخل إلى حسابك لتجد كل طلباتك وباقاتك المفضلة في مكان واحد.",
+      "form": {
+        "emailLabel": "البريد الإلكتروني",
+        "emailPlaceholder": "user@example.com",
+        "passwordLabel": "كلمة المرور",
+        "passwordPlaceholder": "اكتب كلمة المرور",
+        "forgotPassword": "نسيت كلمة المرور؟",
+        "rememberMe": "تذكرني",
+        "submit": "تسجيل الدخول",
+        "submitting": "جاري تسجيل الدخول...",
+        "noAccount": "ليس لديك حساب بعد؟",
+        "createAccount": "أنشئ حسابا الآن",
+        "showPassword": "إظهار كلمة المرور",
+        "hidePassword": "إخفاء كلمة المرور",
+        "success": "تم تسجيل الدخول بنجاح",
+        "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+        "validation": {
+          "emailRequired": "البريد الإلكتروني مطلوب",
+          "emailInvalid": "البريد الإلكتروني غير صحيح",
+          "passwordMin": "كلمة المرور يجب أن تكون 8 أحرف على الأقل"
+        }
+      }
+    }
   }
 }

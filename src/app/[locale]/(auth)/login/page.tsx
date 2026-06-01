@@ -1,69 +1,76 @@
 import { LoginForm } from "@/features/auth/components/login-form";
 import { Link } from "@/i18n/navigation";
+import { getLocale, getTranslations } from "next-intl/server";
 import Image from "next/image";
 
-export default function LoginPage() {
+export default async function LoginPage() {
+    const locale = await getLocale();
+    const t = await getTranslations("auth.login");
+    const isArabic = locale === "ar";
+    const alternateLocale = isArabic ? "en" : "ar";
+
     return (
-        <div className="min-h-screen flex flex-col lg:flex-row">
-            {/* Left — Form */}
-            <div className="flex flex-col items-center justify-center w-full lg:w-175 lg:min-h-screen bg-white px-6 py-12 gap-10">
-                {/* Language switcher */}
-                <div className="w-full max-w-101.5 flex justify-end">
-                    <Link
-                        href="/login"
-                        locale="ar"
-                        className="text-base text-zinc-700 hover:text-primary-500 transition-colors font-(--font-tajawal)"
-                    >
-                        العربية
-                    </Link>
-                </div>
+        <main className="min-h-screen bg-white overflow-hidden">
+            <div className="grid min-h-screen grid-cols-1 min-[560px]:grid-cols-[minmax(340px,49%)_minmax(0,1fr)] lg:grid-cols-[700px_minmax(0,1fr)]">
 
-                {/* Content */}
-                <div className="flex flex-col items-center gap-10 w-full max-w-[406px]">
-                    {/* Top separator */}
-                    <Image
-                        src="/svgs/separator-2.svg"
-                        alt="ornament"
-                        width={280}
-                        height={45}
-                    />
+                <section className="relative flex min-h-screen w-full flex-col items-center justify-between px-5 py-6 min-[560px]:px-6 lg:px-0 lg:py-0 overflow-y-auto no-scrollbar">
 
-                    {/* Form */}
-                    <div className="flex flex-col items-center gap-6 w-full">
-                        {/* Header */}
-                        <div className="flex justify-center items-center w-full pb-4 border-b border-zinc-200">
-                            <h1
-                                className="text-5xl text-[#741C21]"
-                                style={{ fontFamily: "'Edwardian Script ITC', 'Great Vibes', cursive" }}
-                            >
-                                Welcome back!
-                            </h1>
-                        </div>
-
-                        <LoginForm />
+                    <div className="flex w-full max-w-101.5 justify-end pt-4 lg:absolute lg:left-36.75 lg:top-15 lg:pt-0 z-10">
+                        <Link
+                            href="/login"
+                            locale={alternateLocale}
+                            className="text-base font-normal text-zinc-700 transition-colors hover:text-primary-700 font-zain"
+                        >
+                            {t("languageSwitch")}
+                        </Link>
                     </div>
 
-                    {/* Bottom separator (flipped) */}
-                    <Image
-                        src="/svgs/separator-2.svg"
-                        alt="ornament"
-                        width={280}
-                        height={45}
-                        className="scale-y-[-1]"
-                    />
-                </div>
-            </div>
+                    <div className="flex flex-1 w-full max-w-101.5 flex-col items-center justify-center gap-6 my-auto lg:absolute lg:left-36.75 lg:top-[50%] lg:-translate-y-1/2">
+                        <Image
+                            src="/svgs/separator-2.svg"
+                            alt=""
+                            width={280}
+                            height={45}
+                            className="h-11.5 w-70 object-contain"
+                        />
 
-            {/* Right — Cover Image */}
-            <div className="hidden lg:flex flex-1 relative min-h-screen bg-[#741C21]">
-                <Image
-                    src="/images/cover.svg"
-                    alt="Rose App"
-                    fill
-                    className="object-cover"
-                    priority
-                />
+                        <div className="flex w-full flex-col items-center gap-6">
+                            <div className="flex w-full flex-col items-center justify-start border-b border-zinc-200 pb-3 text-center">
+                                <h1
+                                    className="text-[40px] sm:text-[48px] leading-[1.08] text-primary-700 pb-1"
+                                    style={
+                                        isArabic
+                                            ? undefined
+                                            : { fontFamily: "'Edwardian Script ITC', 'Great Vibes', cursive" }
+                                    }
+                                >
+                                    {t("title")}
+                                </h1>
+                            </div>
+
+                            <LoginForm />
+                        </div>
+
+                        <Image
+                            src="/svgs/separator-2.svg"
+                            alt=""
+                            width={280}
+                            height={45}
+                            className="h-11.5 w-70 scale-y-[-1] object-contain"
+                        />
+                    </div>
+                </section>
+
+                <section className="relative hidden h-screen overflow-hidden bg-primary-900 min-[560px]:block">
+                    <Image
+                        src="/images/Cover.svg"
+                        alt={t("coverAlt")}
+                        fill
+                        className="object-cover object-center"
+                        priority
+                    />
+                </section>
             </div>
-        </div>
+        </main>
     );
 }
