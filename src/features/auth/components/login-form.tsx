@@ -22,7 +22,6 @@ export function LoginForm() {
     const t = useTranslations("auth.login.form");
     const [showPassword, setShowPassword] = useState(false);
     const { mutate: login, isPending } = useLogin();
-    const isArabic = locale === "ar";
 
     const loginSchema = useMemo(
         () =>
@@ -61,6 +60,8 @@ export function LoginForm() {
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-6">
             <div className="flex w-full flex-col gap-4">
+
+                {/* Email */}
                 <div className="flex w-full flex-col gap-1.5">
                     <Label htmlFor="email" className="text-sm font-medium text-zinc-800 font-inter">
                         {t("emailLabel")}
@@ -70,7 +71,7 @@ export function LoginForm() {
                         type="email"
                         placeholder={t("emailPlaceholder")}
                         {...register("email")}
-                        className={`h-[49px] rounded-[10px] border-zinc-300 px-4 text-sm font-inter ${errors.email ? "border-red-500" : ""
+                        className={`h-[49px] rounded-[10px] px-4 text-sm font-inter ${errors.email ? "border-red-500" : ""
                             }`}
                     />
                     {errors.email && (
@@ -78,6 +79,7 @@ export function LoginForm() {
                     )}
                 </div>
 
+                {/* Password */}
                 <div className="flex w-full flex-col gap-1.5">
                     <Label htmlFor="password" className="text-sm font-medium text-zinc-800 font-inter">
                         {t("passwordLabel")}
@@ -88,7 +90,7 @@ export function LoginForm() {
                             type={showPassword ? "text" : "password"}
                             placeholder={t("passwordPlaceholder")}
                             {...register("password")}
-                            className={`h-[49px] rounded-[10px] border-red-900 px-4 pe-11 text-sm font-inter ${errors.password ? "border-red-500" : ""
+                            className={`h-[49px] rounded-[10px] px-4 pe-11 text-sm text-zinc-900 font-inter ${errors.password ? "border-red-500" : ""
                                 }`}
                         />
                         <button
@@ -98,38 +100,39 @@ export function LoginForm() {
                             className="absolute end-4 top-1/2 -translate-y-1/2 text-zinc-400 transition-colors hover:text-zinc-600"
                         >
                             {showPassword ? (
-                                <EyeOff className="size-5" />
-                            ) : (
                                 <Eye className="size-5" />
+                            ) : (
+                                <EyeOff className="size-5" />
                             )}
                         </button>
                     </div>
                     {errors.password && (
                         <p className="text-xs text-red-600 mt-0.5 font-inter">{errors.password.message}</p>
                     )}
+
+                    {/* Forgot Password — تحت الـ password input */}
+                    <Link
+                        href="/forgot-password"
+                        className="self-end text-sm font-semibold text-primary-700 hover:underline font-sarabun"
+                    >
+                        {t("forgotPassword")}
+                    </Link>
                 </div>
+
             </div>
 
-            <div className="flex items-center justify-between w-full pt-1">
-                <div className="flex items-center gap-2.5">
-                    <Checkbox
-                        id="remember"
-                        className="size-5 rounded-[6px] border-primary-700 data-[state=checked]:bg-primary-700"
-                    />
-                    <Label
-                        htmlFor="remember"
-                        className="text-sm font-normal text-zinc-800 cursor-pointer select-none font-inter"
-                    >
-                        {t("rememberMe")}
-                    </Label>
-                </div>
-
-                <Link
-                    href="/forgot-password"
-                    className="text-sm font-semibold text-primary-700 hover:underline font-sarabun"
+            {/* Remember Me — لوحده */}
+            <div className="flex items-center gap-2.5">
+                <Checkbox
+                    id="remember"
+                    className="size-5 rounded-[6px] border-primary-700 data-[state=checked]:bg-primary-700"
+                />
+                <Label
+                    htmlFor="remember"
+                    className="text-sm font-normal text-zinc-800 cursor-pointer select-none font-inter"
                 >
-                    {t("forgotPassword")}
-                </Link>
+                    {t("rememberMe")}
+                </Label>
             </div>
 
             <div className="flex w-full flex-col gap-4 pt-2">

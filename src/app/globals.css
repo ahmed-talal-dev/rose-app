@@ -224,7 +224,7 @@
     --color-background: #09090B;
     --color-foreground: #FAFAFA;
     --color-border: #27272A;
-    --color-input: #27272A;
+    --color-input: #D4D4D8;
     --color-muted: #18181B;
     --color-muted-foreground: #A1A1AA;
   }
@@ -237,9 +237,7 @@ body {
   font-family: var(--font-sans);
 }
 
-* {
-  border-color: var(--color-border);
-}
+
 
 :root {
   --background: oklch(1 0 0);
@@ -312,7 +310,7 @@ body {
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply outline-ring/50;
   }
 
   body {
