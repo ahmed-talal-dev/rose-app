@@ -224,7 +224,7 @@
     --color-background: #09090B;
     --color-foreground: #FAFAFA;
     --color-border: #27272A;
-    --color-input: #D4D4D8;
+    --color-input: #d7d7d7;
     --color-muted: #18181B;
     --color-muted-foreground: #A1A1AA;
   }
@@ -310,7 +310,13 @@ body {
 
 @layer base {
   * {
-    @apply outline-ring/50;
+    @apply border-border outline-ring/50;
+  }
+
+  input,
+  textarea,
+  select {
+    @apply border-input;
   }
 
   body {

@@ -10,13 +10,21 @@ import {
     updateProfile,
     changePassword,
     deleteAccount,
+    register,
 } from "../apis";
+import { RegisterSchema } from "../schemas";
 
 // Get profile
 export const useProfile = () =>
     useQuery({
         queryKey: ["profile"],
         queryFn: getProfile,
+    });
+
+// Register
+export const useRegister = () =>
+    useMutation({
+        mutationFn: (data: RegisterSchema) => register(data),
     });
 
 // Login

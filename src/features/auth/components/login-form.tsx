@@ -71,7 +71,7 @@ export function LoginForm() {
                         type="email"
                         placeholder={t("emailPlaceholder")}
                         {...register("email")}
-                        className={`h-[49px] rounded-[10px] px-4 text-sm font-inter ${errors.email ? "border-red-500" : ""
+                        className={`h-12.25 rounded-[10px]  px-4 text-zinc-900  text-sm font-inter ${errors.email ? "border-red-500" : ""
                             }`}
                     />
                     {errors.email && (
@@ -90,14 +90,14 @@ export function LoginForm() {
                             type={showPassword ? "text" : "password"}
                             placeholder={t("passwordPlaceholder")}
                             {...register("password")}
-                            className={`h-[49px] rounded-[10px] px-4 pe-11 text-sm text-zinc-900 font-inter ${errors.password ? "border-red-500" : ""
+                            className={`h-12.25 rounded-[10px] px-4 pe-11 text-sm text-zinc-900 font-inter ${errors.password ? "border-red-500" : ""
                                 }`}
                         />
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
                             aria-label={showPassword ? t("hidePassword") : t("showPassword")}
-                            className="absolute end-4 top-1/2 -translate-y-1/2 text-zinc-400 transition-colors hover:text-zinc-600"
+                            className="absolute inset-e-4 top-1/2 -translate-y-1/2 text-zinc-400 transition-colors hover:text-zinc-600"
                         >
                             {showPassword ? (
                                 <Eye className="size-5" />
@@ -110,7 +110,7 @@ export function LoginForm() {
                         <p className="text-xs text-red-600 mt-0.5 font-inter">{errors.password.message}</p>
                     )}
 
-                    {/* Forgot Password — تحت الـ password input */}
+                    {/* Forgot Password  */}
                     <Link
                         href="/forgot-password"
                         className="self-end text-sm font-semibold text-primary-700 hover:underline font-sarabun"
@@ -121,7 +121,7 @@ export function LoginForm() {
 
             </div>
 
-            {/* Remember Me — لوحده */}
+            {/* Remember Me */}
             <div className="flex items-center gap-2.5">
                 <Checkbox
                     id="remember"
@@ -139,7 +139,7 @@ export function LoginForm() {
                 <Button
                     type="submit"
                     disabled={isPending}
-                    className="h-[41px] w-full rounded-[10px] bg-primary-700 text-base font-semibold text-white hover:bg-primary-800 transition-colors font-sarabun"
+                    className="h-10.25 w-full rounded-[10px] bg-primary-700 text-base font-semibold text-white hover:bg-primary-800 transition-colors font-sarabun"
                 >
                     {isPending ? (
                         <div className="flex items-center gap-2">

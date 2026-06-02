@@ -39,6 +39,47 @@
           "passwordMin": "Password must be at least 8 characters"
         }
       }
+    },
+    "register": {
+      "languageSwitch": "العربية",
+      "title": "Become part of our family!",
+      "coverAlt": "Rose bouquet arrangement",
+      "form": {
+        "firstNameLabel": "First Name",
+        "firstNamePlaceholder": "John",
+        "lastNameLabel": "Last Name",
+        "lastNamePlaceholder": "Doe",
+        "usernameLabel": "Username",
+        "usernamePlaceholder": "john_doe",
+        "phoneLabel": "Phone Number",
+        "phonePlaceholder": "1234567890",
+        "emailLabel": "Email",
+        "emailPlaceholder": "user@example.com",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Enter your password",
+        "confirmPasswordLabel": "Confirm Password",
+        "confirmPasswordPlaceholder": "Confirm your password",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
+        "submit": "Create Account",
+        "submitting": "Creating account...",
+        "hasAccount": "Already have an account?",
+        "login": "Login",
+        "success": "Account created successfully!",
+        "validation": {
+          "firstNameRequired": "First name is required",
+          "lastNameRequired": "Last name is required",
+          "usernameMin": "Username must be at least 3 characters",
+          "usernameMax": "Username must be at most 30 characters",
+          "emailRequired": "Email is required",
+          "emailInvalid": "Invalid email address",
+          "passwordMin": "Password must be at least 8 characters",
+          "passwordUppercase": "Password must contain at least one uppercase letter",
+          "passwordNumber": "Password must contain at least one number",
+          "confirmPasswordRequired": "Please confirm your password",
+          "passwordsMismatch": "Passwords do not match"
+        }
+      }
     }
   }
 }

@@ -1,5 +1,13 @@
 import { fetchClient } from "@/shared/lib/apis/fetch";
 import { User } from "@/shared/types/user.d";
+import { RegisterSchema } from "../schemas";
+
+// Register
+export const register = (data: RegisterSchema) =>
+    fetchClient<{ user: User; token: string }>("/api/auth/register", {
+        method: "POST",
+        body: JSON.stringify(data),
+    });
 
 // Check email
 export const checkEmail = (email: string) =>

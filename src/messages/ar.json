@@ -39,6 +39,47 @@
           "passwordMin": "كلمة المرور يجب أن تكون 8 أحرف على الأقل"
         }
       }
+    },
+    "register": {
+      "languageSwitch": "English",
+      "title": "إنشاء حساب",
+      "coverAlt": "تنسيق باقة ورد",
+      "form": {
+        "firstNameLabel": "الاسم الأول",
+        "firstNamePlaceholder": "أحمد",
+        "lastNameLabel": "اسم العائلة",
+        "lastNamePlaceholder": "محمد",
+        "usernameLabel": "اسم المستخدم",
+        "usernamePlaceholder": "ahmed_mohamed",
+        "phoneLabel": "رقم الهاتف",
+        "phonePlaceholder": "1234567890",
+        "emailLabel": "البريد الإلكتروني",
+        "emailPlaceholder": "user@example.com",
+        "passwordLabel": "كلمة المرور",
+        "passwordPlaceholder": "اكتب كلمة المرور",
+        "confirmPasswordLabel": "تأكيد كلمة المرور",
+        "confirmPasswordPlaceholder": "أكد كلمة المرور",
+        "showPassword": "إظهار كلمة المرور",
+        "hidePassword": "إخفاء كلمة المرور",
+        "submit": "إنشاء الحساب",
+        "submitting": "جاري إنشاء الحساب...",
+        "hasAccount": "لديك حساب بالفعل؟",
+        "login": "تسجيل الدخول",
+        "success": "تم إنشاء الحساب بنجاح!",
+        "validation": {
+          "firstNameRequired": "الاسم الأول مطلوب",
+          "lastNameRequired": "اسم العائلة مطلوب",
+          "usernameMin": "اسم المستخدم يجب أن يكون 3 أحرف على الأقل",
+          "usernameMax": "اسم المستخدم يجب أن يكون 30 حرفاً على الأكثر",
+          "emailRequired": "البريد الإلكتروني مطلوب",
+          "emailInvalid": "البريد الإلكتروني غير صحيح",
+          "passwordMin": "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
+          "passwordUppercase": "كلمة المرور يجب أن تحتوي على حرف كبير واحد على الأقل",
+          "passwordNumber": "كلمة المرور يجب أن تحتوي على رقم واحد على الأقل",
+          "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
+          "passwordsMismatch": "كلمتا المرور غير متطابقتين"
+        }
+      }
     }
   }
 }
