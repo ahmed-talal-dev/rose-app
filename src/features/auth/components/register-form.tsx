@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useLocale, useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
-import { Button } from "@/shared/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { Link } from "@/i18n/navigation";
 import { type RegisterSchema } from "../schemas";
 import { useRegister } from "../hooks";
@@ -33,11 +33,12 @@ export function RegisterForm() {
                     .string()
                     .min(3, t("validation.usernameMin"))
                     .max(30, t("validation.usernameMax")),
-                phone: z.string().optional(),
                 email: z
                     .string()
                     .min(1, t("validation.emailRequired"))
                     .email(t("validation.emailInvalid")),
+                phone: z.string().optional(),
+                gender: z.enum(["MALE", "FEMALE"]).optional(),
                 password: z
                     .string()
                     .min(8, t("validation.passwordMin"))
@@ -54,6 +55,7 @@ export function RegisterForm() {
     const {
         register: registerField,
         handleSubmit,
+        control,
         formState: { errors },
     } = useForm<RegisterSchema>({
         resolver: zodResolver(registerSchema),
@@ -71,12 +73,16 @@ export function RegisterForm() {
         });
     };
 
+    const inputClass = (hasError: boolean) =>
+        `h-[49px] rounded-[10px] border-zinc-300 px-4 text-sm font-inter ${hasError ? "border-red-500" : ""}`;
+
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-6">
-            <div className="flex w-full flex-col gap-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-9">
+            {/* Fields */}
+            <div className="flex flex-col gap-4 w-full">
 
                 {/* First Name + Last Name */}
-                <div className="flex w-full gap-3">
+                <div className="flex w-full gap-5">
                     <div className="flex flex-1 flex-col gap-1.5">
                         <Label htmlFor="firstName" className="text-sm font-medium text-zinc-800 font-inter">
                             {t("firstNameLabel")}
@@ -86,10 +92,10 @@ export function RegisterForm() {
                             type="text"
                             placeholder={t("firstNamePlaceholder")}
                             {...registerField("firstName")}
-                            className={`h-[49px] rounded-[10px] px-4 text-sm font-inter ${errors.firstName ? "border-red-500" : ""}`}
+                            className={inputClass(!!errors.firstName)}
                         />
                         {errors.firstName && (
-                            <p className="text-xs text-red-600 mt-0.5 font-inter">{errors.firstName.message}</p>
+                            <p className="text-sm text-red-600 font-inter">{errors.firstName.message}</p>
                         )}
                     </div>
 
@@ -102,16 +108,16 @@ export function RegisterForm() {
                             type="text"
                             placeholder={t("lastNamePlaceholder")}
                             {...registerField("lastName")}
-                            className={`h-[49px] rounded-[10px] px-4 text-sm font-inter ${errors.lastName ? "border-red-500" : ""}`}
+                            className={inputClass(!!errors.lastName)}
                         />
                         {errors.lastName && (
-                            <p className="text-xs text-red-600 mt-0.5 font-inter">{errors.lastName.message}</p>
+                            <p className="text-sm text-red-600 font-inter">{errors.lastName.message}</p>
                         )}
                     </div>
                 </div>
 
                 {/* Username */}
-                <div className="flex w-full flex-col gap-1.5">
+                <div className="flex flex-col gap-1.5 w-full">
                     <Label htmlFor="username" className="text-sm font-medium text-zinc-800 font-inter">
                         {t("usernameLabel")}
                     </Label>
@@ -120,44 +126,15 @@ export function RegisterForm() {
                         type="text"
                         placeholder={t("usernamePlaceholder")}
                         {...registerField("username")}
-                        className={`h-[49px] rounded-[10px] px-4 text-sm font-inter ${errors.username ? "border-red-500" : ""}`}
+                        className={inputClass(!!errors.username)}
                     />
                     {errors.username && (
-                        <p className="text-xs text-red-600 mt-0.5 font-inter">{errors.username.message}</p>
-                    )}
-                </div>
-
-                {/* Phone */}
-                <div className="flex w-full flex-col gap-1.5">
-                    <Label htmlFor="phone" className="text-sm font-medium text-zinc-800 font-inter">
-                        {t("phoneLabel")}
-                    </Label>
-                    <div className="relative flex items-center">
-                        <div className="absolute start-3 flex items-center gap-1.5 border-e border-zinc-200 pe-3">
-                            <Image
-                                src="/svgs/eg-flag.svg"
-                                alt="EG"
-                                width={23}
-                                height={16}
-                                className="rounded-sm"
-                            />
-                            <span className="text-sm text-zinc-700 font-inter">+20</span>
-                        </div>
-                        <Input
-                            id="phone"
-                            type="tel"
-                            placeholder={t("phonePlaceholder")}
-                            {...registerField("phone")}
-                            className={`h-[52px] rounded-[10px] ps-24 pe-4 text-sm font-inter ${errors.phone ? "border-red-500" : ""}`}
-                        />
-                    </div>
-                    {errors.phone && (
-                        <p className="text-xs text-red-600 mt-0.5 font-inter">{errors.phone.message}</p>
+                        <p className="text-sm text-red-600 font-inter">{errors.username.message}</p>
                     )}
                 </div>
 
                 {/* Email */}
-                <div className="flex w-full flex-col gap-1.5">
+                <div className="flex flex-col gap-1.5 w-full">
                     <Label htmlFor="email" className="text-sm font-medium text-zinc-800 font-inter">
                         {t("emailLabel")}
                     </Label>
@@ -166,15 +143,71 @@ export function RegisterForm() {
                         type="email"
                         placeholder={t("emailPlaceholder")}
                         {...registerField("email")}
-                        className={`h-[49px] rounded-[10px] px-4 text-sm font-inter ${errors.email ? "border-red-500" : ""}`}
+                        className={inputClass(!!errors.email)}
                     />
                     {errors.email && (
-                        <p className="text-xs text-red-600 mt-0.5 font-inter">{errors.email.message}</p>
+                        <p className="text-sm text-red-600 font-inter">{errors.email.message}</p>
+                    )}
+                </div>
+
+                {/* Phone */}
+                <div className="flex flex-col gap-1.5 w-full">
+                    <Label htmlFor="phone" className="text-sm font-medium text-zinc-800 font-inter">
+                        {t("phoneLabel")}
+                    </Label>
+                    <div className="relative flex items-center">
+                        <div className="absolute start-3 flex items-center gap-2 border-e border-zinc-200 pe-3 h-6">
+                            <Image
+                                src="/svgs/eg-flag.svg"
+                                alt="EG"
+                                width={23}
+                                height={16}
+                                className="rounded-sm"
+                            />
+                            <span className="text-sm font-medium text-[#323639] font-inter">+20</span>
+                        </div>
+                        <Input
+                            id="phone"
+                            type="tel"
+                            placeholder={t("phonePlaceholder")}
+                            {...registerField("phone")}
+                            className={`h-[53px] rounded-[10px] border-zinc-300 ps-[5.5rem] pe-4 text-sm font-inter ${errors.phone ? "border-red-500" : ""}`}
+                        />
+                    </div>
+                    {errors.phone && (
+                        <p className="text-sm text-red-600 font-inter">{errors.phone.message}</p>
+                    )}
+                </div>
+
+                {/* Gender */}
+                <div className="flex flex-col gap-1.5 w-full">
+                    <Label htmlFor="gender" className="text-sm font-medium text-zinc-800 font-inter">
+                        {t("genderLabel")}
+                    </Label>
+                    <Controller
+                        name="gender"
+                        control={control}
+                        render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                                <SelectTrigger
+                                    className={`h-[49px] rounded-[10px] border-zinc-300 px-4 text-sm font-inter ${errors.gender ? "border-red-500" : ""}`}
+                                >
+                                    <SelectValue placeholder={t("genderPlaceholder")} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="MALE">{t("genderMale")}</SelectItem>
+                                    <SelectItem value="FEMALE">{t("genderFemale")}</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        )}
+                    />
+                    {errors.gender && (
+                        <p className="text-sm text-red-600 font-inter">{errors.gender.message}</p>
                     )}
                 </div>
 
                 {/* Password */}
-                <div className="flex w-full flex-col gap-1.5">
+                <div className="flex flex-col gap-1.5 w-full">
                     <Label htmlFor="password" className="text-sm font-medium text-zinc-800 font-inter">
                         {t("passwordLabel")}
                     </Label>
@@ -184,7 +217,7 @@ export function RegisterForm() {
                             type={showPassword ? "text" : "password"}
                             placeholder={t("passwordPlaceholder")}
                             {...registerField("password")}
-                            className={`h-[49px] rounded-[10px] px-4 pe-11 text-sm font-inter ${errors.password ? "border-red-500" : ""}`}
+                            className={`h-[49px] rounded-[10px] border-zinc-300 px-4 pe-11 text-sm font-inter ${errors.password ? "border-red-500" : ""}`}
                         />
                         <button
                             type="button"
@@ -196,12 +229,12 @@ export function RegisterForm() {
                         </button>
                     </div>
                     {errors.password && (
-                        <p className="text-xs text-red-600 mt-0.5 font-inter">{errors.password.message}</p>
+                        <p className="text-sm text-red-600 font-inter">{errors.password.message}</p>
                     )}
                 </div>
 
                 {/* Confirm Password */}
-                <div className="flex w-full flex-col gap-1.5">
+                <div className="flex flex-col gap-1.5 w-full">
                     <Label htmlFor="confirmPassword" className="text-sm font-medium text-zinc-800 font-inter">
                         {t("confirmPasswordLabel")}
                     </Label>
@@ -211,7 +244,7 @@ export function RegisterForm() {
                             type={showConfirmPassword ? "text" : "password"}
                             placeholder={t("confirmPasswordPlaceholder")}
                             {...registerField("confirmPassword")}
-                            className={`h-[49px] rounded-[10px] px-4 pe-11 text-sm font-inter ${errors.confirmPassword ? "border-red-500" : ""}`}
+                            className={`h-[49px] rounded-[10px] border-zinc-300 px-4 pe-11 text-sm font-inter ${errors.confirmPassword ? "border-red-500" : ""}`}
                         />
                         <button
                             type="button"
@@ -223,36 +256,36 @@ export function RegisterForm() {
                         </button>
                     </div>
                     {errors.confirmPassword && (
-                        <p className="text-xs text-red-600 mt-0.5 font-inter">{errors.confirmPassword.message}</p>
+                        <p className="text-sm text-red-600 font-inter">{errors.confirmPassword.message}</p>
                     )}
                 </div>
 
             </div>
 
-            {/* Submit */}
-            <div className="flex w-full flex-col gap-4 pt-2">
-                <Button
+            {/* Submit + Login link */}
+            <div className="flex flex-col gap-5 w-full">
+                <button
                     type="submit"
                     disabled={isPending}
-                    className="h-[41px] w-full rounded-[10px] bg-primary-700 text-base font-semibold text-white hover:bg-primary-800 transition-colors font-sarabun"
+                    className="w-full h-[41px] bg-[#A6252A] hover:bg-[#741C21] text-white font-medium text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2"
                 >
                     {isPending ? (
-                        <div className="flex items-center gap-2">
+                        <>
                             <Loader2 className="size-4 animate-spin" />
                             {t("submitting")}
-                        </div>
+                        </>
                     ) : (
                         t("submit")
                     )}
-                </Button>
+                </button>
 
-                <div className="flex w-full flex-col items-center gap-4 text-center mt-2">
+                <div className="flex flex-col items-center gap-5 w-full">
                     <div className="w-full border-t border-zinc-200" />
                     <p className="text-sm font-medium text-zinc-800 font-sarabun">
                         {t("hasAccount")}{" "}
                         <Link
                             href="/login"
-                            className="font-semibold text-primary-700 hover:underline font-sarabun"
+                            className="font-semibold text-[#741C21] hover:underline font-sarabun"
                         >
                             {t("login")}
                         </Link>
