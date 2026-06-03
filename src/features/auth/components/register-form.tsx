@@ -10,11 +10,96 @@ import { toast } from "sonner";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { Link } from "@/i18n/navigation";
 import { type RegisterSchema } from "../schemas";
 import { useRegister } from "../hooks";
+import { useRef, useEffect } from "react";
+import { ChevronDown } from "lucide-react";
 import { PhoneInput } from "@/shared/ui/phone-input";
+
+// ── Custom Gender Select ──────────────────────────────────────────────────────
+interface GenderSelectProps {
+    value?: "MALE" | "FEMALE";
+    onChange: (val: "MALE" | "FEMALE") => void;
+    placeholder: string;
+    maleLabel: string;
+    femaleLabel: string;
+    hasError?: boolean;
+}
+
+function GenderSelect({ value, onChange, placeholder, maleLabel, femaleLabel, hasError }: GenderSelectProps) {
+    const [open, setOpen] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handler = (e: MouseEvent) => {
+            if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+        };
+        document.addEventListener("mousedown", handler);
+        return () => document.removeEventListener("mousedown", handler);
+    }, []);
+
+    const options = [
+        { value: "MALE" as const, label: maleLabel, icon: "♂" },
+        { value: "FEMALE" as const, label: femaleLabel, icon: "♀" },
+    ];
+
+    const selected = options.find((o) => o.value === value);
+
+    return (
+        <div className="relative w-full" ref={ref}>
+            {/* Trigger */}
+            <button
+                type="button"
+                onClick={() => setOpen(!open)}
+                className={`
+                    w-full h-10 lg:h-[49px] flex items-center justify-between
+                    rounded-[10px] border bg-white px-4 text-sm font-inter
+                    transition-colors outline-none
+                    ${open ? "border-primary-700 ring-2 ring-primary-700/20" : hasError ? "border-red-500" : "border-zinc-300"}
+                    ${selected ? "text-zinc-800" : "text-zinc-400"}
+                `}
+            >
+                <span className="flex items-center gap-2">
+                    {selected ? (
+                        <>
+                            <span className="text-base leading-none">{selected.icon}</span>
+                            {selected.label}
+                        </>
+                    ) : (
+                        placeholder
+                    )}
+                </span>
+                <ChevronDown className={`size-4 text-zinc-500 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+            </button>
+
+            {/* Dropdown */}
+            {open && (
+                <div className="absolute top-full start-0 mt-1.5 w-full bg-white border border-zinc-200 rounded-xl shadow-lg z-[200] p-1 overflow-hidden">
+                    {options.map((opt) => (
+                        <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => { onChange(opt.value); setOpen(false); }}
+                            className={`
+                                w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-inter
+                                transition-colors text-start
+                                ${value === opt.value
+                                    ? "bg-primary-50 text-primary-700 font-medium"
+                                    : "text-zinc-700 hover:bg-zinc-50"
+                                }
+                            `}
+                        >
+                            <span className="text-base leading-none">{opt.icon}</span>
+                            {opt.label}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 export function RegisterForm() {
     const router = useRouter();
@@ -178,46 +263,21 @@ export function RegisterForm() {
 
                 {/* Gender */}
                 <div className="flex flex-col gap-1 w-full">
-                    <Label htmlFor="gender" className="text-xs lg:text-sm font-medium text-zinc-800 font-inter">
+                    <Label className="text-xs lg:text-sm font-medium text-zinc-800 font-inter">
                         {t("genderLabel")}
                     </Label>
                     <Controller
                         name="gender"
                         control={control}
                         render={({ field }) => (
-                            <Select onValueChange={field.onChange} value={field.value}>
-                                <SelectTrigger
-                                    className={`
-                                        h-10 lg:h-[49px] rounded-[10px] border px-4 text-sm font-inter
-                                        bg-white transition-colors
-                                        data-[state=open]:border-primary-700 data-[state=open]:ring-2 data-[state=open]:ring-primary-700/20
-                                        ${field.value ? "text-zinc-800" : "text-zinc-400"}
-                                        ${errors.gender ? "border-red-500" : "border-zinc-300"}
-                                    `}
-                                >
-                                    <SelectValue placeholder={t("genderPlaceholder")} />
-                                </SelectTrigger>
-                                <SelectContent
-                                    className="z-[100] overflow-hidden rounded-xl border border-zinc-200 bg-white p-1 shadow-lg min-w-[var(--radix-select-trigger-width)]"
-                                    position="popper"
-                                    sideOffset={6}
-                                >
-                                    <SelectItem
-                                        value="MALE"
-                                        className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-inter text-zinc-700 cursor-pointer outline-none transition-colors hover:bg-zinc-50 focus:bg-zinc-50 data-[state=checked]:bg-primary-50 data-[state=checked]:text-primary-700 data-[state=checked]:font-medium"
-                                    >
-                                        <span className="text-base leading-none">♂</span>
-                                        {t("genderMale")}
-                                    </SelectItem>
-                                    <SelectItem
-                                        value="FEMALE"
-                                        className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-inter text-zinc-700 cursor-pointer outline-none transition-colors hover:bg-zinc-50 focus:bg-zinc-50 data-[state=checked]:bg-primary-50 data-[state=checked]:text-primary-700 data-[state=checked]:font-medium"
-                                    >
-                                        <span className="text-base leading-none">♀</span>
-                                        {t("genderFemale")}
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <GenderSelect
+                                value={field.value}
+                                onChange={field.onChange}
+                                placeholder={t("genderPlaceholder")}
+                                maleLabel={t("genderMale")}
+                                femaleLabel={t("genderFemale")}
+                                hasError={!!errors.gender}
+                            />
                         )}
                     />
                     {errors.gender && (
