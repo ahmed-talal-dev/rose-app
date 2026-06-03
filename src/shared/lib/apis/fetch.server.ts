@@ -6,20 +6,17 @@ type RequestOptions = RequestInit & {
     params?: Record<string, string | number | boolean | undefined>;
 };
 
-export async function fetchClient<T>(
+export async function fetchServer<T>(
     endpoint: string,
     options: RequestOptions = {}
 ): Promise<T> {
     const session = await auth();
     const { params, ...init } = options;
 
-    // Build URL with query params
     const url = new URL(`${BASE_URL}${endpoint}`);
     if (params) {
         Object.entries(params).forEach(([key, value]) => {
-            if (value !== undefined) {
-                url.searchParams.append(key, String(value));
-            }
+            if (value !== undefined) url.searchParams.append(key, String(value));
         });
     }
 
@@ -31,11 +28,7 @@ export async function fetchClient<T>(
         ...init.headers,
     };
 
-    const res = await fetch(url.toString(), {
-        ...init,
-        headers,
-    });
-
+    const res = await fetch(url.toString(), { ...init, headers });
     const data = await res.json();
 
     if (!res.ok || !data.status) {

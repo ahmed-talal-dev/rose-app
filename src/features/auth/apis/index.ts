@@ -1,4 +1,4 @@
-import { fetchClient } from "@/shared/lib/apis/fetch";
+import { fetchClient } from "@/shared/lib/apis/fetch.client";
 import { User } from "@/shared/types/user.d";
 import { RegisterSchema } from "../schemas";
 
@@ -16,20 +16,17 @@ export const checkEmail = (email: string) =>
         body: JSON.stringify({ email }),
     });
 
-// Send verification
 export const sendVerification = (email: string, redirectUrl?: string) =>
-    fetchClient<null>("/api/auth/send-verification", {
+    fetchClient<null>("/api/auth/send-email-verification", {
         method: "POST",
         body: JSON.stringify({ email, redirectUrl }),
     });
 
-// Verify email
-export const verifyEmail = (token: string) =>
-    fetchClient<null>("/api/auth/verify-email", {
+export const verifyEmail = (data: { email: string; code: string }) =>
+    fetchClient<null>("/api/auth/confirm-email-verification", {
         method: "POST",
-        body: JSON.stringify({ token }),
+        body: JSON.stringify(data),
     });
-
 // Forgot password
 export const forgotPassword = (email: string, redirectUrl?: string) =>
     fetchClient<null>("/api/auth/forgot-password", {

@@ -21,6 +21,8 @@
       "form": {
         "emailLabel": "Email",
         "emailPlaceholder": "user@example.com",
+        "usernameLabel": "Username",
+        "usernamePlaceholder": "john_doe",
         "passwordLabel": "Password",
         "passwordPlaceholder": "Enter your password",
         "forgotPassword": "Forgot your password?",
@@ -32,11 +34,12 @@
         "showPassword": "Show password",
         "hidePassword": "Hide password",
         "success": "Logged in successfully!",
-        "invalidCredentials": "Invalid email or password",
+        "invalidCredentials": "Invalid username or password",
         "validation": {
           "emailRequired": "Email is required",
           "emailInvalid": "Invalid email address",
-          "passwordMin": "Password must be at least 8 characters"
+          "passwordMin": "Password must be at least 8 characters",
+          "usernameRequired": "Username is required"
         }
       }
     },
@@ -66,10 +69,21 @@
         "showPassword": "Show password",
         "hidePassword": "Hide password",
         "submit": "Create Account",
-        "submitting": "Creating account...",
+        "submitting": "Processing...",
         "hasAccount": "Already have an account?",
         "login": "Login",
         "success": "Account created successfully!",
+        "continue": "Continue",
+        "verificationSent": "Verification code sent to your email",
+        "emailVerified": "Email verified successfully",
+        "verificationResent": "Verification code resent",
+        "changeEmail": "Change",
+        "otpLabel": "Enter the 6-digit verification code",
+        "didntReceive": "Didn't receive the code?",
+        "resend": "Resend",
+        "resendIn": "Resend in",
+        "verifyEmail": "Verify Email",
+        "back": "Back",
         "validation": {
           "firstNameRequired": "First name is required",
           "lastNameRequired": "Last name is required",
@@ -77,11 +91,15 @@
           "usernameMax": "Username must be at most 30 characters",
           "emailRequired": "Email is required",
           "emailInvalid": "Invalid email address",
+          "emailExists": "This email is already registered",
           "passwordMin": "Password must be at least 8 characters",
           "passwordUppercase": "Password must contain at least one uppercase letter",
           "passwordNumber": "Password must contain at least one number",
+          "passwordSpecial": "Password must contain at least one special character (!@#$%^&*)",
           "confirmPasswordRequired": "Please confirm your password",
-          "passwordsMismatch": "Passwords do not match"
+          "passwordsMismatch": "Passwords do not match",
+          "otpRequired": "Please enter the verification code",
+          "otpInvalid": "Invalid or expired verification code"
         }
       }
     }

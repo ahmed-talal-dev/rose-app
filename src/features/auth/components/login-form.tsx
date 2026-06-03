@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "@/i18n/navigation";
@@ -18,7 +18,6 @@ import { useLogin } from "../hooks";
 
 export function LoginForm() {
     const router = useRouter();
-    const locale = useLocale();
     const t = useTranslations("auth.login.form");
     const [showPassword, setShowPassword] = useState(false);
     const { mutate: login, isPending } = useLogin();
@@ -26,13 +25,8 @@ export function LoginForm() {
     const loginSchema = useMemo(
         () =>
             z.object({
-                email: z
-                    .string()
-                    .min(1, t("validation.emailRequired"))
-                    .email(t("validation.emailInvalid")),
-                password: z
-                    .string()
-                    .min(8, t("validation.passwordMin")),
+                username: z.string().min(1, t("validation.usernameRequired")),
+                password: z.string().min(8, t("validation.passwordMin")),
             }),
         [t]
     );
@@ -63,19 +57,17 @@ export function LoginForm() {
 
                 {/* Email */}
                 <div className="flex w-full flex-col gap-1.5">
-                    <Label htmlFor="email" className="text-sm font-medium text-zinc-800 font-inter">
-                        {t("emailLabel")}
-                    </Label>
+                    <Label htmlFor="username" className="text-sm font-medium text-zinc-800 font-inter"
+                    >{t("usernameLabel")}</Label>
                     <Input
-                        id="email"
-                        type="email"
-                        placeholder={t("emailPlaceholder")}
-                        {...register("email")}
-                        className={`h-12.25 rounded-[10px]  px-4 text-zinc-900  text-sm font-inter ${errors.email ? "border-red-500" : ""
-                            }`}
+                        id="username"
+                        type="text"
+                        placeholder={t("usernamePlaceholder")}
+                        {...register("username")}
+                        className={`h-12.25 rounded-[10px] px-4 text-zinc-900 text-sm font-inter ${errors.username ? "border-red-500" : ""}`}
                     />
-                    {errors.email && (
-                        <p className="text-xs text-red-600 mt-0.5 font-inter">{errors.email.message}</p>
+                    {errors.username && (
+                        <p className="text-xs text-red-600 mt-0.5 font-inter">{errors.username.message}</p>
                     )}
                 </div>
 

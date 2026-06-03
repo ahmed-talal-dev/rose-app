@@ -30,11 +30,8 @@ export const useRegister = () =>
 // Login
 export const useLogin = () =>
     useMutation({
-        mutationFn: async (data: { email: string; password: string }) => {
-            const res = await signIn("credentials", {
-                ...data,
-                redirect: false,
-            });
+        mutationFn: async (data: { username: string; password: string }) => {
+            const res = await signIn("credentials", { ...data, redirect: false });
             if (res?.error) throw new Error("Invalid email or password");
             return res;
         },
@@ -62,7 +59,7 @@ export const useSendVerification = () =>
 // Verify email
 export const useVerifyEmail = () =>
     useMutation({
-        mutationFn: (token: string) => verifyEmail(token),
+        mutationFn: (data: { email: string; code: string }) => verifyEmail(data),
     });
 
 // Forgot password

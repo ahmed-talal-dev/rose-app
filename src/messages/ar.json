@@ -21,6 +21,8 @@
       "form": {
         "emailLabel": "البريد الإلكتروني",
         "emailPlaceholder": "user@example.com",
+        "usernameLabel": "اسم المستخدم",
+        "usernamePlaceholder": "ahmed_mohamed",
         "passwordLabel": "كلمة المرور",
         "passwordPlaceholder": "اكتب كلمة المرور",
         "forgotPassword": "نسيت كلمة المرور؟",
@@ -32,11 +34,12 @@
         "showPassword": "إظهار كلمة المرور",
         "hidePassword": "إخفاء كلمة المرور",
         "success": "تم تسجيل الدخول بنجاح",
-        "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+        "invalidCredentials": "اسم المستخدم أو كلمة المرور غير صحيحة",
         "validation": {
           "emailRequired": "البريد الإلكتروني مطلوب",
           "emailInvalid": "البريد الإلكتروني غير صحيح",
-          "passwordMin": "كلمة المرور يجب أن تكون 8 أحرف على الأقل"
+          "passwordMin": "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
+          "usernameRequired": "اسم المستخدم مطلوب"
         }
       }
     },
@@ -66,10 +69,21 @@
         "showPassword": "إظهار كلمة المرور",
         "hidePassword": "إخفاء كلمة المرور",
         "submit": "إنشاء الحساب",
-        "submitting": "جاري إنشاء الحساب...",
+        "submitting": "جاري المعالجة...",
         "hasAccount": "لديك حساب بالفعل؟",
         "login": "تسجيل الدخول",
         "success": "تم إنشاء الحساب بنجاح!",
+        "continue": "متابعة",
+        "verificationSent": "تم إرسال كود التحقق إلى بريدك الإلكتروني",
+        "emailVerified": "تم التحقق من البريد الإلكتروني بنجاح",
+        "verificationResent": "تم إعادة إرسال كود التحقق",
+        "changeEmail": "تغيير",
+        "otpLabel": "أدخل كود التحقق المكون من 6 أرقام",
+        "didntReceive": "ما وصلك الكود؟",
+        "resend": "إعادة الإرسال",
+        "resendIn": "إعادة الإرسال بعد",
+        "verifyEmail": "تحقق من البريد الإلكتروني",
+        "back": "رجوع",
         "validation": {
           "firstNameRequired": "الاسم الأول مطلوب",
           "lastNameRequired": "اسم العائلة مطلوب",
@@ -77,11 +91,15 @@
           "usernameMax": "اسم المستخدم يجب أن يكون 30 حرفاً على الأكثر",
           "emailRequired": "البريد الإلكتروني مطلوب",
           "emailInvalid": "البريد الإلكتروني غير صحيح",
+          "emailExists": "هذا البريد الإلكتروني مسجل بالفعل",
           "passwordMin": "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
           "passwordUppercase": "كلمة المرور يجب أن تحتوي على حرف كبير واحد على الأقل",
           "passwordNumber": "كلمة المرور يجب أن تحتوي على رقم واحد على الأقل",
+          "passwordSpecial": "كلمة المرور يجب أن تحتوي على رمز خاص (!@#$%^&*)",
           "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
-          "passwordsMismatch": "كلمتا المرور غير متطابقتين"
+          "passwordsMismatch": "كلمتا المرور غير متطابقتين",
+          "otpRequired": "يرجى إدخال كود التحقق",
+          "otpInvalid": "كود التحقق غير صحيح أو منتهي الصلاحية"
         }
       }
     }
