@@ -10,13 +10,14 @@ export default async function RegisterPage() {
     const alternateLocale = isArabic ? "en" : "ar";
 
     return (
-        <main className="min-h-screen bg-white overflow-hidden">
-            <div className="grid min-h-screen grid-cols-1 min-[560px]:grid-cols-[minmax(340px,49%)_minmax(0,1fr)] lg:grid-cols-[700px_minmax(0,1fr)]">
+        <main className="h-screen bg-white overflow-hidden">
+            <div className="grid h-full grid-cols-1 min-[560px]:grid-cols-[minmax(340px,49%)_minmax(0,1fr)] lg:grid-cols-[700px_minmax(0,1fr)]">
 
-                <section className="relative flex min-h-screen w-full flex-col items-center justify-between px-5 py-6 min-[560px]:px-6 lg:px-0 lg:py-0 overflow-y-auto no-scrollbar">
+                {/* Left — Form Side */}
+                <section className="relative h-screen overflow-y-auto no-scrollbar flex flex-col items-center px-5 py-6 min-[560px]:px-8 lg:px-0">
 
-                    {/* Language switcher */}
-                    <div className="flex w-full max-w-101.5 justify-end pt-4 lg:absolute lg:left-36.75 lg:top-15 lg:pt-0 z-10">
+                    {/* Language switcher — sticky top */}
+                    <div className="w-full max-w-[406px] flex justify-end pt-2 pb-4 shrink-0">
                         <Link
                             href="/register"
                             locale={alternateLocale}
@@ -26,20 +27,25 @@ export default async function RegisterPage() {
                         </Link>
                     </div>
 
-                    <div className="flex flex-1 w-full max-w-101.5 flex-col items-center justify-center gap-6 my-auto lg:absolute lg:left-36.75 lg:top-[50%] lg:-translate-y-1/2">
-                        {/* Top separator */}
+                    {/* Content */}
+                    <div className="flex w-full max-w-[406px] flex-col items-center gap-6 lg:gap-10 pb-6">
+
+                        {/* Top separator — hidden on small screens */}
                         <Image
                             src="/svgs/separator-2.svg"
                             alt=""
                             width={280}
                             height={45}
-                            className="h-11.5 w-70 object-contain"
+                            className="hidden sm:block h-11.5 w-70 object-contain shrink-0"
                         />
 
+                        {/* Form wrapper */}
                         <div className="flex w-full flex-col items-center gap-6">
-                            <div className="flex w-full flex-col items-center justify-start border-b border-zinc-200 pb-3 text-center">
+
+                            {/* Title */}
+                            <div className="flex w-full flex-col items-center justify-center border-b border-zinc-200 pb-4 text-center shrink-0">
                                 <h1
-                                    className="text-[40px] sm:text-[48px] leading-[1.08] text-primary-700 pb-1"
+                                    className="text-[36px] sm:text-[48px] leading-tight sm:leading-[57px] text-primary-700"
                                     style={
                                         isArabic
                                             ? undefined
@@ -50,16 +56,17 @@ export default async function RegisterPage() {
                                 </h1>
                             </div>
 
+                            {/* Register Form */}
                             <RegisterForm />
                         </div>
 
-                        {/* Bottom separator */}
+                        {/* Bottom separator — hidden on small screens */}
                         <Image
                             src="/svgs/separator-2.svg"
                             alt=""
                             width={280}
                             height={45}
-                            className="h-11.5 w-70 scale-y-[-1] object-contain"
+                            className="hidden sm:block h-11.5 w-70 scale-y-[-1] object-contain shrink-0"
                         />
                     </div>
                 </section>

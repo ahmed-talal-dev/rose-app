@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Link } from "@/i18n/navigation";
 import { type RegisterSchema } from "../schemas";
 import { useRegister } from "../hooks";
-import Image from "next/image";
+import { PhoneInput } from "@/shared/ui/phone-input";
 
 export function RegisterForm() {
     const router = useRouter();
@@ -74,17 +74,18 @@ export function RegisterForm() {
     };
 
     const inputClass = (hasError: boolean) =>
-        `h-[49px] rounded-[10px] border-zinc-300 px-4 text-sm font-inter ${hasError ? "border-red-500" : ""}`;
+        `h-10 lg:h-[49px] rounded-[10px] border-zinc-300 px-4 text-sm font-inter text-zinc-800 placeholder:text-zinc-400 ${hasError ? "border-red-500" : ""}`;
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-9">
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-5 lg:gap-9">
+
             {/* Fields */}
-            <div className="flex flex-col gap-4 w-full">
+            <div className="flex flex-col gap-2 lg:gap-2.5 w-full">
 
                 {/* First Name + Last Name */}
-                <div className="flex w-full gap-5">
-                    <div className="flex flex-1 flex-col gap-1.5">
-                        <Label htmlFor="firstName" className="text-sm font-medium text-zinc-800 font-inter">
+                <div className="flex w-full gap-3 lg:gap-5">
+                    <div className="flex flex-1 flex-col gap-1">
+                        <Label htmlFor="firstName" className="text-xs lg:text-sm font-medium text-zinc-800 font-inter">
                             {t("firstNameLabel")}
                         </Label>
                         <Input
@@ -95,12 +96,12 @@ export function RegisterForm() {
                             className={inputClass(!!errors.firstName)}
                         />
                         {errors.firstName && (
-                            <p className="text-sm text-red-600 font-inter">{errors.firstName.message}</p>
+                            <p className="text-xs text-red-600 font-inter">{errors.firstName.message}</p>
                         )}
                     </div>
 
-                    <div className="flex flex-1 flex-col gap-1.5">
-                        <Label htmlFor="lastName" className="text-sm font-medium text-zinc-800 font-inter">
+                    <div className="flex flex-1 flex-col gap-1">
+                        <Label htmlFor="lastName" className="text-xs lg:text-sm font-medium text-zinc-800 font-inter">
                             {t("lastNameLabel")}
                         </Label>
                         <Input
@@ -111,14 +112,14 @@ export function RegisterForm() {
                             className={inputClass(!!errors.lastName)}
                         />
                         {errors.lastName && (
-                            <p className="text-sm text-red-600 font-inter">{errors.lastName.message}</p>
+                            <p className="text-xs text-red-600 font-inter">{errors.lastName.message}</p>
                         )}
                     </div>
                 </div>
 
                 {/* Username */}
-                <div className="flex flex-col gap-1.5 w-full">
-                    <Label htmlFor="username" className="text-sm font-medium text-zinc-800 font-inter">
+                <div className="flex flex-col gap-1 w-full">
+                    <Label htmlFor="username" className="text-xs lg:text-sm font-medium text-zinc-800 font-inter">
                         {t("usernameLabel")}
                     </Label>
                     <Input
@@ -129,13 +130,13 @@ export function RegisterForm() {
                         className={inputClass(!!errors.username)}
                     />
                     {errors.username && (
-                        <p className="text-sm text-red-600 font-inter">{errors.username.message}</p>
+                        <p className="text-xs text-red-600 font-inter">{errors.username.message}</p>
                     )}
                 </div>
 
                 {/* Email */}
-                <div className="flex flex-col gap-1.5 w-full">
-                    <Label htmlFor="email" className="text-sm font-medium text-zinc-800 font-inter">
+                <div className="flex flex-col gap-1 w-full">
+                    <Label htmlFor="email" className="text-xs lg:text-sm font-medium text-zinc-800 font-inter">
                         {t("emailLabel")}
                     </Label>
                     <Input
@@ -146,42 +147,38 @@ export function RegisterForm() {
                         className={inputClass(!!errors.email)}
                     />
                     {errors.email && (
-                        <p className="text-sm text-red-600 font-inter">{errors.email.message}</p>
+                        <p className="text-xs text-red-600 font-inter">{errors.email.message}</p>
                     )}
                 </div>
 
+                {/* Phone + Gender side by side on small screens */}
                 {/* Phone */}
-                <div className="flex flex-col gap-1.5 w-full">
-                    <Label htmlFor="phone" className="text-sm font-medium text-zinc-800 font-inter">
+                <div className="flex flex-col gap-1 w-full">
+                    <Label htmlFor="phone" className="text-xs lg:text-sm font-medium text-zinc-800 font-inter">
                         {t("phoneLabel")}
                     </Label>
-                    <div className="relative flex items-center">
-                        <div className="absolute start-3 flex items-center gap-2 border-e border-zinc-200 pe-3 h-6">
-                            <Image
-                                src="/svgs/eg-flag.svg"
-                                alt="EG"
-                                width={23}
-                                height={16}
-                                className="rounded-sm"
+                    <Controller
+                        name="phone"
+                        control={control}
+                        render={({ field }) => (
+                            <PhoneInput
+                                id="phone"
+                                value={field.value ?? ""}
+                                onChange={field.onChange}
+                                onBlur={field.onBlur}
+                                placeholder={t("phonePlaceholder")}
+                                hasError={!!errors.phone}
                             />
-                            <span className="text-sm font-medium text-[#323639] font-inter">+20</span>
-                        </div>
-                        <Input
-                            id="phone"
-                            type="tel"
-                            placeholder={t("phonePlaceholder")}
-                            {...registerField("phone")}
-                            className={`h-[53px] rounded-[10px] border-zinc-300 ps-[5.5rem] pe-4 text-sm font-inter ${errors.phone ? "border-red-500" : ""}`}
-                        />
-                    </div>
+                        )}
+                    />
                     {errors.phone && (
-                        <p className="text-sm text-red-600 font-inter">{errors.phone.message}</p>
+                        <p className="text-xs text-red-600 font-inter">{errors.phone.message}</p>
                     )}
                 </div>
 
                 {/* Gender */}
-                <div className="flex flex-col gap-1.5 w-full">
-                    <Label htmlFor="gender" className="text-sm font-medium text-zinc-800 font-inter">
+                <div className="flex flex-col gap-1 w-full">
+                    <Label htmlFor="gender" className="text-xs lg:text-sm font-medium text-zinc-800 font-inter">
                         {t("genderLabel")}
                     </Label>
                     <Controller
@@ -190,25 +187,47 @@ export function RegisterForm() {
                         render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
                                 <SelectTrigger
-                                    className={`h-[49px] rounded-[10px] border-zinc-300 px-4 text-sm font-inter ${errors.gender ? "border-red-500" : ""}`}
+                                    className={`
+                                        h-10 lg:h-[49px] rounded-[10px] border px-4 text-sm font-inter
+                                        bg-white transition-colors
+                                        data-[state=open]:border-primary-700 data-[state=open]:ring-2 data-[state=open]:ring-primary-700/20
+                                        ${field.value ? "text-zinc-800" : "text-zinc-400"}
+                                        ${errors.gender ? "border-red-500" : "border-zinc-300"}
+                                    `}
                                 >
                                     <SelectValue placeholder={t("genderPlaceholder")} />
                                 </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="MALE">{t("genderMale")}</SelectItem>
-                                    <SelectItem value="FEMALE">{t("genderFemale")}</SelectItem>
+                                <SelectContent
+                                    className="z-[100] overflow-hidden rounded-xl border border-zinc-200 bg-white p-1 shadow-lg min-w-[var(--radix-select-trigger-width)]"
+                                    position="popper"
+                                    sideOffset={6}
+                                >
+                                    <SelectItem
+                                        value="MALE"
+                                        className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-inter text-zinc-700 cursor-pointer outline-none transition-colors hover:bg-zinc-50 focus:bg-zinc-50 data-[state=checked]:bg-primary-50 data-[state=checked]:text-primary-700 data-[state=checked]:font-medium"
+                                    >
+                                        <span className="text-base leading-none">♂</span>
+                                        {t("genderMale")}
+                                    </SelectItem>
+                                    <SelectItem
+                                        value="FEMALE"
+                                        className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-inter text-zinc-700 cursor-pointer outline-none transition-colors hover:bg-zinc-50 focus:bg-zinc-50 data-[state=checked]:bg-primary-50 data-[state=checked]:text-primary-700 data-[state=checked]:font-medium"
+                                    >
+                                        <span className="text-base leading-none">♀</span>
+                                        {t("genderFemale")}
+                                    </SelectItem>
                                 </SelectContent>
                             </Select>
                         )}
                     />
                     {errors.gender && (
-                        <p className="text-sm text-red-600 font-inter">{errors.gender.message}</p>
+                        <p className="text-xs text-red-600 font-inter">{errors.gender.message}</p>
                     )}
                 </div>
 
                 {/* Password */}
-                <div className="flex flex-col gap-1.5 w-full">
-                    <Label htmlFor="password" className="text-sm font-medium text-zinc-800 font-inter">
+                <div className="flex flex-col gap-1 w-full">
+                    <Label htmlFor="password" className="text-xs lg:text-sm font-medium text-zinc-800 font-inter">
                         {t("passwordLabel")}
                     </Label>
                     <div className="relative">
@@ -217,7 +236,7 @@ export function RegisterForm() {
                             type={showPassword ? "text" : "password"}
                             placeholder={t("passwordPlaceholder")}
                             {...registerField("password")}
-                            className={`h-[49px] rounded-[10px] border-zinc-300 px-4 pe-11 text-sm font-inter ${errors.password ? "border-red-500" : ""}`}
+                            className={`h-10 lg:h-[49px] rounded-[10px] border-zinc-300 px-4 pe-11 text-sm font-inter text-zinc-800 placeholder:text-zinc-400 w-full [&::-ms-reveal]:hidden [&::-ms-clear]:hidden [&::-webkit-credentials-auto-fill-button]:hidden ${errors.password ? "border-red-500" : ""}`}
                         />
                         <button
                             type="button"
@@ -225,17 +244,17 @@ export function RegisterForm() {
                             aria-label={showPassword ? t("hidePassword") : t("showPassword")}
                             className="absolute end-4 top-1/2 -translate-y-1/2 text-zinc-400 transition-colors hover:text-zinc-600"
                         >
-                            {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+                            {showPassword ? <Eye className="size-4 lg:size-5" /> : <EyeOff className="size-4 lg:size-5" />}
                         </button>
                     </div>
                     {errors.password && (
-                        <p className="text-sm text-red-600 font-inter">{errors.password.message}</p>
+                        <p className="text-xs text-red-600 font-inter">{errors.password.message}</p>
                     )}
                 </div>
 
                 {/* Confirm Password */}
-                <div className="flex flex-col gap-1.5 w-full">
-                    <Label htmlFor="confirmPassword" className="text-sm font-medium text-zinc-800 font-inter">
+                <div className="flex flex-col gap-1 w-full">
+                    <Label htmlFor="confirmPassword" className="text-xs lg:text-sm font-medium text-zinc-800 font-inter">
                         {t("confirmPasswordLabel")}
                     </Label>
                     <div className="relative">
@@ -244,7 +263,7 @@ export function RegisterForm() {
                             type={showConfirmPassword ? "text" : "password"}
                             placeholder={t("confirmPasswordPlaceholder")}
                             {...registerField("confirmPassword")}
-                            className={`h-[49px] rounded-[10px] border-zinc-300 px-4 pe-11 text-sm font-inter ${errors.confirmPassword ? "border-red-500" : ""}`}
+                            className={`h-10 lg:h-[49px] rounded-[10px] border-zinc-300 px-4 pe-11 text-sm font-inter text-zinc-800 placeholder:text-zinc-400 w-full [&::-ms-reveal]:hidden [&::-ms-clear]:hidden [&::-webkit-credentials-auto-fill-button]:hidden ${errors.confirmPassword ? "border-red-500" : ""}`}
                         />
                         <button
                             type="button"
@@ -252,22 +271,22 @@ export function RegisterForm() {
                             aria-label={showConfirmPassword ? t("hidePassword") : t("showPassword")}
                             className="absolute end-4 top-1/2 -translate-y-1/2 text-zinc-400 transition-colors hover:text-zinc-600"
                         >
-                            {showConfirmPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+                            {showConfirmPassword ? <Eye className="size-4 lg:size-5" /> : <EyeOff className="size-4 lg:size-5" />}
                         </button>
                     </div>
                     {errors.confirmPassword && (
-                        <p className="text-sm text-red-600 font-inter">{errors.confirmPassword.message}</p>
+                        <p className="text-xs text-red-600 font-inter">{errors.confirmPassword.message}</p>
                     )}
                 </div>
 
             </div>
 
             {/* Submit + Login link */}
-            <div className="flex flex-col gap-5 w-full">
+            <div className="flex flex-col gap-4 lg:gap-5 w-full">
                 <button
                     type="submit"
                     disabled={isPending}
-                    className="w-full h-[41px] bg-[#A6252A] hover:bg-[#741C21] text-white font-medium text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2"
+                    className="w-full h-10 lg:h-[41px] bg-[#A6252A] hover:bg-[#741C21] text-white font-medium text-sm lg:text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2"
                 >
                     {isPending ? (
                         <>
@@ -279,9 +298,9 @@ export function RegisterForm() {
                     )}
                 </button>
 
-                <div className="flex flex-col items-center gap-5 w-full">
+                <div className="flex flex-col items-center gap-4 w-full">
                     <div className="w-full border-t border-zinc-200" />
-                    <p className="text-sm font-medium text-zinc-800 font-sarabun">
+                    <p className="text-xs lg:text-sm font-medium text-zinc-800 font-sarabun">
                         {t("hasAccount")}{" "}
                         <Link
                             href="/login"
