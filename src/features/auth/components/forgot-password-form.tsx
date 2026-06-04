@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -15,6 +15,7 @@ import { useForgotPassword } from "../hooks";
 
 export function ForgotPasswordForm() {
     const t = useTranslations("auth.forgotPassword.form");
+    const locale = useLocale();
     const { mutate: forgotPassword, isPending, isSuccess } = useForgotPassword();
 
     const forgotPasswordSchema = useMemo(
@@ -38,14 +39,13 @@ export function ForgotPasswordForm() {
 
     const onSubmit = (data: ForgotPasswordSchema) => {
         forgotPassword(
-            { email: data.email },
             {
-                onSuccess: () => {
-                    toast.success(t("success"));
-                },
-                onError: (err) => {
-                    toast.error(err.message);
-                },
+                email: data.email,
+                redirectUrl: `${window.location.origin}/${locale}/reset-password`,
+            },
+            {
+                onSuccess: () => toast.success(t("success")),
+                onError: (err) => toast.error(err.message),
             }
         );
     };

@@ -123,6 +123,29 @@
           "emailInvalid": "البريد الإلكتروني غير صحيح"
         }
       }
+    },
+    "resetPassword": {
+      "languageSwitch": "English",
+      "title": "إنشاء كلمة مرور جديدة",
+      "subtitle": "اضبط كلمة مرور قوية لتأمين حسابك.",
+      "coverAlt": "تنسيق باقة ورد",
+      "form": {
+        "passwordLabel": "كلمة المرور",
+        "confirmLabel": "تأكيد كلمة المرور",
+        "submit": "إعادة تعيين كلمة المرور",
+        "submitting": "جاري إعادة التعيين...",
+        "success": "تم إعادة تعيين كلمة المرور بنجاح.",
+        "invalidToken": "رابط إعادة التعيين غير صالح أو منتهي الصلاحية.",
+        "needHelp": "تحتاج مساعدة؟",
+        "contactUs": "تواصل معنا",
+        "validation": {
+          "passwordMin": "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
+          "passwordUppercase": "يجب أن تحتوي على حرف كبير واحد على الأقل",
+          "passwordNumber": "يجب أن تحتوي على رقم واحد على الأقل",
+          "confirmRequired": "يرجى تأكيد كلمة المرور",
+          "passwordsMismatch": "كلمتا المرور غير متطابقتين"
+        }
+      }
     }
   }
 }

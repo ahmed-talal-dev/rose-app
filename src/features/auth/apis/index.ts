@@ -31,7 +31,10 @@ export const verifyEmail = (data: { email: string; code: string }) =>
 export const forgotPassword = (email: string, redirectUrl?: string) =>
     fetchClient<null>("/api/auth/forgot-password", {
         method: "POST",
-        body: JSON.stringify({ email, redirectUrl }),
+        body: JSON.stringify({
+            email,
+            redirectUrl: redirectUrl ?? `${process.env.NEXT_PUBLIC_APP_URL}/en/reset-password`,
+        }),
     });
 
 // Reset password

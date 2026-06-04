@@ -66,7 +66,7 @@ export const useVerifyEmail = () =>
 export const useForgotPassword = () =>
     useMutation({
         mutationFn: ({ email, redirectUrl }: { email: string; redirectUrl?: string }) =>
-            forgotPassword(email, redirectUrl),
+            forgotPassword(email, redirectUrl ?? `${process.env.NEXT_PUBLIC_APP_URL}/en/reset-password`),
     });
 
 // Reset password

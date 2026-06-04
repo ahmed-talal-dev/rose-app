@@ -123,6 +123,29 @@
           "emailInvalid": "Invalid email address"
         }
       }
+    },
+    "resetPassword": {
+      "languageSwitch": "العربية",
+      "title": "Create a new password",
+      "subtitle": "Set a strong password to secure your account.",
+      "coverAlt": "Rose bouquet arrangement",
+      "form": {
+        "passwordLabel": "Password",
+        "confirmLabel": "Confirm Password",
+        "submit": "Reset Password",
+        "submitting": "Resetting...",
+        "success": "Your password has been successfully reset.",
+        "invalidToken": "Invalid or expired reset link.",
+        "needHelp": "Need help?",
+        "contactUs": "Contact us",
+        "validation": {
+          "passwordMin": "Password must be at least 8 characters",
+          "passwordUppercase": "Must contain at least one uppercase letter",
+          "passwordNumber": "Must contain at least one number",
+          "confirmRequired": "Please confirm your password",
+          "passwordsMismatch": "Passwords do not match"
+        }
+      }
     }
   }
 }
