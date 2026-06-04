@@ -1,5 +1,5 @@
-import { fetchClient } from "@/shared/lib/apis/fetch";
 import { Product } from "@/features/products/types";
+import { fetchClient } from "@/shared/lib/apis/fetch.client";
 import { PaginatedPayload } from "@/shared/types";
 
 export const getWishlist = () =>

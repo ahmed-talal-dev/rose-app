@@ -22,10 +22,10 @@ import {
     useVerifyEmail,
 } from "../hooks";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+//  Types 
 type Step = "email" | "verify" | "form";
 
-// ─── GenderSelect ─────────────────────────────────────────────────────────────
+//  GenderSelect 
 interface GenderSelectProps {
     value?: "MALE" | "FEMALE";
     onChange: (val: "MALE" | "FEMALE") => void;
@@ -61,7 +61,7 @@ function GenderSelect({
                 type="button"
                 onClick={() => setOpen(!open)}
                 className={`
-                    w-full h-10 lg:h-[49px] flex items-center justify-between
+                    w-full h-10 lg:h-12.25 flex items-center justify-between
                     rounded-[10px] border bg-white px-4 text-sm font-inter transition-colors outline-none
                     ${open ? "border-primary-700 ring-2 ring-primary-700/20" : hasError ? "border-red-500" : "border-zinc-300"}
                     ${selected ? "text-zinc-800" : "text-zinc-400"}
@@ -76,7 +76,7 @@ function GenderSelect({
             </button>
 
             {open && (
-                <div className="absolute top-full start-0 mt-1.5 w-full bg-white border border-zinc-200 rounded-xl shadow-lg z-[200] p-1">
+                <div className="absolute top-full inset-s-0 mt-1.5 w-full bg-white border border-zinc-200 rounded-xl shadow-lg z-200 p-1">
                     {options.map((opt) => (
                         <button
                             key={opt.value}
@@ -97,7 +97,7 @@ function GenderSelect({
     );
 }
 
-// ─── OTP Input ────────────────────────────────────────────────────────────────
+//  OTP Input 
 interface OtpInputProps {
     value: string;
     onChange: (val: string) => void;
@@ -155,7 +155,7 @@ function OtpInput({ value, onChange, hasError }: OtpInputProps) {
     );
 }
 
-// ─── Step Indicator ───────────────────────────────────────────────────────────
+//  Step Indicator 
 function StepIndicator({ step }: { step: Step }) {
     const steps: Step[] = ["email", "verify", "form"];
     const current = steps.indexOf(step);
@@ -179,7 +179,7 @@ function StepIndicator({ step }: { step: Step }) {
     );
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
+//  Main Component 
 export function RegisterForm() {
     const router = useRouter();
     const t = useTranslations("auth.register.form");
@@ -187,7 +187,7 @@ export function RegisterForm() {
     // ── State ──
     const [step, setStep] = useState<Step>("email");
     const [verifiedEmail, setVerifiedEmail] = useState("");
-    const [otpToken, setOtpToken] = useState(""); // token من الـ URL أو من الـ email
+    const [otpToken, setOtpToken] = useState("");
     const [otp, setOtp] = useState("");
     const [otpError, setOtpError] = useState("");
     const [resendCooldown, setResendCooldown] = useState(0);
@@ -240,9 +240,8 @@ export function RegisterForm() {
         return () => clearTimeout(timer);
     }, [resendCooldown]);
 
-    // ─────────────────────────────────────────────────────────────────────────
+
     // Step 1: Submit email
-    // ─────────────────────────────────────────────────────────────────────────
     const onEmailSubmit = (data: { email: string }) => {
         sendVerification(
             { email: data.email },
@@ -260,17 +259,14 @@ export function RegisterForm() {
         );
     };
 
-    // ─────────────────────────────────────────────────────────────────────────
+
     // Step 2: Verify OTP
-    // ─────────────────────────────────────────────────────────────────────────
     const onVerifySubmit = () => {
         if (otp.length < 6) {
             setOtpError(t("validation.otpRequired"));
             return;
         }
         setOtpError("");
-
-        // الـ token هو الـ OTP اللي المستخدم كتبه
         verifyEmail({ email: verifiedEmail, code: otp }, {
             onSuccess: () => {
                 setStep("form");
@@ -298,9 +294,7 @@ export function RegisterForm() {
         );
     };
 
-    // ─────────────────────────────────────────────────────────────────────────
     // Step 3: Register
-    // ─────────────────────────────────────────────────────────────────────────
     const onRegisterSubmit = (data: Omit<RegisterSchema, "email">) => {
         const { confirmPassword, ...rest } = data;
         register({ ...data, email: verifiedEmail, phone: data.phone ? `+2${data.phone}` : undefined, },
@@ -314,9 +308,7 @@ export function RegisterForm() {
         );
     };
 
-    // ─────────────────────────────────────────────────────────────────────────
     // Helpers
-    // ─────────────────────────────────────────────────────────────────────────
     const inputClass = (hasError: boolean) =>
         `h-10 lg:h-[49px] rounded-[10px] border-zinc-300 px-4 text-sm font-inter text-zinc-800 placeholder:text-zinc-400 ${hasError ? "border-red-500" : ""}`;
 
@@ -325,9 +317,7 @@ export function RegisterForm() {
 
     const isStep1Loading = isSendingVerification;
 
-    // ─────────────────────────────────────────────────────────────────────────
     // Render
-    // ─────────────────────────────────────────────────────────────────────────
     return (
         <div className="w-full flex flex-col">
             <StepIndicator step={step} />
@@ -359,7 +349,7 @@ export function RegisterForm() {
                         <button
                             type="submit"
                             disabled={isStep1Loading}
-                            className="w-full h-10 lg:h-[41px] bg-[#A6252A] hover:bg-[#741C21] text-white font-medium text-sm lg:text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2"
+                            className="w-full h-10 lg:h-10.25 bg-primary-600 hover:bg-primary-700 text-white font-medium text-sm lg:text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2"
                         >
                             {isStep1Loading ? (
                                 <><Loader2 className="size-4 animate-spin" />{t("submitting")}</>
@@ -370,7 +360,7 @@ export function RegisterForm() {
                             <div className="w-full border-t border-zinc-200" />
                             <p className="text-xs lg:text-sm font-medium text-zinc-800 font-sarabun">
                                 {t("hasAccount")}{" "}
-                                <Link href="/login" className="font-semibold text-[#741C21] hover:underline font-sarabun">
+                                <Link href="/login" className="font-semibold text-bg-primary-700 hover:underline font-sarabun">
                                     {t("login")}
                                 </Link>
                             </p>
@@ -390,7 +380,7 @@ export function RegisterForm() {
                             <button
                                 type="button"
                                 onClick={() => { setStep("email"); setOtp(""); setOtpError(""); }}
-                                className="ms-auto text-xs text-[#741C21] hover:underline font-inter shrink-0"
+                                className="ms-auto text-xs text-bg-primary-700 hover:underline font-inter shrink-0"
                             >
                                 {t("changeEmail")}
                             </button>
@@ -414,7 +404,7 @@ export function RegisterForm() {
                                 type="button"
                                 onClick={onResend}
                                 disabled={resendCooldown > 0 || isSendingVerification}
-                                className="font-semibold text-[#741C21] hover:underline disabled:opacity-50 disabled:no-underline"
+                                className="font-semibold text-bg-primary-700 hover:underline disabled:opacity-50 disabled:no-underline"
                             >
                                 {resendCooldown > 0 ? `${t("resendIn")} ${resendCooldown}s` : t("resend")}
                             </button>
@@ -426,7 +416,7 @@ export function RegisterForm() {
                             type="button"
                             onClick={onVerifySubmit}
                             disabled={isVerifying || otp.length < 6}
-                            className="w-full h-10 lg:h-[41px] bg-[#A6252A] hover:bg-[#741C21] text-white font-medium text-sm lg:text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2"
+                            className="w-full h-10 lg:h-10.25 bg-bg-primary-600 hover:bg-bg-primary-700 text-white font-medium text-sm lg:text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2"
                         >
                             {isVerifying ? (
                                 <><Loader2 className="size-4 animate-spin" />{t("submitting")}</>
@@ -568,7 +558,7 @@ export function RegisterForm() {
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute end-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 transition-colors"
+                                    className="absolute inset-e-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 transition-colors"
                                 >
                                     {showPassword ? <Eye className="size-4 lg:size-5" /> : <EyeOff className="size-4 lg:size-5" />}
                                 </button>
@@ -594,7 +584,7 @@ export function RegisterForm() {
                                 <button
                                     type="button"
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute end-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 transition-colors"
+                                    className="absolute inset-e-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 transition-colors"
                                 >
                                     {showConfirmPassword ? <Eye className="size-4 lg:size-5" /> : <EyeOff className="size-4 lg:size-5" />}
                                 </button>
@@ -611,7 +601,7 @@ export function RegisterForm() {
                         <button
                             type="submit"
                             disabled={isRegistering}
-                            className="w-full h-10 lg:h-[41px] bg-[#A6252A] hover:bg-[#741C21] text-white font-medium text-sm lg:text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2"
+                            className="w-full h-10 lg:h-10.25 bg-bg-primary-600 hover:bg-bg-primary-700 text-white font-medium text-sm lg:text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2"
                         >
                             {isRegistering ? (
                                 <><Loader2 className="size-4 animate-spin" />{t("submitting")}</>
@@ -622,7 +612,7 @@ export function RegisterForm() {
                             <div className="w-full border-t border-zinc-200" />
                             <p className="text-xs lg:text-sm font-medium text-zinc-800 font-sarabun">
                                 {t("hasAccount")}{" "}
-                                <Link href="/login" className="font-semibold text-[#741C21] hover:underline font-sarabun">
+                                <Link href="/login" className="font-semibold text-bg-primary-700 hover:underline font-sarabun">
                                     {t("login")}
                                 </Link>
                             </p>

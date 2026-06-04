@@ -17,7 +17,7 @@ export default async function RegisterPage() {
                 <section className="relative h-screen overflow-y-auto no-scrollbar flex flex-col items-center px-5 py-6 min-[560px]:px-8 lg:px-0">
 
                     {/* Language switcher — sticky top */}
-                    <div className="w-full max-w-[406px] flex justify-end pt-2 pb-4 shrink-0">
+                    <div className="w-full max-w-101.5 flex justify-end pt-2 pb-4 shrink-0">
                         <Link
                             href="/register"
                             locale={alternateLocale}
@@ -28,7 +28,7 @@ export default async function RegisterPage() {
                     </div>
 
                     {/* Content */}
-                    <div className="flex w-full max-w-[406px] flex-col items-center gap-6 lg:gap-10 pb-6">
+                    <div className="flex w-full max-w-101.5 flex-col items-center gap-6 lg:gap-10 pb-6">
 
                         {/* Top separator — hidden on small screens */}
                         <Image
@@ -45,7 +45,7 @@ export default async function RegisterPage() {
                             {/* Title */}
                             <div className="flex w-full flex-col items-center justify-center border-b border-zinc-200 pb-4 text-center shrink-0">
                                 <h1
-                                    className="text-[36px] sm:text-[48px] leading-tight sm:leading-[57px] text-primary-700"
+                                    className="text-[36px] sm:text-[48px] leading-tight sm:leading-14.25 text-primary-700"
                                     style={
                                         isArabic
                                             ? undefined
