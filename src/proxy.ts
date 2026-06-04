@@ -18,7 +18,7 @@ export default auth(async (req: NextRequest & { auth: Session | null }) => {
     const pathnameWithoutLocale = pathname.replace(/^\/(en|ar)/, "");
     const locale = pathname.split("/")[1] || "en";
 
-    // ✅ NEW: Redirect root "/" to "/[locale]/login"
+    // Redirect root "/" to "/[locale]/login"
     if (pathnameWithoutLocale === "" || pathnameWithoutLocale === "/") {
         return NextResponse.redirect(new URL(`/${locale}/login`, req.url));
     }

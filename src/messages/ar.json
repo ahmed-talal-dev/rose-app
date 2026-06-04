@@ -102,6 +102,27 @@
           "otpInvalid": "كود التحقق غير صحيح أو منتهي الصلاحية"
         }
       }
+    },
+    "forgotPassword": {
+      "languageSwitch": "English",
+      "title": "نسيت كلمة المرور؟",
+      "subtitle": "لا تقلق، هنبعتلك تعليمات لإعادة تعيينها.",
+      "coverAlt": "هدايا ورود",
+      "form": {
+        "emailLabel": "البريد الإلكتروني",
+        "emailPlaceholder": "user@example.com",
+        "submit": "متابعة",
+        "submitting": "جاري الإرسال...",
+        "noAccount": "ليس لديك حساب بعد؟",
+        "createAccount": "أنشئ حسابا الآن",
+        "success": "تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني",
+        "checkEmail": "تحقق من بريدك الإلكتروني",
+        "checkEmailSubtitle": "أرسلنا لك رابط إعادة تعيين كلمة المرور",
+        "validation": {
+          "emailRequired": "البريد الإلكتروني مطلوب",
+          "emailInvalid": "البريد الإلكتروني غير صحيح"
+        }
+      }
     }
   }
 }

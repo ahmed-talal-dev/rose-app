@@ -102,6 +102,27 @@
           "otpInvalid": "Invalid or expired verification code"
         }
       }
+    },
+    "forgotPassword": {
+      "languageSwitch": "العربية",
+      "title": "Forgot Password?",
+      "subtitle": "Worry not, we'll send you instructions to help you reset it.",
+      "coverAlt": "Gift boxes",
+      "form": {
+        "emailLabel": "Email",
+        "emailPlaceholder": "user@example.com",
+        "submit": "Continue",
+        "submitting": "Sending...",
+        "noAccount": "Don't have an account yet?",
+        "createAccount": "Create one now!",
+        "success": "Password reset link sent to your email",
+        "checkEmail": "Check your email",
+        "checkEmailSubtitle": "We sent you a password reset link",
+        "validation": {
+          "emailRequired": "Email is required",
+          "emailInvalid": "Invalid email address"
+        }
+      }
     }
   }
 }
