@@ -6,7 +6,18 @@ import { Session } from "next-auth";
 
 const intlMiddleware = createIntlMiddleware(routing);
 
-const protectedRoutes = ["/profile", "/cart", "/checkout", "/orders", "/wishlist"];
+const protectedRoutes = [
+    "/profile",
+    "/cart",
+    "/checkout",
+    "/orders",
+    "/wishlist",
+    "/products",
+    "/categories",
+    "/occasions",
+    "/contact",
+    "/about"
+];
 const adminRoutes = ["/dashboard", "/products/manage", "/categories", "/coupons", "/blogs", "/testimonials", "/audit-logs"];
 const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password"];
 
@@ -18,9 +29,9 @@ export default auth(async (req: NextRequest & { auth: Session | null }) => {
     const pathnameWithoutLocale = pathname.replace(/^\/(en|ar)/, "");
     const locale = pathname.split("/")[1] || "en";
 
-    // Redirect root "/" to "/[locale]/login"
+    // Redirect root "/" to "/[locale]/home or login" (Let guest view the homepage)
     if (pathnameWithoutLocale === "" || pathnameWithoutLocale === "/") {
-        return NextResponse.redirect(new URL(`/${locale}/login`, req.url));
+        return intlMiddleware(req);
     }
 
     // If not logged in and trying to access protected route

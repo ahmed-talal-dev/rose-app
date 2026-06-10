@@ -69,7 +69,7 @@ export function ResetPasswordForm() {
 
                 {/* Password */}
                 <div className="flex flex-col gap-1.5 w-full">
-                    <Label htmlFor="newPassword" className="text-sm font-medium text-zinc-800">
+                    <Label htmlFor="newPassword" className="text-sm font-medium text-zinc-800 dark:text-zinc-300">
                         {t("passwordLabel")}
                     </Label>
                     <div className="relative">
@@ -78,24 +78,24 @@ export function ResetPasswordForm() {
                             type={showPassword ? "text" : "password"}
                             placeholder="••••••••"
                             {...register("newPassword")}
-                            className={`h-12.25 rounded-[10px] border-zinc-300 text-zinc-800 px-4 pe-11 text-sm ${errors.newPassword ? "border-red-500" : ""}`}
+                            className={`h-12.25 rounded-[10px] border-zinc-300 dark:border-zinc-700 bg-white dark:bg-[#2a2b2f] text-zinc-800 dark:text-zinc-100 px-4 pe-11 text-sm focus-visible:ring-[#FFA3B9] ${errors.newPassword ? "border-red-500" : ""}`}
                         />
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute inset-e-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 transition-colors"
+                            className="absolute inset-e-4 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
                         >
                             {showPassword ? <Eye className="size-5" /> : <EyeOff className="size-5" />}
                         </button>
                     </div>
                     {errors.newPassword && (
-                        <p className="text-sm text-red-600">{errors.newPassword.message}</p>
+                        <p className="text-sm text-red-600 dark:text-red-400">{errors.newPassword.message}</p>
                     )}
                 </div>
 
                 {/* Confirm Password */}
                 <div className="flex flex-col gap-1.5 w-full">
-                    <Label htmlFor="confirmPassword" className="text-sm font-medium text-zinc-800">
+                    <Label htmlFor="confirmPassword" className="text-sm font-medium text-zinc-800 dark:text-zinc-300">
                         {t("confirmLabel")}
                     </Label>
                     <div className="relative">
@@ -104,18 +104,18 @@ export function ResetPasswordForm() {
                             type={showConfirm ? "text" : "password"}
                             placeholder="••••••••"
                             {...register("confirmPassword")}
-                            className={`h-12.25 rounded-[10px] border-zinc-300 text-zinc-800 px-4 pe-11 text-sm ${errors.confirmPassword ? "border-red-500" : ""}`}
+                            className={`h-12.25 rounded-[10px] border-zinc-300 dark:border-zinc-700 bg-white dark:bg-[#2a2b2f] text-zinc-800 dark:text-zinc-100 px-4 pe-11 text-sm focus-visible:ring-[#FFA3B9] ${errors.confirmPassword ? "border-red-500" : ""}`}
                         />
                         <button
                             type="button"
                             onClick={() => setShowConfirm(!showConfirm)}
-                            className="absolute inset-e-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 transition-colors"
+                            className="absolute inset-e-4 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
                         >
                             {showConfirm ? <Eye className="size-5" /> : <EyeOff className="size-5" />}
                         </button>
                     </div>
                     {errors.confirmPassword && (
-                        <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
+                        <p className="text-sm text-red-600 dark:text-red-400">{errors.confirmPassword.message}</p>
                     )}
                 </div>
             </div>
@@ -125,7 +125,7 @@ export function ResetPasswordForm() {
                 <button
                     type="submit"
                     disabled={isPending}
-                    className="w-full h-[41px] bg-[#A6252A] hover:bg-[#741C21] text-white font-medium text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2"
+                    className="w-full h-[41px] bg-[#A6252A] dark:bg-[#FFA3B9] hover:bg-[#741C21] dark:hover:bg-[#ff85a2] text-white dark:text-[#1c1d21] font-semibold text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2 shadow-sm"
                 >
                     {isPending ? (
                         <><Loader2 className="size-4 animate-spin" />{t("submitting")}</>
@@ -133,10 +133,10 @@ export function ResetPasswordForm() {
                 </button>
 
                 <div className="flex flex-col items-center gap-4">
-                    <div className="w-full border-t border-zinc-200" />
-                    <p className="text-sm font-medium text-zinc-800 font-sarabun">
+                    <div className="w-full border-t border-zinc-200 dark:border-zinc-800" />
+                    <p className="text-sm font-medium text-zinc-800 dark:text-zinc-300 font-sarabun">
                         {t("needHelp")}{" "}
-                        <Link href="/contact" className="font-semibold text-primary-700 hover:underline">
+                        <Link href="/contact" className="font-semibold text-[#A6252A] dark:text-[#FFA3B9] hover:underline">
                             {t("contactUs")}
                         </Link>
                     </p>

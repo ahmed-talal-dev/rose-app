@@ -6,6 +6,7 @@ import { QueryProvider } from "@/shared/providers/query-provider";
 import { AuthProvider } from "@/shared/providers/session-provider";
 import { Toaster } from "@/shared/ui/sonner";
 import { Inter, Sarabun, Tajawal, Zain } from "next/font/google";
+import { ThemeProvider } from "@/shared/providers/theme-provider";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -48,14 +49,18 @@ export default async function LocaleLayout({ children, params }: Props) {
             className={`${inter.variable} ${sarabun.variable} ${tajawal.variable} ${zain.variable}`}
             suppressHydrationWarning
         >
-            <body className={locale === "ar" ? "font-tajawal" : "font-inter"}>
+            <body className={locale === "ar" ? "font-tajawal" : "font-inter"}
+                suppressHydrationWarning
+            >
                 <NextIntlClientProvider messages={messages}>
-                    <AuthProvider>
-                        <QueryProvider>
-                            {children}
-                            <Toaster richColors position="top-right" />
-                        </QueryProvider>
-                    </AuthProvider>
+                    <ThemeProvider>
+                        <AuthProvider>
+                            <QueryProvider>
+                                {children}
+                                <Toaster richColors position="top-right" />
+                            </QueryProvider>
+                        </AuthProvider>
+                    </ThemeProvider>
                 </NextIntlClientProvider>
             </body>
         </html>

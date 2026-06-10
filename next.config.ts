@@ -6,9 +6,21 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 const nextConfig: NextConfig = {
     images: {
         remotePatterns: [
+            // {
+            //     protocol: "https",
+            //     hostname: "flagcdn.com",
+            // },
             {
                 protocol: "https",
-                hostname: "flagcdn.com",
+                hostname: "rose-app.elevate-bootcamp.cloud",
+            },
+            {
+                protocol: "https",
+                hostname: "www.rose-app.elevate-bootcamp.cloud",
+            },
+            {
+                protocol: "https",
+                hostname: "randomuser.me",
             },
         ],
     },

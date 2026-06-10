@@ -22,10 +22,8 @@ import {
     useVerifyEmail,
 } from "../hooks";
 
-//  Types 
 type Step = "email" | "verify" | "form";
 
-//  GenderSelect 
 interface GenderSelectProps {
     value?: "MALE" | "FEMALE";
     onChange: (val: "MALE" | "FEMALE") => void;
@@ -62,21 +60,21 @@ function GenderSelect({
                 onClick={() => setOpen(!open)}
                 className={`
                     w-full h-10 lg:h-12.25 flex items-center justify-between
-                    rounded-[10px] border bg-white px-4 text-sm font-inter transition-colors outline-none
-                    ${open ? "border-primary-700 ring-2 ring-primary-700/20" : hasError ? "border-red-500" : "border-zinc-300"}
-                    ${selected ? "text-zinc-800" : "text-zinc-400"}
+                    rounded-[10px] border px-4 text-sm font-inter transition-colors outline-none
+                    ${open ? "border-primary-700 dark:border-[#FFA3B9] ring-2 ring-primary-700/20 dark:ring-[#FFA3B9]/20 bg-white dark:bg-[#3A3B3F]" : hasError ? "border-red-500 bg-white dark:bg-[#3A3B3F]" : "border-zinc-300 dark:border-zinc-700 bg-white dark:bg-[#3A3B3F]"}
+                    ${selected ? "text-zinc-800 dark:text-zinc-100" : "text-zinc-400 dark:text-zinc-500"}
                 `}
             >
                 <span className="flex items-center gap-2">
                     {selected ? (
-                        <><span className="text-base leading-none">{selected.icon}</span>{selected.label}</>
+                        <><span className="text-base leading-none text-primary-700 dark:text-[#FFA3B9]">{selected.icon}</span>{selected.label}</>
                     ) : placeholder}
                 </span>
-                <ChevronDown className={`size-4 text-zinc-500 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+                <ChevronDown className={`size-4 text-zinc-500 dark:text-zinc-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
             </button>
 
             {open && (
-                <div className="absolute top-full inset-s-0 mt-1.5 w-full bg-white border border-zinc-200 rounded-xl shadow-lg z-200 p-1">
+                <div className="absolute top-full inset-s-0 mt-1.5 w-full bg-white dark:bg-[#3A3B3F] border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg z-200 p-1">
                     {options.map((opt) => (
                         <button
                             key={opt.value}
@@ -84,10 +82,10 @@ function GenderSelect({
                             onClick={() => { onChange(opt.value); setOpen(false); }}
                             className={`
                                 w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-inter transition-colors text-start
-                                ${value === opt.value ? "bg-primary-50 text-primary-700 font-medium" : "text-zinc-700 hover:bg-zinc-50"}
+                                ${value === opt.value ? "bg-primary-50 dark:bg-zinc-800 text-primary-700 dark:text-[#FFA3B9] font-medium" : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/50"}
                             `}
                         >
-                            <span className="text-base leading-none">{opt.icon}</span>
+                            <span className="text-base leading-none text-primary-700 dark:text-[#FFA3B9]">{opt.icon}</span>
                             {opt.label}
                         </button>
                     ))}
@@ -97,7 +95,6 @@ function GenderSelect({
     );
 }
 
-//  OTP Input 
 interface OtpInputProps {
     value: string;
     onChange: (val: string) => void;
@@ -146,8 +143,8 @@ function OtpInput({ value, onChange, hasError }: OtpInputProps) {
                     className={`
                         w-10 h-12 lg:w-12 lg:h-14 text-center text-lg font-semibold font-inter
                         rounded-[10px] border outline-none transition-all
-                        ${hasError ? "border-red-500 bg-red-50" : digit ? "border-primary-600 bg-primary-50 text-primary-700" : "border-zinc-300 bg-white text-zinc-800"}
-                        focus:border-primary-700 focus:ring-2 focus:ring-primary-700/20
+                        ${hasError ? "border-red-500 bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400" : digit ? "border-primary-600 dark:border-[#FFA3B9] bg-primary-50 dark:bg-zinc-800 text-primary-700 dark:text-[#FFA3B9]" : "border-zinc-300 dark:border-zinc-700 bg-white dark:bg-[#3A3B3F] text-zinc-800 dark:text-zinc-100"}
+                        focus:border-primary-700 dark:focus:border-[#FFA3B9] focus:ring-2 focus:ring-primary-700/20 dark:focus:ring-[#FFA3B9]/20
                     `}
                 />
             ))}
@@ -155,7 +152,6 @@ function OtpInput({ value, onChange, hasError }: OtpInputProps) {
     );
 }
 
-//  Step Indicator 
 function StepIndicator({ step }: { step: Step }) {
     const steps: Step[] = ["email", "verify", "form"];
     const current = steps.indexOf(step);
@@ -166,12 +162,12 @@ function StepIndicator({ step }: { step: Step }) {
                 <div key={s} className="flex items-center gap-2">
                     <div className={`
                         w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold font-inter transition-all
-                        ${i < current ? "bg-primary-600 text-white" : i === current ? "bg-primary-600 text-white ring-4 ring-primary-100" : "bg-zinc-100 text-zinc-400"}
+                        ${i < current ? "bg-primary-600 dark:bg-[#FFA3B9] text-white dark:text-[#212226]" : i === current ? "bg-primary-600 dark:bg-[#FFA3B9] text-white dark:text-[#212226] ring-4 ring-primary-100 dark:ring-[#FFA3B9]/20" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500"}
                     `}>
                         {i < current ? <CheckCircle2 className="size-4" /> : i + 1}
                     </div>
                     {i < 2 && (
-                        <div className={`w-8 h-0.5 rounded-full transition-all ${i < current ? "bg-primary-600" : "bg-zinc-200"}`} />
+                        <div className={`w-8 h-0.5 rounded-full transition-all ${i < current ? "bg-primary-600 dark:bg-[#FFA3B9]" : "bg-zinc-200 dark:bg-zinc-700"}`} />
                     )}
                 </div>
             ))}
@@ -179,12 +175,10 @@ function StepIndicator({ step }: { step: Step }) {
     );
 }
 
-//  Main Component 
 export function RegisterForm() {
     const router = useRouter();
     const t = useTranslations("auth.register.form");
 
-    // ── State ──
     const [step, setStep] = useState<Step>("email");
     const [verifiedEmail, setVerifiedEmail] = useState("");
     const [otpToken, setOtpToken] = useState("");
@@ -194,12 +188,10 @@ export function RegisterForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    // ── Mutations ──
     const { mutate: sendVerification, isPending: isSendingVerification } = useSendVerification();
     const { mutate: verifyEmail, isPending: isVerifying } = useVerifyEmail();
     const { mutate: register, isPending: isRegistering } = useRegister();
 
-    // ── Step 1: Email form ──
     const emailSchema = useMemo(() =>
         z.object({
             email: z.string().min(1, t("validation.emailRequired")).email(t("validation.emailInvalid")),
@@ -209,7 +201,6 @@ export function RegisterForm() {
         resolver: zodResolver(emailSchema),
     });
 
-    // ── Step 3: Register form ──
     const registerSchema = useMemo(() =>
         z.object({
             firstName: z.string().min(1, t("validation.firstNameRequired")),
@@ -233,15 +224,12 @@ export function RegisterForm() {
         resolver: zodResolver(registerSchema),
     });
 
-    // ── Resend cooldown timer ──
     useEffect(() => {
         if (resendCooldown <= 0) return;
         const timer = setTimeout(() => setResendCooldown((c) => c - 1), 1000);
         return () => clearTimeout(timer);
     }, [resendCooldown]);
 
-
-    // Step 1: Submit email
     const onEmailSubmit = (data: { email: string }) => {
         sendVerification(
             { email: data.email },
@@ -259,8 +247,6 @@ export function RegisterForm() {
         );
     };
 
-
-    // Step 2: Verify OTP
     const onVerifySubmit = () => {
         if (otp.length < 6) {
             setOtpError(t("validation.otpRequired"));
@@ -294,7 +280,6 @@ export function RegisterForm() {
         );
     };
 
-    // Step 3: Register
     const onRegisterSubmit = (data: Omit<RegisterSchema, "email">) => {
         const { confirmPassword, ...rest } = data;
         register({ ...data, email: verifiedEmail, phone: data.phone ? `+2${data.phone}` : undefined, },
@@ -308,16 +293,14 @@ export function RegisterForm() {
         );
     };
 
-    // Helpers
     const inputClass = (hasError: boolean) =>
-        `h-10 lg:h-[49px] rounded-[10px] border-zinc-300 px-4 text-sm font-inter text-zinc-800 placeholder:text-zinc-400 ${hasError ? "border-red-500" : ""}`;
+        `h-10 lg:h-[49px] rounded-[10px] bg-white dark:bg-[#3A3B3F] border-zinc-300 dark:border-zinc-700 px-4 text-sm font-inter text-zinc-800 dark:text-zinc-100 focus-visible:ring-1 focus-visible:ring-primary-700 dark:focus-visible:ring-[#FFA3B9] placeholder:text-zinc-400 dark:placeholder:text-zinc-500 ${hasError ? "border-red-500" : ""}`;
 
     const passwordInputClass = (hasError: boolean) =>
-        `h-10 lg:h-[49px] rounded-[10px] border-zinc-300 px-4 pe-11 text-sm font-inter text-zinc-800 placeholder:text-zinc-400 w-full [&::-ms-reveal]:hidden [&::-webkit-credentials-auto-fill-button]:hidden ${hasError ? "border-red-500" : ""}`;
+        `h-10 lg:h-[49px] rounded-[10px] bg-white dark:bg-[#3A3B3F] border-zinc-300 dark:border-zinc-700 px-4 pe-11 text-sm font-inter text-zinc-800 dark:text-zinc-100 focus-visible:ring-1 focus-visible:ring-primary-700 dark:focus-visible:ring-[#FFA3B9] placeholder:text-zinc-400 dark:placeholder:text-zinc-500 w-full [&::-ms-reveal]:hidden [&::-webkit-credentials-auto-fill-button]:hidden ${hasError ? "border-red-500" : ""}`;
 
     const isStep1Loading = isSendingVerification;
 
-    // Render
     return (
         <div className="w-full flex flex-col">
             <StepIndicator step={step} />
@@ -327,7 +310,7 @@ export function RegisterForm() {
                 <form onSubmit={emailForm.handleSubmit(onEmailSubmit)} className="flex flex-col gap-5 lg:gap-9">
                     <div className="flex flex-col gap-2 lg:gap-2.5">
                         <div className="flex flex-col gap-1">
-                            <Label htmlFor="email" className="text-xs lg:text-sm font-medium text-zinc-800 font-inter">
+                            <Label htmlFor="email" className="text-xs lg:text-sm font-medium text-zinc-800 dark:text-zinc-300 font-inter">
                                 {t("emailLabel")}
                             </Label>
                             <Input
@@ -338,7 +321,7 @@ export function RegisterForm() {
                                 className={inputClass(!!emailForm.formState.errors.email)}
                             />
                             {emailForm.formState.errors.email && (
-                                <p className="text-xs text-red-600 font-inter">
+                                <p className="text-xs text-red-600 dark:text-red-400 font-inter mt-0.5">
                                     {emailForm.formState.errors.email.message}
                                 </p>
                             )}
@@ -349,7 +332,7 @@ export function RegisterForm() {
                         <button
                             type="submit"
                             disabled={isStep1Loading}
-                            className="w-full h-10 lg:h-10.25 bg-primary-600 hover:bg-primary-700 text-white font-medium text-sm lg:text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2"
+                            className="w-full h-10 lg:h-10.25 bg-primary-600 dark:bg-[#FFA3B9] hover:bg-primary-700 dark:hover:bg-[#ffbccc] text-white dark:text-[#212226] font-semibold text-sm lg:text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2"
                         >
                             {isStep1Loading ? (
                                 <><Loader2 className="size-4 animate-spin" />{t("submitting")}</>
@@ -357,10 +340,10 @@ export function RegisterForm() {
                         </button>
 
                         <div className="flex flex-col items-center gap-4">
-                            <div className="w-full border-t border-zinc-200" />
-                            <p className="text-xs lg:text-sm font-medium text-zinc-800 font-sarabun">
+                            <div className="w-full border-t border-zinc-200 dark:border-zinc-700" />
+                            <p className="text-xs lg:text-sm font-medium text-zinc-800 dark:text-zinc-300 font-sarabun">
                                 {t("hasAccount")}{" "}
-                                <Link href="/login" className="font-semibold text-bg-primary-700 hover:underline font-sarabun">
+                                <Link href="/login" className="font-semibold text-primary-700 dark:text-[#FFA3B9] hover:underline font-sarabun transition-colors">
                                     {t("login")}
                                 </Link>
                             </p>
@@ -373,38 +356,35 @@ export function RegisterForm() {
             {step === "verify" && (
                 <div className="flex flex-col gap-5 lg:gap-9">
                     <div className="flex flex-col gap-5">
-                        {/* Email display */}
-                        <div className="flex items-center gap-2 p-3 bg-zinc-50 rounded-[10px] border border-zinc-200">
-                            <Mail className="size-4 text-zinc-400 shrink-0" />
-                            <span className="text-sm text-zinc-600 font-inter truncate">{verifiedEmail}</span>
+                        <div className="flex items-center gap-2 p-3 bg-zinc-50 dark:bg-zinc-800/50 rounded-[10px] border border-zinc-200 dark:border-zinc-700">
+                            <Mail className="size-4 text-zinc-400 dark:text-zinc-500 shrink-0" />
+                            <span className="text-sm text-zinc-600 dark:text-zinc-300 font-inter truncate">{verifiedEmail}</span>
                             <button
                                 type="button"
                                 onClick={() => { setStep("email"); setOtp(""); setOtpError(""); }}
-                                className="ms-auto text-xs text-bg-primary-700 hover:underline font-inter shrink-0"
+                                className="ms-auto text-xs text-primary-700 dark:text-[#FFA3B9] hover:underline font-inter shrink-0 transition-colors"
                             >
                                 {t("changeEmail")}
                             </button>
                         </div>
 
-                        {/* OTP */}
                         <div className="flex flex-col gap-3">
-                            <Label className="text-xs lg:text-sm font-medium text-zinc-800 font-inter text-center">
+                            <Label className="text-xs lg:text-sm font-medium text-zinc-800 dark:text-zinc-300 font-inter text-center">
                                 {t("otpLabel")}
                             </Label>
                             <OtpInput value={otp} onChange={setOtp} hasError={!!otpError} />
                             {otpError && (
-                                <p className="text-xs text-red-600 font-inter text-center">{otpError}</p>
+                                <p className="text-xs text-red-600 dark:text-red-400 font-inter text-center mt-0.5">{otpError}</p>
                             )}
                         </div>
 
-                        {/* Resend */}
-                        <p className="text-xs text-zinc-500 font-inter text-center">
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400 font-inter text-center">
                             {t("didntReceive")}{" "}
                             <button
                                 type="button"
                                 onClick={onResend}
                                 disabled={resendCooldown > 0 || isSendingVerification}
-                                className="font-semibold text-bg-primary-700 hover:underline disabled:opacity-50 disabled:no-underline"
+                                className="font-semibold text-primary-700 dark:text-[#FFA3B9] hover:underline disabled:opacity-50 disabled:no-underline transition-colors"
                             >
                                 {resendCooldown > 0 ? `${t("resendIn")} ${resendCooldown}s` : t("resend")}
                             </button>
@@ -416,7 +396,7 @@ export function RegisterForm() {
                             type="button"
                             onClick={onVerifySubmit}
                             disabled={isVerifying || otp.length < 6}
-                            className="w-full h-10 lg:h-10.25 bg-bg-primary-600 hover:bg-bg-primary-700 text-white font-medium text-sm lg:text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2"
+                            className="w-full h-10 lg:h-10.25 bg-primary-600 dark:bg-[#FFA3B9] hover:bg-primary-700 dark:hover:bg-[#ffbccc] text-white dark:text-[#212226] font-semibold text-sm lg:text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2"
                         >
                             {isVerifying ? (
                                 <><Loader2 className="size-4 animate-spin" />{t("submitting")}</>
@@ -426,7 +406,7 @@ export function RegisterForm() {
                         <button
                             type="button"
                             onClick={() => { setStep("email"); setOtp(""); setOtpError(""); }}
-                            className="flex items-center justify-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-700 font-inter transition-colors"
+                            className="flex items-center justify-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 font-inter transition-colors"
                         >
                             <ArrowLeft className="size-4" />
                             {t("back")}
@@ -440,16 +420,14 @@ export function RegisterForm() {
                 <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="flex flex-col gap-5 lg:gap-9">
                     <div className="flex flex-col gap-2 lg:gap-2.5">
 
-                        {/* Verified email (readonly) */}
-                        <div className="flex items-center gap-2 p-3 bg-green-50 rounded-[10px] border border-green-200">
-                            <CheckCircle2 className="size-4 text-green-600 shrink-0" />
-                            <span className="text-sm text-green-700 font-inter truncate">{verifiedEmail}</span>
+                        <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-950/20 rounded-[10px] border border-green-200 dark:border-green-900/50">
+                            <CheckCircle2 className="size-4 text-green-600 dark:text-green-400 shrink-0" />
+                            <span className="text-sm text-green-700 dark:text-green-400 font-inter truncate">{verifiedEmail}</span>
                         </div>
 
-                        {/* First + Last Name */}
                         <div className="flex w-full gap-3 lg:gap-5">
                             <div className="flex flex-1 flex-col gap-1">
-                                <Label htmlFor="firstName" className="text-xs lg:text-sm font-medium text-zinc-800 font-inter">
+                                <Label htmlFor="firstName" className="text-xs lg:text-sm font-medium text-zinc-800 dark:text-zinc-300 font-inter">
                                     {t("firstNameLabel")}
                                 </Label>
                                 <Input
@@ -460,11 +438,11 @@ export function RegisterForm() {
                                     className={inputClass(!!registerForm.formState.errors.firstName)}
                                 />
                                 {registerForm.formState.errors.firstName && (
-                                    <p className="text-xs text-red-600 font-inter">{registerForm.formState.errors.firstName.message}</p>
+                                    <p className="text-xs text-red-600 dark:text-red-400 font-inter mt-0.5">{registerForm.formState.errors.firstName.message}</p>
                                 )}
                             </div>
                             <div className="flex flex-1 flex-col gap-1">
-                                <Label htmlFor="lastName" className="text-xs lg:text-sm font-medium text-zinc-800 font-inter">
+                                <Label htmlFor="lastName" className="text-xs lg:text-sm font-medium text-zinc-800 dark:text-zinc-300 font-inter">
                                     {t("lastNameLabel")}
                                 </Label>
                                 <Input
@@ -475,14 +453,13 @@ export function RegisterForm() {
                                     className={inputClass(!!registerForm.formState.errors.lastName)}
                                 />
                                 {registerForm.formState.errors.lastName && (
-                                    <p className="text-xs text-red-600 font-inter">{registerForm.formState.errors.lastName.message}</p>
+                                    <p className="text-xs text-red-600 dark:text-red-400 font-inter mt-0.5">{registerForm.formState.errors.lastName.message}</p>
                                 )}
                             </div>
                         </div>
 
-                        {/* Username */}
                         <div className="flex flex-col gap-1">
-                            <Label htmlFor="username" className="text-xs lg:text-sm font-medium text-zinc-800 font-inter">
+                            <Label htmlFor="username" className="text-xs lg:text-sm font-medium text-zinc-800 dark:text-zinc-300 font-inter">
                                 {t("usernameLabel")}
                             </Label>
                             <Input
@@ -493,13 +470,12 @@ export function RegisterForm() {
                                 className={inputClass(!!registerForm.formState.errors.username)}
                             />
                             {registerForm.formState.errors.username && (
-                                <p className="text-xs text-red-600 font-inter">{registerForm.formState.errors.username.message}</p>
+                                <p className="text-xs text-red-600 dark:text-red-400 font-inter mt-0.5">{registerForm.formState.errors.username.message}</p>
                             )}
                         </div>
 
-                        {/* Phone */}
                         <div className="flex flex-col gap-1">
-                            <Label htmlFor="phone" className="text-xs lg:text-sm font-medium text-zinc-800 font-inter">
+                            <Label htmlFor="phone" className="text-xs lg:text-sm font-medium text-zinc-800 dark:text-zinc-300 font-inter">
                                 {t("phoneLabel")}
                             </Label>
                             <Controller
@@ -517,13 +493,12 @@ export function RegisterForm() {
                                 )}
                             />
                             {registerForm.formState.errors.phone && (
-                                <p className="text-xs text-red-600 font-inter">{registerForm.formState.errors.phone.message}</p>
+                                <p className="text-xs text-red-600 dark:text-red-400 font-inter mt-0.5">{registerForm.formState.errors.phone.message}</p>
                             )}
                         </div>
 
-                        {/* Gender */}
                         <div className="flex flex-col gap-1">
-                            <Label className="text-xs lg:text-sm font-medium text-zinc-800 font-inter">
+                            <Label className="text-xs lg:text-sm font-medium text-zinc-800 dark:text-zinc-300 font-inter">
                                 {t("genderLabel")}
                             </Label>
                             <Controller
@@ -542,9 +517,8 @@ export function RegisterForm() {
                             />
                         </div>
 
-                        {/* Password */}
                         <div className="flex flex-col gap-1">
-                            <Label htmlFor="password" className="text-xs lg:text-sm font-medium text-zinc-800 font-inter">
+                            <Label htmlFor="password" className="text-xs lg:text-sm font-medium text-zinc-800 dark:text-zinc-300 font-inter">
                                 {t("passwordLabel")}
                             </Label>
                             <div className="relative">
@@ -558,19 +532,18 @@ export function RegisterForm() {
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-e-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 transition-colors"
+                                    className="absolute inset-e-4 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
                                 >
                                     {showPassword ? <Eye className="size-4 lg:size-5" /> : <EyeOff className="size-4 lg:size-5" />}
                                 </button>
                             </div>
                             {registerForm.formState.errors.password && (
-                                <p className="text-xs text-red-600 font-inter">{registerForm.formState.errors.password.message}</p>
+                                <p className="text-xs text-red-600 dark:text-red-400 font-inter mt-0.5">{registerForm.formState.errors.password.message}</p>
                             )}
                         </div>
 
-                        {/* Confirm Password */}
                         <div className="flex flex-col gap-1">
-                            <Label htmlFor="confirmPassword" className="text-xs lg:text-sm font-medium text-zinc-800 font-inter">
+                            <Label htmlFor="confirmPassword" className="text-xs lg:text-sm font-medium text-zinc-800 dark:text-zinc-300 font-inter">
                                 {t("confirmPasswordLabel")}
                             </Label>
                             <div className="relative">
@@ -584,24 +557,23 @@ export function RegisterForm() {
                                 <button
                                     type="button"
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute inset-e-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 transition-colors"
+                                    className="absolute inset-e-4 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
                                 >
                                     {showConfirmPassword ? <Eye className="size-4 lg:size-5" /> : <EyeOff className="size-4 lg:size-5" />}
                                 </button>
                             </div>
                             {registerForm.formState.errors.confirmPassword && (
-                                <p className="text-xs text-red-600 font-inter">{registerForm.formState.errors.confirmPassword.message}</p>
+                                <p className="text-xs text-red-600 dark:text-red-400 font-inter mt-0.5">{registerForm.formState.errors.confirmPassword.message}</p>
                             )}
                         </div>
 
                     </div>
 
-                    {/* Submit */}
                     <div className="flex flex-col gap-4 lg:gap-5">
                         <button
                             type="submit"
                             disabled={isRegistering}
-                            className="w-full h-10 lg:h-10.25 bg-bg-primary-600 hover:bg-bg-primary-700 text-white font-medium text-sm lg:text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2"
+                            className="w-full h-10 lg:h-10.25 bg-primary-600 dark:bg-[#FFA3B9] hover:bg-primary-700 dark:hover:bg-[#ffbccc] text-white dark:text-[#212226] font-semibold text-sm lg:text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2"
                         >
                             {isRegistering ? (
                                 <><Loader2 className="size-4 animate-spin" />{t("submitting")}</>
@@ -609,10 +581,10 @@ export function RegisterForm() {
                         </button>
 
                         <div className="flex flex-col items-center gap-4">
-                            <div className="w-full border-t border-zinc-200" />
-                            <p className="text-xs lg:text-sm font-medium text-zinc-800 font-sarabun">
+                            <div className="w-full border-t border-zinc-200 dark:border-zinc-700" />
+                            <p className="text-xs lg:text-sm font-medium text-zinc-800 dark:text-zinc-300 font-sarabun">
                                 {t("hasAccount")}{" "}
-                                <Link href="/login" className="font-semibold text-bg-primary-700 hover:underline font-sarabun">
+                                <Link href="/login" className="font-semibold text-primary-700 dark:text-[#FFA3B9] hover:underline font-sarabun transition-colors">
                                     {t("login")}
                                 </Link>
                             </p>

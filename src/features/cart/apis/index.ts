@@ -1,4 +1,4 @@
-import { fetchClient } from "@/shared/lib/apis/fetch";
+import { fetchClient } from "@/shared/lib/apis/fetch.client";
 import { Cart, AddToCartInput, UpdateCartInput } from "../types";
 
 export const getCart = () =>

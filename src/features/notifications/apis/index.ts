@@ -1,4 +1,4 @@
-import { fetchClient } from "@/shared/lib/apis/fetch";
+import { fetchClient } from "@/shared/lib/apis/fetch.client";
 import { PaginatedPayload } from "@/shared/types";
 import { Notification, NotificationsParams } from "../types";
 

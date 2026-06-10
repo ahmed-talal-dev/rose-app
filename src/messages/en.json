@@ -7,7 +7,171 @@
     "delete": "Delete",
     "edit": "Edit",
     "search": "Search",
-    "noResults": "No results found"
+    "noResults": "No results found",
+    "viewAll": "View All",
+    "exploreGifts": "Explore gifts",
+    "addToCart": "Add to Cart",
+    "addToWishlist": "Add to Wishlist",
+    "shopNow": "Shop Now",
+    "learnMore": "Learn More",
+    "viewMore": "View More"
+  },
+  "navbar": {
+    "home": "Home",
+    "products": "Products",
+    "categories": "Categories",
+    "occasions": "Occasions",
+    "contact": "Contact",
+    "about": "About",
+    "searchPlaceholder": "What awesome gift are you looking for?",
+    "wishlist": "Wishlist",
+    "cart": "Cart",
+    "profile": "Profile",
+    "deliverTo": "Deliver to:",
+    "cairo": "Cairo",
+    "hello": "Hello",
+    "account": "Account",
+    "addresses": "Addresses",
+    "orders": "Orders",
+    "dashboard": "Dashboard",
+    "logout": "Log out",
+    "login": "Login"
+  },
+  "notifications": {
+    "title": "Notifications ({count})",
+    "titleEmpty": "Notifications",
+    "clearAll": "Clear all notifications",
+    "markAllRead": "Mark all as read",
+    "empty": "No notifications to display.",
+    "markAsRead": "Mark as read",
+    "deleteNotification": "Delete notification"
+  },
+  "home": {
+    "hero": {
+      "leftCard": {
+        "badge": "Staring from 10.99 EGP",
+        "title": "Special Gifts For The People You Love",
+        "cta": "Shop Now"
+      },
+      "slide1": {
+        "title": "Say It with Flowers",
+        "subtitle": "Elegant gifts for every special moment.",
+        "cta": "I'm buying!"
+      },
+      "slide2": {
+        "title": "Fresh Roses Collection",
+        "subtitle": "Beautiful roses for your loved ones.",
+        "cta": "Explore"
+      },
+      "slide3": {
+        "title": "Perfect For Every Occasion",
+        "subtitle": "Make every moment memorable.",
+        "cta": "Shop Now"
+      },
+      "prev": "Previous",
+      "next": "Next",
+      "goToSlide": "Go to slide {number}"
+    },
+    "features": {
+      "delivery": {
+        "title": "Free Delivery",
+        "subtitle": "For orders above 120 EGP"
+      },
+      "refund": {
+        "title": "Get Refund",
+        "subtitle": "Refunds within 30 days"
+      },
+      "payment": {
+        "title": "Safe Payment",
+        "subtitle": "100% Secure Payment"
+      },
+      "support": {
+        "title": "24/7 Support",
+        "subtitle": "Contact us at any time"
+      }
+    },
+    "bestSelling": {
+      "eyebrow": "Best Selling",
+      "title": "<pink>Check Out</pink> What Everyone's <pink>Buying</pink> Right Now",
+      "subtitle": "Not sure what to choose? Start with our best sellers, these are the gifts our customers keep coming back for. Whether you're celebrating a birthday, anniversary or wedding, our top picks are guaranteed to leave a lasting impression."
+    },
+    "mostPopular": {
+      "eyebrow": "Popular",
+      "title": "Most Popular",
+      "subtitle": "Fresh picks that everyone is talking about.",
+      "all": "All",
+      "viewAll": "View All"
+    },
+    "occasions": {
+      "occasion1": {
+        "badge": "Wedding",
+        "title": "Celebrate Her Forever with a Gift She'll Always Remember"
+      },
+      "occasion2": {
+        "badge": "Engagement",
+        "title": "Honor the Beginning of a Beautiful Journey Together"
+      },
+      "occasion3": {
+        "badge": "Anniversary",
+        "title": "Mark Every Year of Love with a Meaningful Surprise"
+      }
+    },
+    "about": {
+      "eyebrow": "ABOUT",
+      "titlePart1": "Delivering the ",
+      "titleHighlight1": "Finest",
+      "titlePart2": " Gift Boxes for Your ",
+      "titleHighlight2": "Special",
+      "titlePart3": " Moments",
+      "description": "Make every moment memorable with our premium gift boxes. Carefully curated and beautifully packaged, each box is filled with handpicked items designed to impress. Whether it's for a birthday, wedding, or a simple “thank you,” our gift boxes are crafted to leave a lasting impression — because thoughtful gifting starts here.",
+      "cta": "Discover",
+      "feature1": "Competitive Prices & Easy Shopping",
+      "feature2": "Premium Quality & Elegant Packaging",
+      "feature3": "Perfect for Every Occasion",
+      "feature4": "Fast & Reliable Delivery"
+    },
+    "gallery": {
+      "eyebrow": "GALLERY",
+      "title": "Check Out our Wonderful Gallery"
+    },
+    "testimonials": {
+      "eyebrow": "Testimonials",
+      "title": "Real Words from Happy Customers",
+      "jakeName": "Jake Miller",
+      "jakeReview": "I've been ordering from this flower shop for years and they never disappoint. The quality and service are exceptional!",
+      "jakeDate": "January 12, 2025",
+      "tylerName": "Tyler Brooks",
+      "tylerReview": "Customer service is top-notch and the flowers last longer than any others I've bought. Highly recommend!",
+      "tylerDate": "January 12, 2025",
+      "maxName": "Max Turner",
+      "maxReview": "The team truly cares about every order. I always feel confident when I buy flowers from here. The checkout process was sup...",
+      "maxDate": "January 12, 2025",
+      "noTestimonials": "No testimonials yet"
+    },
+    "trusted": {
+      "eyebrow": "Trusted by Thousands",
+      "title": "Trusted by over <highlight>4.5k+</highlight> companies",
+      "stat1": { "value": "50,000+", "label": "Happy Customers" },
+      "stat2": { "value": "10,000+", "label": "Orders Delivered" },
+      "stat3": { "value": "4.9/5", "label": "Average Rating" },
+      "stat4": { "value": "200+", "label": "Flower Varieties" }
+    }
+  },
+  "footer": {
+    "discoverTitle": "Discover",
+    "home": "Home",
+    "products": "Products",
+    "categories": "Categories",
+    "occasions": "Occasions",
+    "contact": "Contact Us",
+    "about": "About Us",
+    "terms": "Terms & Conditions",
+    "privacy": "Privacy Policy",
+    "faq": "FAQ",
+    "newsletterTitle": "<pink>Get</pink> 20%  <pink>Off Discount Coupon</pink>",
+    "newsletterSubtitle": "Subscribe to our newsletter and stay updated with the latest offers",
+    "newsletterPlaceholder": "Your email address",
+    "subscribe": "Subscribe"
   },
   "auth": {
     "login": {

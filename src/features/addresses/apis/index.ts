@@ -1,4 +1,4 @@
-import { fetchClient } from "@/shared/lib/apis/fetch";
+import { fetchClient } from "@/shared/lib/apis/fetch.client";
 import { Address, CreateAddressInput, UpdateAddressInput } from "../types";
 
 export const getAddresses = () =>
