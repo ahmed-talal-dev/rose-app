@@ -311,5 +311,34 @@
         }
       }
     }
+  },
+  "products": {
+    "title": "Our Products",
+    "loadingProducts": "Loading products...",
+    "showingResults": "Showing {count} products",
+    "filters": "Filters",
+    "category": "Category",
+    "occasion": "Occasion",
+    "rating": "Rating",
+    "price": "Price",
+    "from": "from",
+    "to": "to",
+    "reset": "Reset",
+    "resetAll": "Reset All",
+    "resetAllFilters": "Reset all filters",
+    "noProductsTitle": "No products found",
+    "noProductsSubtitle": "We couldn't find any products matching your selected filters. Try adjusting them.",
+    "sortNewest": "Newest",
+    "sortPriceAsc": "Price: Low to High",
+    "sortPriceDesc": "Price: High to Low",
+    "sortRating": "Top Rated",
+    "backToProducts": "Back to Products",
+    "outOfStock": "Out of Stock",
+    "inStock": "In Stock",
+    "reviewsCount": "reviews",
+    "priceLabel": "Price",
+    "availability": "Availability",
+    "descriptionLabel": "Description",
+    "noDescription": "No description available."
   }
 }

@@ -14,6 +14,7 @@ const config: Config = {
                 inter: ["var(--font-inter)", "sans-serif"],
                 sarabun: ["var(--font-sarabun)", "sans-serif"],
                 tajawal: ["var(--font-tajawal)", "sans-serif"],
+                zain: ["var(--font-zain)", "sans-serif"],
             },
         },
     },

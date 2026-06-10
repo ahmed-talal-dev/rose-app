@@ -33,6 +33,7 @@ import {
     DropdownMenuItem,
     DropdownMenuSeparator,
 } from "@/shared/ui/dropdown-menu";
+import { LoginPopover } from "@/features/auth/components/login-popover";
 
 export function Navbar() {
     const t = useTranslations("navbar");
@@ -97,6 +98,11 @@ export function Navbar() {
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        router.push(`/products?search=${encodeURIComponent(searchQuery)}`);
+                                    }
+                                }}
                                 placeholder={t("searchPlaceholder")}
                                 className="flex-1 bg-transparent text-sm lg:text-base font-normal text-zinc-800 dark:text-zinc-100 font-inter outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500 min-w-0 text-start"
                             />
@@ -166,12 +172,17 @@ export function Navbar() {
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         ) : (
-                            <Link href="/login" className="hidden lg:flex flex-row items-center px-3 gap-2 self-stretch hover:opacity-80 transition-opacity text-start">
-                                <User className="w-5 h-5 text-zinc-750 dark:text-zinc-300" strokeWidth={1.5} />
-                                <span className="text-sm lg:text-base font-medium leading-none text-zinc-750 dark:text-zinc-300 font-sarabun">
-                                    {t("login")}
-                                </span>
-                            </Link>
+                            <div className="relative group hidden lg:flex items-center self-stretch">
+                                <Link href="/login" className="flex flex-row items-center px-3 gap-2 self-stretch hover:opacity-85 transition-opacity text-start">
+                                    <User className="w-5 h-5 text-zinc-750 dark:text-zinc-300" strokeWidth={1.5} />
+                                    <span className="text-sm lg:text-base font-medium leading-none text-zinc-750 dark:text-zinc-300 font-sarabun">
+                                        {t("login")}
+                                    </span>
+                                </Link>
+                                <div className="absolute top-full end-0 pt-2 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[100]">
+                                    <LoginPopover />
+                                </div>
+                            </div>
                         )}
 
                         {/* Separator (hidden on tablet/mobile) */}
@@ -221,37 +232,40 @@ export function Navbar() {
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:block bg-red-800 dark:bg-rose-200 border-t dark:border-rose-300/20 transition-colors duration-300">
+            <nav className="hidden lg:block bg-[#741C21] dark:bg-zinc-900 border-t border-transparent dark:border-zinc-800 transition-colors duration-300">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="flex flex-row justify-center items-center gap-4 h-11">
+                    <div className="flex flex-row justify-center items-center gap-2 lg:gap-4 h-12">
                         {navLinks.map((link) => {
                             const LinkIcon = link.icon;
-                            const isActive = pathname === link.href;
+                            const isActive = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+
                             return (
                                 <Link
                                     key={link.href}
                                     href={link.href}
-                                    className={`flex flex-row justify-center items-center px-3 gap-2 h-11 border-b-2 border-transparent transition-all ${isActive
-                                            ? "border-rose-200 text-rose-200 dark:border-zinc-900 dark:text-zinc-900 font-bold"
-                                            : "text-zinc-50 dark:text-zinc-800 hover:text-rose-200 dark:hover:text-zinc-950"
+                                    className={`relative flex flex-row justify-center items-center px-3 gap-2 h-full transition-all ${isActive
+                                        ? "text-[#FFC2D0]"
+                                        : "text-zinc-50 dark:text-zinc-300 hover:text-[#FFC2D0] dark:hover:text-white"
                                         }`}
                                     data-active={isActive}
                                 >
                                     <LinkIcon
                                         className={`w-4 lg:w-5 h-4 lg:h-5 shrink-0 transition-colors ${isActive
-                                                ? "text-rose-200 dark:text-zinc-900"
-                                                : "text-zinc-50 dark:text-zinc-800"
+                                            ? "text-[#FFC2D0]"
+                                            : "text-zinc-50 dark:text-zinc-300"
                                             }`}
-                                        strokeWidth={1.5}
+                                        strokeWidth={isActive ? 2 : 1.5}
                                     />
                                     <span
-                                        className={`text-sm lg:text-base font-medium font-sarabun whitespace-nowrap transition-colors ${isActive
-                                                ? "text-rose-200 dark:text-zinc-900"
-                                                : "text-zinc-50 dark:text-zinc-800"
+                                        className={`text-sm lg:text-base font-sarabun whitespace-nowrap transition-colors ${isActive ? "font-bold text-[#FFC2D0]" : "font-medium"
                                             }`}
                                     >
                                         {link.label}
                                     </span>
+
+                                    {isActive && (
+                                        <span className="absolute bottom-0 left-0 w-full h-[3px] bg-[#FFC2D0] rounded-t-sm" />
+                                    )}
                                 </Link>
                             );
                         })}
@@ -270,6 +284,12 @@ export function Navbar() {
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        router.push(`/products?search=${encodeURIComponent(searchQuery)}`);
+                                        setMobileMenuOpen(false);
+                                    }
+                                }}
                                 placeholder={t("searchPlaceholder")}
                                 className="w-full ps-10 pe-4 py-2.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm outline-none text-zinc-800 dark:text-zinc-100 text-start"
                             />
@@ -296,8 +316,8 @@ export function Navbar() {
                                         key={link.href}
                                         href={link.href}
                                         className={`flex items-center gap-2 p-2.5 sm:p-3 rounded-xl text-sm font-medium transition-all text-start ${isActive
-                                                ? "bg-rose-50 dark:bg-rose-200 text-red-800 dark:text-zinc-900 font-semibold"
-                                                : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                                            ? "bg-rose-50 dark:bg-rose-200 text-red-800 dark:text-zinc-900 font-semibold"
+                                            : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800"
                                             }`}
                                         data-active={isActive}
                                         onClick={() => setMobileMenuOpen(false)}

@@ -313,5 +313,34 @@
         }
       }
     }
+  },
+  "products": {
+    "title": "منتجاتنا",
+    "loadingProducts": "جاري تحميل المنتجات...",
+    "showingResults": "عرض {count} من المنتجات",
+    "filters": "الفلاتر",
+    "category": "القسم",
+    "occasion": "المناسبة",
+    "rating": "التقييم",
+    "price": "السعر",
+    "from": "من",
+    "to": "إلى",
+    "reset": "إعادة تعيين",
+    "resetAll": "إعادة تعيين الكل",
+    "resetAllFilters": "إعادة تعيين جميع الفلاتر",
+    "noProductsTitle": "لم يتم العثور على منتجات",
+    "noProductsSubtitle": "لم نتمكن من العثور على أي منتجات تطابق الفلاتر المحددة. جرب تغييرها.",
+    "sortNewest": "الأحدث",
+    "sortPriceAsc": "السعر: من الأقل للأعلى",
+    "sortPriceDesc": "السعر: من الأعلى للأقل",
+    "sortRating": "الأعلى تقييماً",
+    "backToProducts": "العودة للمنتجات",
+    "outOfStock": "نفذت الكمية",
+    "inStock": "متوفر",
+    "reviewsCount": "تقييمات",
+    "priceLabel": "السعر",
+    "availability": "حالة التوفر",
+    "descriptionLabel": "الوصف",
+    "noDescription": "لا يوجد وصف متاح."
   }
 }
