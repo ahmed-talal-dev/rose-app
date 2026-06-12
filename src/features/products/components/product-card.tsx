@@ -116,17 +116,17 @@ export function ProductCard({ product }: ProductCardProps) {
         : `${BASE_URL}${product.cover}`;
 
     return (
-        <div className="group relative w-[302px] flex flex-col gap-4 rounded-2xl transition-all duration-300">
+        <div className="group relative w-[302px] h-[397px] bg-white dark:bg-zinc-900 rounded-2xl p-4 flex flex-col gap-4 transition-all duration-300">
 
             {/* Image Cover Container */}
-            <div className="relative w-[302px] h-[272px] rounded-[12px] overflow-hidden bg-zinc-50 dark:bg-zinc-800 p-[10px]">
+            <div className="relative w-[270px] h-[272px] rounded-[12px] overflow-hidden bg-zinc-50 dark:bg-zinc-800">
                 {imageUrl ? (
                     <Image
                         src={imageUrl}
                         alt={product.title}
                         fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500 rounded-[12px]"
-                        sizes="302px"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        sizes="270px"
                         unoptimized
                         onError={(e) => {
                             (e.target as HTMLImageElement).src = "/images/placeholder.svg";
@@ -138,63 +138,68 @@ export function ProductCard({ product }: ProductCardProps) {
                     </div>
                 )}
 
-                {/* Top Overlays: Badges and Wishlist */}
-                <div className="absolute top-[10px] left-[10px] right-[10px] flex flex-row justify-between items-start z-10 pointer-events-none">
+                {/* Top-left Badges */}
+                <div className="absolute top-[10px] left-[10px] flex flex-row items-center gap-[6px] z-10 pointer-events-none">
+                    {toNum(product.rating) >= 4.5 && !isOutOfStock && (
+                        <div className="flex justify-center items-center px-[8px] py-[2px] bg-[#FBEAEA] rounded-full h-[16px]">
+                            <span className="font-sarabun font-medium text-[12px] leading-none text-[#A6252A]">
+                                HOT
+                            </span>
+                        </div>
+                    )}
+                    {isOutOfStock && (
+                        <div className="flex justify-center items-center px-[8px] py-[2px] bg-[#DC2626] rounded-full h-[16px]">
+                            <span className="font-sarabun font-medium text-[12px] leading-none text-[#FFF1F5]">
+                                OUT OF STOCK
+                            </span>
+                        </div>
+                    )}
+                    {product.discountType && !isOutOfStock && (
+                        <div className="flex justify-center items-center px-[8px] py-[2px] bg-zinc-100 rounded-full h-[16px]">
+                            <span className="font-sarabun font-medium text-[12px] leading-none text-zinc-700">
+                                NEW
+                            </span>
+                        </div>
+                    )}
+                </div>
 
-                    <div className="flex flex-row items-center gap-[6px] pointer-events-auto">
-                        {toNum(product.rating) >= 4.5 && !isOutOfStock && (
-                            <div className="flex justify-center items-center px-[8px] py-[2px] bg-[#FBEAEA] rounded-full h-[16px]">
-                                <span className="font-sarabun font-medium text-[12px] leading-none text-[#A6252A]">
-                                    HOT
-                                </span>
-                            </div>
-                        )}
-                        {isOutOfStock && (
-                            <div className="flex justify-center items-center px-[8px] py-[2px] bg-[#DC2626] rounded-full h-[16px]">
-                                <span className="font-sarabun font-medium text-[12px] leading-none text-[#FFF1F5]">
-                                    OUT OF STOCK
-                                </span>
-                            </div>
-                        )}
-                        {product.discountType && !isOutOfStock && (
-                            <div className="flex justify-center items-center px-[8px] py-[2px] bg-[#F4F4F5] rounded-full h-[16px]">
-                                <span className="font-sarabun font-medium text-[12px] leading-none text-[#3F3F46]">
-                                    NEW
-                                </span>
-                            </div>
-                        )}
-                    </div>
-
+                {/* Hover Wishlist Pill Button */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
                     <button
                         aria-label={t("addToWishlist")}
                         disabled={isWishlistLoading}
                         onClick={handleWishlistClick}
-                        className="flex items-center justify-center w-[30px] h-[30px] bg-white rounded-full transition-colors focus:outline-none border-none cursor-pointer pointer-events-auto"
+                        className="flex flex-row justify-center items-center px-[6px] py-0 gap-[6px] h-[30px] bg-white rounded-[1000px] shadow-md hover:bg-zinc-50 transition-colors border-none cursor-pointer"
                     >
                         {isWishlistLoading ? (
-                            <Loader2 className="h-[18px] w-[18px] animate-spin text-[#A6252A]" />
+                            <Loader2 className="w-[20px] h-[20px] animate-spin text-[#A6252A]" />
                         ) : (
                             <Heart
-                                className={`w-[18px] h-[18px] transition-colors ${isInWishlist ? "fill-[#A6252A] text-[#A6252A]" : "text-[#A6252A]"
-                                    }`}
-                                strokeWidth={isInWishlist ? 0 : 1.5}
+                                className={`w-[20px] h-[20px] ${isInWishlist ? "fill-[#A6252A] text-[#A6252A]" : "text-[#A6252A]"}`}
+                                strokeWidth={1.5}
                             />
                         )}
+                        <span className="font-sarabun font-medium text-[12px] leading-none text-[#A6252A] whitespace-nowrap">
+                            {isInWishlist
+                                ? (locale === "ar" ? "إزالة من المفضلة" : "Remove from Wishlist")
+                                : (locale === "ar" ? "أضف إلى المفضلة" : "Add to Wishlist")
+                            }
+                        </span>
                     </button>
                 </div>
             </div>
 
             {/* Product Details */}
-            <div className="flex flex-col justify-end items-start w-[302px] gap-[12px]">
+            <div className="flex flex-col justify-end items-start w-[270px] gap-[12px] flex-1">
 
                 <Link href={`/products/${product.id}`} className="block w-full">
-                    <h3 className="font-sarabun font-semibold text-[18px] leading-none text-[#741C21] hover:text-[#A6252A] transition-colors truncate">
+                    <h3 className="font-sarabun font-semibold text-[18px] leading-none text-[#741C21] dark:text-[#E07A7D] hover:text-[#A6252A] dark:hover:text-[#D75458] transition-colors truncate">
                         {product.title}
                     </h3>
                 </Link>
 
                 <div className="flex flex-row items-center w-full gap-[10px]">
-                    <div className="flex flex-col items-start w-[250px] flex-1 gap-[6px]">
+                    <div className="flex flex-col items-start flex-1 gap-[6px]">
 
                         <div className="flex flex-row items-center gap-[4px] h-[15px]">
                             {Array.from({ length: 5 }).map((_, i) => (
@@ -209,7 +214,7 @@ export function ProductCard({ product }: ProductCardProps) {
                             ))}
                         </div>
 
-                        <div className="flex flex-row items-end gap-[8px] w-full font-sarabun font-medium text-[16px] leading-none text-[#741C21]">
+                        <div className="flex flex-row items-end gap-[8px] w-full font-sarabun font-medium text-[16px] leading-none text-[#741C21] dark:text-[#E07A7D]">
                             <span>{discounted ? discounted.toFixed(2) : price.toFixed(2)} EGP</span>
                             {discounted && (
                                 <span className="line-through opacity-70">

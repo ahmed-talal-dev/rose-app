@@ -48,29 +48,43 @@ export default function ProductsPage() {
     const { data: occasionsData } = useOccasions({ limit: 100 });
 
     // Fetch products list dynamically from backend
+    // When searching, fetch all products for client-side filtering (API doesn't support search param)
     const { data: productsData, isLoading: isProductsLoading } = useProducts({
         categoryId: activeCategoryId || undefined,
         occasionId: activeOccasionId || undefined,
         minPrice: activeMinPrice ? Number(activeMinPrice) : undefined,
         maxPrice: activeMaxPrice ? Number(activeMaxPrice) : undefined,
-        search: activeSearch || undefined,
         sortBy: activeSortBy,
         sortOrder: activeSortOrder,
-        page: activePage,
-        limit,
+        page: activeSearch ? undefined : activePage,
+        limit: activeSearch ? 200 : limit,
     });
 
     const categories = categoriesData?.data || [];
     const occasions = occasionsData?.data || [];
-    const products = productsData?.data || [];
+    const allProducts = productsData?.data || [];
     const meta = productsData?.metadata;
+
+    // Client-side search filter (API doesn't support search param)
+    const searchFiltered = activeSearch
+        ? allProducts.filter((p) =>
+            p.title.toLowerCase().includes(activeSearch.toLowerCase())
+        )
+        : allProducts;
 
     // Filter products client-side for rating filter
     const displayedProducts = activeRating
-        ? products.filter((p) => Math.round(Number(p.rating)) >= activeRating)
-        : products;
+        ? searchFiltered.filter((p) => Math.round(Number(p.rating)) >= activeRating)
+        : searchFiltered;
 
-    const totalPages = meta?.totalPages || 1;
+    // For search, we handle pagination client-side
+    const paginatedProducts = activeSearch
+        ? displayedProducts.slice((activePage - 1) * limit, activePage * limit)
+        : displayedProducts;
+
+    const totalPages = activeSearch
+        ? Math.ceil(displayedProducts.length / limit) || 1
+        : meta?.totalPages || 1;
 
     // Update query parameters in the URL
     const updateParams = (newParams: Record<string, string | number | null>) => {
@@ -256,7 +270,7 @@ export default function ProductsPage() {
                                 </div>
                             ))}
                         </div>
-                    ) : displayedProducts.length === 0 ? (
+                    ) : paginatedProducts.length === 0 ? (
                         /* Empty state: No products found */
                         <div className="flex flex-col items-center justify-center py-20 text-center">
                             <SlidersHorizontal className="size-16 text-zinc-300 dark:text-zinc-700 mb-4 stroke-[1.25]" />
@@ -277,7 +291,7 @@ export default function ProductsPage() {
                         /* Products Grid */
                         <div className="flex flex-col gap-8">
                             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 justify-items-center">
-                                {displayedProducts.map((product) => (
+                                {paginatedProducts.map((product) => (
                                     <div key={product.id} className="w-full flex justify-center">
                                         <ProductCard product={product} />
                                     </div>

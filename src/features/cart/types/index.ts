@@ -12,8 +12,8 @@ export type CartItem = {
 };
 
 export type Cart = {
-    items: CartItem[];
-    total: number;
+    id: string;
+    cartItems: CartItem[];
 };
 
 export type AddToCartInput = {

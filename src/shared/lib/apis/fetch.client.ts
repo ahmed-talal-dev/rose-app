@@ -21,7 +21,7 @@ export async function fetchClient<T>(
     }
 
     const headers: HeadersInit = {
-        "Content-Type": "application/json",
+        ...(!(init.body instanceof FormData) && { "Content-Type": "application/json" }),
         ...(session?.user?.accessToken && {
             Authorization: `Bearer ${session.user.accessToken}`,
         }),

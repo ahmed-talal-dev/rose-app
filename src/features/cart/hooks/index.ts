@@ -1,50 +1,63 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getCart, addToCart, updateCartItem, removeCartItem, clearCart } from "../apis";
-import { AddToCartInput, UpdateCartInput } from "../types";
+import { addToCart, clearCart, getCart, removeCartItem, updateCartItem } from "../apis";
 
-export const useCart = () =>
+
+// ─── Query Keys ──────────────────────────────────────────────────────────────
+
+export const cartKeys = {
+    all: ["cart"] as const,
+};
+
+// ─── Hooks ───────────────────────────────────────────────────────────────────
+
+/** جلب السلة */
+export const useCart = (options?: { enabled?: boolean }) =>
     useQuery({
-        queryKey: ["cart"],
+        queryKey: cartKeys.all,
         queryFn: getCart,
+        enabled: options?.enabled ?? true,
     });
 
+/** إضافة منتج للسلة */
 export const useAddToCart = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (body: AddToCartInput) => addToCart(body),
+        mutationFn: addToCart,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["cart"] });
+            queryClient.invalidateQueries({ queryKey: cartKeys.all });
         },
     });
 };
 
+/** تعديل كمية منتج */
 export const useUpdateCartItem = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ id, body }: { id: string; body: UpdateCartInput }) =>
-            updateCartItem(id, body),
+        mutationFn: updateCartItem,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["cart"] });
+            queryClient.invalidateQueries({ queryKey: cartKeys.all });
         },
     });
 };
 
+/** إزالة منتج من السلة */
 export const useRemoveCartItem = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (id: string) => removeCartItem(id),
+        mutationFn: removeCartItem,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["cart"] });
+            queryClient.invalidateQueries({ queryKey: cartKeys.all });
         },
     });
 };
 
+/** تفريغ السلة كاملة */
 export const useClearCart = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: clearCart,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["cart"] });
+            queryClient.invalidateQueries({ queryKey: cartKeys.all });
         },
     });
 };

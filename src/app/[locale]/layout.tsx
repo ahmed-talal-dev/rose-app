@@ -57,7 +57,7 @@ export default async function LocaleLayout({ children, params }: Props) {
                         <AuthProvider>
                             <QueryProvider>
                                 {children}
-                                <Toaster richColors position="top-right" />
+                                <Toaster richColors position="bottom-right" />
                             </QueryProvider>
                         </AuthProvider>
                     </ThemeProvider>

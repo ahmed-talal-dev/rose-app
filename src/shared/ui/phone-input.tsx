@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 
-const COUNTRIES = [
+export const COUNTRIES = [
     { code: "EG", dialCode: "+20", name: "Egypt" },
     { code: "SA", dialCode: "+966", name: "Saudi Arabia" },
     { code: "AE", dialCode: "+971", name: "UAE" },
@@ -50,6 +50,7 @@ function FlagImage({ code, size = 20 }: { code: string; size?: number }) {
 interface PhoneInputProps {
     value?: string;
     onChange?: (value: string) => void;
+    onDialCodeChange?: (dialCode: string) => void;
     onBlur?: () => void;
     placeholder?: string;
     hasError?: boolean;
@@ -59,6 +60,7 @@ interface PhoneInputProps {
 export function PhoneInput({
     value = "",
     onChange,
+    onDialCodeChange,
     onBlur,
     placeholder = "Phone number",
     hasError = false,
@@ -96,6 +98,7 @@ export function PhoneInput({
 
     const handleSelect = (country: typeof COUNTRIES[0]) => {
         setSelectedCountry(country);
+        onDialCodeChange?.(country.dialCode);
         setOpen(false);
         setSearch("");
     };

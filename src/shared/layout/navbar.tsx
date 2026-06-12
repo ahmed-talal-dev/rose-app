@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import {
@@ -21,6 +21,8 @@ import {
     User,
     Settings,
     LogOut,
+    Loader2,
+    Star,
 } from "lucide-react";
 import Image from "next/image";
 import ThemeToggle from "@/shared/components/theme-toggle";
@@ -34,6 +36,8 @@ import {
     DropdownMenuSeparator,
 } from "@/shared/ui/dropdown-menu";
 import { LoginPopover } from "@/features/auth/components/login-popover";
+import { useCart } from "@/features/cart/hooks";
+import { useProducts } from "@/features/products/hooks";
 
 export function Navbar() {
     const t = useTranslations("navbar");
@@ -43,8 +47,81 @@ export function Navbar() {
     const { data: session } = useSession();
     const userName = session?.user?.name || "Jonathan Adrian";
 
+    const { data: cartData } = useCart({ enabled: !!session });
+    const cartItems = cartData?.cartItems ?? [];
+    const cartCount = cartItems.reduce((sum: number, item: any) => sum + item.quantity, 0);
+
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const [isSearchFocused, setIsSearchFocused] = useState(false);
+    const searchInputRef = useRef<HTMLInputElement>(null);
+
+    const [deliveryCity, setDeliveryCity] = useState("");
+
+    // Synchronize deliveryCity from localStorage
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+
+        const updateDeliveryCity = () => {
+            const savedCity = localStorage.getItem("selected_address_city");
+            if (savedCity) {
+                setDeliveryCity(savedCity);
+            } else {
+                setDeliveryCity(t("cairo") || "Cairo");
+            }
+        };
+
+        updateDeliveryCity();
+
+        // Listen for address changes in checkout page
+        window.addEventListener("addressChanged", updateDeliveryCity);
+        window.addEventListener("storage", updateDeliveryCity);
+
+        return () => {
+            window.removeEventListener("addressChanged", updateDeliveryCity);
+            window.removeEventListener("storage", updateDeliveryCity);
+        };
+    }, [t]);
+
+    // Fetch all products for client-side search (API doesn't support search param)
+    const { data: allProductsData, isLoading: isSearchLoading } = useProducts({
+        limit: 100,
+    });
+    const allProducts = allProductsData?.data || [];
+
+    // Client-side filter
+    const searchProducts = searchQuery.trim()
+        ? allProducts.filter((p) =>
+            p.title.toLowerCase().includes(searchQuery.trim().toLowerCase())
+        ).slice(0, 6)
+        : allProducts.slice(0, 6);
+
+    const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rose-app.elevate-bootcamp.cloud";
+    const resolveImageUrl = (url: string) => {
+        if (!url) return "/images/placeholder.svg";
+        return url.startsWith("http") ? url : `${BASE_URL}${url}`;
+    };
+
+    const highlightText = (text: string, highlight: string) => {
+        if (!highlight.trim()) {
+            return <span>{text}</span>;
+        }
+        const regex = new RegExp(`(${highlight.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, "gi");
+        const parts = text.split(regex);
+        return (
+            <>
+                {parts.map((part, index) =>
+                    regex.test(part) ? (
+                        <span key={index} className="text-[#A6252A] dark:text-rose-400 font-bold">
+                            {part}
+                        </span>
+                    ) : (
+                        <span key={index}>{part}</span>
+                    )
+                )}
+            </>
+        );
+    };
 
     const toggleLocale = () => {
         const nextLocale = locale === "en" ? "ar" : "en";
@@ -85,28 +162,112 @@ export function Navbar() {
                         <div className="flex flex-row items-center gap-1.5">
                             <MapPin className="w-4 lg:w-5 h-4 lg:h-5 text-red-800 dark:text-rose-400 shrink-0" strokeWidth={1.5} />
                             <span className="text-sm lg:text-base font-medium leading-none text-red-800 dark:text-rose-200 font-sarabun whitespace-nowrap">
-                                {t("cairo")}
+                                {deliveryCity || t("cairo")}
                             </span>
                         </div>
                     </div>
 
                     {/* Search */}
-                    <div className="flex-1 min-w-0 max-w-xl mx-1 sm:mx-2 lg:mx-4">
+                    <div className="flex-1 min-w-0 max-w-xl mx-1 sm:mx-2 lg:mx-4 relative">
                         <div className="flex flex-row items-center px-3 lg:px-4 gap-2 w-full h-10 sm:h-12 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-xl focus-within:border-red-800 dark:focus-within:border-rose-400 transition-all">
                             <Search className="w-4 lg:w-4.5 h-4 lg:h-4.5 text-zinc-400 shrink-0" strokeWidth={1.5} />
                             <input
+                                ref={searchInputRef}
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
+                                onFocus={() => setIsSearchFocused(true)}
+                                onBlur={() => setIsSearchFocused(false)}
                                 onKeyDown={(e) => {
                                     if (e.key === "Enter") {
                                         router.push(`/products?search=${encodeURIComponent(searchQuery)}`);
+                                        searchInputRef.current?.blur();
+                                    } else if (e.key === "Escape") {
+                                        searchInputRef.current?.blur();
                                     }
                                 }}
                                 placeholder={t("searchPlaceholder")}
                                 className="flex-1 bg-transparent text-sm lg:text-base font-normal text-zinc-800 dark:text-zinc-100 font-inter outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500 min-w-0 text-start"
                             />
+                            {searchQuery && (
+                                <button
+                                    onClick={() => setSearchQuery("")}
+                                    className="p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-full transition-colors cursor-pointer text-zinc-400 dark:text-zinc-500 border-none bg-transparent shrink-0"
+                                >
+                                    <X className="size-4" />
+                                </button>
+                            )}
                         </div>
+
+                        {/* Search Dropdown Overlay */}
+                        {isSearchFocused && (
+                            <div
+                                onMouseDown={(e) => e.preventDefault()}
+                                className="absolute top-full left-0 right-0 mt-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl overflow-hidden z-50 flex flex-col max-h-[400px] overflow-y-auto"
+                            >
+                                {isSearchLoading ? (
+                                    <div className="py-8 flex justify-center items-center">
+                                        <Loader2 className="size-6 animate-spin text-[#A6252A]" />
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col w-full">
+                                        {/* Header if search query is empty */}
+                                        {!searchQuery.trim() && (
+                                            <div className="px-4 pt-4 pb-2 text-start">
+                                                <span className="text-[#741C21] dark:text-rose-400 font-bold text-sm">
+                                                    {t("productsYouMayLike")}
+                                                </span>
+                                            </div>
+                                        )}
+
+                                        {searchProducts.length === 0 ? (
+                                            <div className="py-6 px-4 text-center text-zinc-500 dark:text-zinc-400 font-medium">
+                                                {t("noProductsFound")}
+                                            </div>
+                                        ) : (
+                                            <div className="flex flex-col w-full">
+                                                {searchProducts.map((product: any) => (
+                                                    <button
+                                                        key={product.id}
+                                                        onClick={() => {
+                                                            router.push(`/products/${product.id}`);
+                                                            setIsSearchFocused(false);
+                                                            searchInputRef.current?.blur();
+                                                        }}
+                                                        className="flex flex-row items-center px-4 py-3.5 gap-3 w-full border-none bg-transparent hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors cursor-pointer text-start border-b border-zinc-100 dark:border-zinc-800/80 last:border-0 shrink-0"
+                                                    >
+                                                        <img
+                                                            src={resolveImageUrl(product.cover)}
+                                                            alt={product.title}
+                                                            className="w-14 h-14 object-cover rounded-xl shrink-0"
+                                                        />
+                                                        
+                                                        <div className="flex-1 flex flex-col items-start gap-1.5 text-start min-w-0 font-sarabun">
+                                                            <h4 className="text-zinc-900 dark:text-zinc-150 text-sm font-semibold truncate w-full">
+                                                                {highlightText(product.title, searchQuery)}
+                                                            </h4>
+                                                            <span className="text-zinc-950 dark:text-zinc-200 text-sm font-bold">
+                                                                {product.price} EGP
+                                                            </span>
+                                                        </div>
+
+                                                        <div className="flex items-center gap-1.5 shrink-0">
+                                                            <Star className="size-3.5 fill-[#FBA707] text-[#FBA707]" />
+                                                            <span className="text-xs text-zinc-550 dark:text-zinc-400 font-medium">
+                                                                {t("searchRating", {
+                                                                    rating: product.rating || "4.5",
+                                                                    count: product.ratings || "8",
+                                                                })}
+                                                            </span>
+                                                        </div>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
 
                     {/* Actions */}
@@ -196,9 +357,11 @@ export function Navbar() {
 
                             <Link href="/cart" className="relative p-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-full transition-colors shrink-0">
                                 <ShoppingCart className="w-5 lg:w-6 h-5 lg:h-6 text-zinc-700 dark:text-zinc-200" strokeWidth={1.5} />
-                                <span className="absolute top-0.5 inset-e-0.5 flex justify-center items-center min-w-4 h-4 px-1 bg-red-600 rounded-full text-[10px] font-bold leading-none text-white font-sarabun shadow-sm">
-                                    8
-                                </span>
+                                {cartCount > 0 && (
+                                    <span className="absolute top-0.5 inset-e-0.5 flex justify-center items-center min-w-4 h-4 px-1 bg-red-600 rounded-full text-[10px] font-bold leading-none text-white font-sarabun shadow-sm">
+                                        {cartCount}
+                                    </span>
+                                )}
                             </Link>
 
                             <NotificationsDropdown />
@@ -335,7 +498,7 @@ export function Navbar() {
                                 <MapPin className="h-5 w-5 text-red-800 dark:text-rose-400 shrink-0" />
                                 <div className="flex flex-col">
                                     <span className="text-xs text-zinc-400 dark:text-zinc-500 font-medium">{t("deliverTo")}</span>
-                                    <span className="text-xs font-bold text-red-800 dark:text-rose-300">{t("cairo")}</span>
+                                    <span className="text-xs font-bold text-red-800 dark:text-rose-300">{deliveryCity || t("cairo")}</span>
                                 </div>
                             </div>
 

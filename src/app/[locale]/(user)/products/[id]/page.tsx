@@ -274,7 +274,7 @@ export default function ProductDetailPage() {
                     <div className="relative w-full lg:w-[605px] h-[300px] sm:h-[402px] lg:h-[402px] rounded-[12px] overflow-hidden bg-zinc-50 dark:bg-zinc-800 border border-zinc-150 dark:border-zinc-800 shrink-0">
                         <Image
                             src={resolveImageUrl(activeImage)}
-                            alt={product.title}
+                            alt={product?.title || "Product image"}
                             fill
                             className="object-cover"
                             unoptimized
@@ -311,7 +311,7 @@ export default function ProductDetailPage() {
                                     >
                                         <Image
                                             src={resolved}
-                                            alt={`${product.title} gallery ${index}`}
+                                            alt={product?.title ? `${product.title} gallery ${index}` : `Gallery image ${index}`}
                                             fill
                                             className="object-cover"
                                             unoptimized
