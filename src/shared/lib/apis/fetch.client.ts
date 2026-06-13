@@ -6,6 +6,18 @@ type RequestOptions = RequestInit & {
     params?: Record<string, string | number | boolean | undefined>;
 };
 
+export class ApiError extends Error {
+    status: number;
+    errors?: Array<{ path: string; message: string }>;
+
+    constructor(message: string, status: number, errors?: Array<{ path: string; message: string }>) {
+        super(message);
+        this.name = "ApiError";
+        this.status = status;
+        this.errors = errors;
+    }
+}
+
 export async function fetchClient<T>(
     endpoint: string,
     options: RequestOptions = {}
@@ -29,11 +41,17 @@ export async function fetchClient<T>(
     };
 
     const res = await fetch(url.toString(), { ...init, headers });
-    const data = await res.json();
+    
+    let data: any;
+    try {
+        data = await res.json();
+    } catch (e) {
+        throw new ApiError("Failed to parse response", res.status);
+    }
 
     if (!res.ok || !data.status) {
-        throw new Error(data.message || "Something went wrong");
+        throw new ApiError(data.message || "Something went wrong", res.status, data.errors);
     }
 
     return data.payload as T;
-}   
+}

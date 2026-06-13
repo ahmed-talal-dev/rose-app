@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "@/i18n/navigation";
@@ -175,9 +175,29 @@ function StepIndicator({ step }: { step: Step }) {
     );
 }
 
+const formatPhone = (phoneNum: string, countryCode: string) => {
+    if (!phoneNum) return undefined;
+    let clean = phoneNum.replace(/[\s\-\(\)]/g, "");
+    if (clean.startsWith("+")) return clean;
+    
+    // Remove leading zero if prepending dial code
+    if (clean.startsWith("0")) {
+        clean = clean.substring(1);
+    }
+    
+    // Check if it already starts with the dial code digits (e.g. "20" or "966")
+    const digitsOnlyDialCode = countryCode.replace("+", "");
+    if (clean.startsWith(digitsOnlyDialCode)) {
+        return `+${clean}`;
+    }
+    
+    return `${countryCode}${clean}`;
+};
+
 export function RegisterForm() {
     const router = useRouter();
     const t = useTranslations("auth.register.form");
+    const locale = useLocale();
 
     const [step, setStep] = useState<Step>("email");
     const [verifiedEmail, setVerifiedEmail] = useState("");
@@ -187,6 +207,7 @@ export function RegisterForm() {
     const [resendCooldown, setResendCooldown] = useState(0);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [dialCode, setDialCode] = useState("+20");
 
     const { mutate: sendVerification, isPending: isSendingVerification } = useSendVerification();
     const { mutate: verifyEmail, isPending: isVerifying } = useVerifyEmail();
@@ -231,11 +252,12 @@ export function RegisterForm() {
     }, [resendCooldown]);
 
     const onEmailSubmit = (data: { email: string }) => {
+        const normalizedEmail = data.email.trim().toLowerCase();
         sendVerification(
-            { email: data.email },
+            { email: normalizedEmail },
             {
                 onSuccess: () => {
-                    setVerifiedEmail(data.email);
+                    setVerifiedEmail(normalizedEmail);
                     setStep("verify");
                     setResendCooldown(60);
                     toast.success(t("verificationSent"));
@@ -253,7 +275,8 @@ export function RegisterForm() {
             return;
         }
         setOtpError("");
-        verifyEmail({ email: verifiedEmail, code: otp }, {
+        const normalizedEmail = verifiedEmail.trim().toLowerCase();
+        verifyEmail({ email: normalizedEmail, code: otp }, {
             onSuccess: () => {
                 setStep("form");
                 toast.success(t("emailVerified"));
@@ -266,8 +289,9 @@ export function RegisterForm() {
 
     const onResend = () => {
         if (resendCooldown > 0) return;
+        const normalizedEmail = verifiedEmail.trim().toLowerCase();
         sendVerification(
-            { email: verifiedEmail },
+            { email: normalizedEmail },
             {
                 onSuccess: () => {
                     setResendCooldown(60);
@@ -281,16 +305,34 @@ export function RegisterForm() {
     };
 
     const onRegisterSubmit = (data: Omit<RegisterSchema, "email">) => {
-        const { confirmPassword, ...rest } = data;
-        register({ ...data, email: verifiedEmail, phone: data.phone ? `+2${data.phone}` : undefined, },
-            {
-                onSuccess: () => {
-                    toast.success(t("success"));
-                    router.push("/login");
-                },
-                onError: (err) => toast.error(err.message),
-            }
-        );
+        const normalizedEmail = verifiedEmail.trim().toLowerCase();
+        const formattedPhone = data.phone ? formatPhone(data.phone, dialCode) : undefined;
+
+        register({ 
+            ...data, 
+            email: normalizedEmail, 
+            phone: formattedPhone,
+        }, {
+            onSuccess: () => {
+                toast.success(t("success"));
+                router.push("/login");
+            },
+            onError: (err: any) => {
+                if (err.errors && Array.isArray(err.errors)) {
+                    err.errors.forEach((validationError: any) => {
+                        if (validationError.path) {
+                            registerForm.setError(validationError.path as any, {
+                                type: "server",
+                                message: validationError.message
+                            });
+                        }
+                    });
+                    toast.error(locale === "ar" ? "يرجى تصحيح الأخطاء في النموذج." : "Please correct the errors in the form.");
+                } else {
+                    toast.error(err.message || "Registration failed");
+                }
+            },
+        });
     };
 
     const inputClass = (hasError: boolean) =>
@@ -486,6 +528,7 @@ export function RegisterForm() {
                                         id="phone"
                                         value={field.value ?? ""}
                                         onChange={field.onChange}
+                                        onDialCodeChange={setDialCode}
                                         onBlur={field.onBlur}
                                         placeholder={t("phonePlaceholder")}
                                         hasError={!!registerForm.formState.errors.phone}

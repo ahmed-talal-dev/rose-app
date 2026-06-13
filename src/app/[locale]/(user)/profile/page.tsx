@@ -250,8 +250,8 @@ export default function AccountSettingsPage() {
                             type="button"
                             onClick={() => setActiveTab("profile")}
                             className={`flex flex-row items-center p-[12px_16px] gap-[10px] w-full h-[48px] rounded-[8px] transition-colors cursor-pointer border-none outline-none shrink-0 ${activeTab === "profile"
-                                    ? "bg-[#27272A] dark:bg-zinc-800"
-                                    : "bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
+                                ? "bg-[#27272A] dark:bg-zinc-800"
+                                : "bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
                                 }`}
                         >
                             <User className={`w-[24px] h-[24px] shrink-0 ${activeTab === "profile" ? "text-[#FAFAFA]" : "text-[#27272A] dark:text-zinc-300"}`} strokeWidth={1.5} />
@@ -264,8 +264,8 @@ export default function AccountSettingsPage() {
                             type="button"
                             onClick={() => setActiveTab("password")}
                             className={`flex flex-row items-center p-[12px_16px] gap-[10px] w-full h-[48px] rounded-[8px] transition-colors cursor-pointer border-none outline-none shrink-0 ${activeTab === "password"
-                                    ? "bg-[#27272A] dark:bg-zinc-800"
-                                    : "bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
+                                ? "bg-[#27272A] dark:bg-zinc-800"
+                                : "bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
                                 }`}
                         >
                             <Lock className={`w-[24px] h-[24px] shrink-0 ${activeTab === "password" ? "text-[#FAFAFA]" : "text-[#27272A] dark:text-zinc-300"}`} strokeWidth={1.5} />
@@ -387,7 +387,7 @@ export default function AccountSettingsPage() {
                                             onChange={(val) => setPhone(val || "")}
                                             onDialCodeChange={(code) => setPhoneDialCode(code)}
                                             placeholder="1012345678"
-                                            className="box-border flex flex-row items-center w-full h-[53px] bg-white dark:bg-zinc-950 border border-[#D4D4D8] dark:border-zinc-700 rounded-[10px] focus-within:border-[#A6252A] transition-colors font-inter"
+
                                         />
                                     </div>
                                 </div>
