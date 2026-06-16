@@ -16,7 +16,12 @@
     "shopNow": "تسوق الآن",
     "learnMore": "اعرف أكثر",
     "all": "الكل",
-    "back": "العودة"
+    "back": "العودة",
+    "removeFromWishlist": "إزالة من المفضلة",
+    "removedFromWishlist": "تمت الإزالة من المفضلة!",
+    "addedToWishlist": "تمت الإضافة إلى المفضلة!",
+    "addedToCart": "تمت إضافة المنتج إلى السلة!",
+    "currency": "ج.م"
   },
   "navbar": {
     "home": "الرئيسية",
@@ -40,7 +45,8 @@
     "login": "تسجيل الدخول",
     "productsYouMayLike": "منتجات قد تعجبك:",
     "noProductsFound": "لم يتم العثور على منتجات",
-    "searchRating": "التقييم: {rating}/5 ({count} تقييم)"
+    "searchRating": "التقييم: {rating}/5 ({count} تقييم)",
+    "langToggle": "English"
   },
   "notifications": {
     "title": "الإشعارات ({count})",
@@ -203,6 +209,8 @@
         "createAccount": "أنشئ حسابا الآن",
         "showPassword": "إظهار كلمة المرور",
         "hidePassword": "إخفاء كلمة المرور",
+        "registerTab": "حساب جديد",
+        "continueToRegister": "متابعة التسجيل",
         "success": "تم تسجيل الدخول بنجاح",
         "invalidCredentials": "اسم المستخدم أو كلمة المرور غير صحيحة",
         "validation": {
@@ -269,7 +277,9 @@
           "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
           "passwordsMismatch": "كلمتا المرور غير متطابقتين",
           "otpRequired": "يرجى إدخال كود التحقق",
-          "otpInvalid": "كود التحقق غير صحيح أو منتهي الصلاحية"
+          "otpInvalid": "كود التحقق غير صحيح أو منتهي الصلاحية",
+          "fixErrors": "يرجى تصحيح الأخطاء في النموذج.",
+          "registrationFailed": "فشل إنشاء الحساب، يرجى المحاولة مرة أخرى."
         }
       }
     },
@@ -288,6 +298,7 @@
         "success": "تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني",
         "checkEmail": "تحقق من بريدك الإلكتروني",
         "checkEmailSubtitle": "أرسلنا لك رابط إعادة تعيين كلمة المرور",
+        "enterCode": "أدخل رمز التحقق",
         "validation": {
           "emailRequired": "البريد الإلكتروني مطلوب",
           "emailInvalid": "البريد الإلكتروني غير صحيح"
@@ -302,6 +313,7 @@
       "form": {
         "passwordLabel": "كلمة المرور",
         "confirmLabel": "تأكيد كلمة المرور",
+        "resetCodeLabel": "رمز التحقق (6 أرقام)",
         "submit": "إعادة تعيين كلمة المرور",
         "submitting": "جاري إعادة التعيين...",
         "success": "تم إعادة تعيين كلمة المرور بنجاح.",
@@ -309,6 +321,7 @@
         "needHelp": "تحتاج مساعدة؟",
         "contactUs": "تواصل معنا",
         "validation": {
+          "resetCodeMin": "يجب أن يتكون رمز التحقق من 6 أرقام",
           "passwordMin": "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
           "passwordUppercase": "يجب أن تحتوي على حرف كبير واحد على الأقل",
           "passwordNumber": "يجب أن تحتوي على رقم واحد على الأقل",
@@ -345,7 +358,26 @@
     "priceLabel": "السعر",
     "availability": "حالة التوفر",
     "descriptionLabel": "الوصف",
-    "noDescription": "لا يوجد وصف متاح."
+    "noDescription": "لا يوجد وصف متاح.",
+    "leftInStock": "في المخزون",
+    "outOfStock": "نفذ",
+    "ratingLabel": "تقييم:",
+    "ratings": "تقييمات",
+    "reviewsTitle": "تقييمات المنتج",
+    "generalRating": "التقييم العام:",
+    "noReviews": "لا توجد تقييمات بعد لهذا المنتج. كن أول من يكتب تقييماً!",
+    "yourRating": "تقييمك:",
+    "reviewTitleLabel": "العنوان",
+    "reviewTitlePlaceholder": "اكتب عنوان التقييم",
+    "reviewTextLabel": "التقييم",
+    "reviewTextPlaceholder": "ما هو رأيك في هذا المنتج؟",
+    "addReviewButton": "إضافة تقييم",
+    "reviewCommentRequired": "برجاء كتابة التعليق",
+    "reviewSuccess": "تم إضافة التقييم بنجاح!",
+    "relatedProducts": "منتجات ذات صلة",
+    "hot": "مميز",
+    "new": "جديد",
+    "noImage": "لا توجد صورة"
   },
   "cart": {
     "title": "السلة",
@@ -399,7 +431,26 @@
     "couponOffDisplay": "خصم {percent}%",
     "editAddressTitle": "تعديل العنوان",
     "deleteConfirm": "هل أنت متأكد من حذف هذا العنوان؟",
-    "myAddresses": "العناوين الخاصة بي"
+    "myAddresses": "العناوين الخاصة بي",
+    "geolocationUnsupported": "تحديد الموقع الجغرافي غير مدعوم في متصفحك",
+    "geolocationFailed": "فشل الحصول على موقعك الجغرافي",
+    "addressDeleted": "تم حذف العنوان بنجاح!",
+    "addressUpdated": "تم تعديل العنوان بنجاح!",
+    "addressSaved": "تم حفظ العنوان بنجاح!",
+    "selectAddressFirst": "برجاء تحديد عنوان الشحن أولاً",
+    "finalizingOrder": "جاري إتمام الطلب...",
+    "enterAddressDetails": "أدخل تفاصيل العنوان",
+    "findYourLocation": "تحديد موقعك",
+    "cityPlaceholder": "أدخل اسم المدينة",
+    "streetPlaceholder": "أدخل عنوانك بالتفصيل",
+    "phonePlaceholder": "رقم الهاتف",
+    "addressLabel": "تصنيف العنوان",
+    "findMyLocation": "تحديد موقعي",
+    "confirm": "تأكيد",
+    "labelHome": "منزل",
+    "labelWork": "عمل",
+    "labelFamily": "عائلة",
+    "fillError": "برجاء ملء جميع الحقول المطلوبة"
   },
   "orders": {
     "title": "الطلبات",
@@ -423,7 +474,8 @@
     "delivered": "تم التوصيل",
     "ratingLabel": "التقييم: {rating}/5",
     "ratingsCount": "({count} تقييمات)",
-    "noOrders": "لا توجد طلبات مسجلة"
+    "noOrders": "لا توجد طلبات مسجلة",
+    "orderDateFormat": "{day} {month}، {year} في {hours}:{minutes} {ampm}"
   },
   "profile": {
     "title": "إعدادات الحساب",
@@ -457,6 +509,11 @@
     "uploadError": "فشل رفع الصورة. الحد الأقصى هو 5 ميجابايت.",
     "fillError": "يرجى ملء جميع الحقول المطلوبة.",
     "passwordMatchError": "كلمات المرور غير متطابقة.",
-    "changePassword": "تغيير كلمة المرور"
+    "changePassword": "تغيير كلمة المرور",
+    "savingChanges": "جاري حفظ التغييرات...",
+    "changingPassword": "جاري تغيير كلمة المرور...",
+    "deletingAccount": "جاري حذف الحساب...",
+    "deleteSuccess": "تم حذف الحساب بنجاح",
+    "loggingOut": "جاري تسجيل الخروج..."
   }
 }

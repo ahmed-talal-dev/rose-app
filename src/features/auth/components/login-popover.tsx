@@ -77,11 +77,10 @@ export function LoginPopover() {
                 <button
                     type="button"
                     onClick={() => setActiveTab("login")}
-                    className={`flex flex-row justify-center items-center px-4 py-3 gap-2.5 w-[196.5px] h-[44px] transition-colors cursor-pointer border-none outline-none ${
-                        activeTab === "login"
-                            ? "bg-[#A6252A] text-white"
-                            : "bg-[#FAFAFA] dark:bg-zinc-800 text-[#27272A] dark:text-zinc-300 border-b border-zinc-300 dark:border-zinc-700"
-                    }`}
+                    className={`flex flex-row justify-center items-center px-4 py-3 gap-2.5 w-[196.5px] h-[44px] transition-colors cursor-pointer border-none outline-none ${activeTab === "login"
+                            ? "bg-primary-600 text-white"
+                            : "bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-300 border-b border-zinc-300 dark:border-zinc-700"
+                        }`}
                 >
                     <span className="font-sarabun font-medium text-base leading-none">
                         {t("submit")}
@@ -92,14 +91,13 @@ export function LoginPopover() {
                 <button
                     type="button"
                     onClick={() => setActiveTab("register")}
-                    className={`flex flex-row justify-center items-center px-4 py-3 gap-2.5 w-[196.5px] h-[44px] transition-colors cursor-pointer border-none outline-none ${
-                        activeTab === "register"
-                            ? "bg-[#A6252A] text-white"
-                            : "bg-[#FAFAFA] dark:bg-zinc-800 text-[#27272A] dark:text-zinc-300 border-b border-zinc-300 dark:border-zinc-700"
-                    }`}
+                    className={`flex flex-row justify-center items-center px-4 py-3 gap-2.5 w-[196.5px] h-[44px] transition-colors cursor-pointer border-none outline-none ${activeTab === "register"
+                            ? "bg-primary-600 text-white"
+                            : "bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-300 border-b border-zinc-300 dark:border-zinc-700"
+                        }`}
                 >
                     <span className="font-sarabun font-medium text-base leading-none">
-                        {locale === "ar" ? "حساب جديد" : "Register"}
+                        {t("registerTab")}
                     </span>
                 </button>
             </div>
@@ -121,9 +119,8 @@ export function LoginPopover() {
                                 type="text"
                                 placeholder={t("emailPlaceholder")}
                                 {...register("username")}
-                                className={`w-full h-[49px] bg-white dark:bg-zinc-800 border border-[#D4D4D8] dark:border-zinc-700 rounded-[10px] px-4 py-4 text-sm text-zinc-800 dark:text-zinc-100 font-inter placeholder-zinc-400 dark:placeholder-zinc-500 outline-none focus:border-[#A6252A] dark:focus:border-rose-500 transition-colors ${
-                                    errors.username ? "border-red-650" : ""
-                                }`}
+                                className={`w-full h-[49px] bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-[10px] px-4 py-4 text-sm text-zinc-800 dark:text-zinc-100 font-inter placeholder-zinc-400 dark:placeholder-zinc-500 outline-none focus:border-primary-600 dark:focus:border-rose-500 transition-colors ${errors.username ? "border-red-650" : ""
+                                    }`}
                             />
                         </div>
 
@@ -137,9 +134,8 @@ export function LoginPopover() {
                                     type={showPassword ? "text" : "password"}
                                     placeholder="********"
                                     {...register("password")}
-                                    className={`w-full h-[49px] bg-white dark:bg-zinc-800 border border-[#D4D4D8] dark:border-zinc-700 rounded-[10px] px-4 py-4 text-sm text-zinc-800 dark:text-zinc-100 font-inter placeholder-zinc-400 dark:placeholder-zinc-500 outline-none focus:border-[#A6252A] dark:focus:border-rose-500 transition-colors ${
-                                        errors.password ? "border-red-650" : ""
-                                    }`}
+                                    className={`w-full h-[49px] bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-[10px] px-4 py-4 text-sm text-zinc-800 dark:text-zinc-100 font-inter placeholder-zinc-400 dark:placeholder-zinc-500 outline-none focus:border-primary-600 dark:focus:border-rose-500 transition-colors ${errors.password ? "border-red-650" : ""
+                                        }`}
                                 />
                                 <button
                                     type="button"
@@ -160,7 +156,7 @@ export function LoginPopover() {
                     <div className="w-full h-[14px] text-end shrink-0">
                         <a
                             href={`/${locale}/forgot-password`}
-                            className="text-sm font-semibold text-[#741C21] dark:text-[#FFA3B9] hover:underline font-sarabun"
+                            className="text-sm font-semibold text-primary-700 dark:text-rose-300 hover:underline font-sarabun"
                         >
                             {t("forgotPassword")}
                         </a>
@@ -172,7 +168,7 @@ export function LoginPopover() {
                         <label className="flex flex-row items-center pt-5 gap-2.5 w-full h-[40px] cursor-pointer select-none">
                             <input
                                 type="checkbox"
-                                className="size-5 border border-[#741C21] dark:border-[#FFA3B9] rounded-[8px] accent-[#A6252A] cursor-pointer"
+                                className="size-5 border border-primary-700 dark:border-rose-300 rounded-[8px] accent-primary-600 cursor-pointer"
                             />
                             <span className="text-sm text-zinc-800 dark:text-zinc-300 font-inter leading-none">
                                 {t("rememberMe")}
@@ -183,7 +179,7 @@ export function LoginPopover() {
                         <button
                             type="submit"
                             disabled={isPending}
-                            className="flex justify-center items-center w-full h-[41px] bg-[#A6252A] hover:bg-[#8B1E22] transition-colors rounded-[10px] text-white font-sarabun font-medium text-base disabled:opacity-75 cursor-pointer"
+                            className="flex justify-center items-center w-full h-[41px] bg-primary-600 hover:bg-primary-700 transition-colors rounded-[10px] text-white font-sarabun font-medium text-base disabled:opacity-75 cursor-pointer"
                         >
                             {isPending ? (
                                 <Loader2 className="size-5 animate-spin text-white" />
@@ -210,9 +206,8 @@ export function LoginPopover() {
                                 placeholder={tRegister("emailPlaceholder")}
                                 value={registerEmail}
                                 onChange={(e) => setRegisterEmail(e.target.value)}
-                                className={`w-full h-[49px] bg-white dark:bg-zinc-800 border border-[#D4D4D8] dark:border-zinc-700 rounded-[10px] px-4 py-4 text-sm text-zinc-800 dark:text-zinc-100 font-inter placeholder-zinc-400 dark:placeholder-zinc-500 outline-none focus:border-[#A6252A] dark:focus:border-rose-500 transition-colors ${
-                                    registerError ? "border-red-650" : ""
-                                }`}
+                                className={`w-full h-[49px] bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-[10px] px-4 py-4 text-sm text-zinc-800 dark:text-zinc-100 font-inter placeholder-zinc-400 dark:placeholder-zinc-500 outline-none focus:border-primary-600 dark:focus:border-rose-500 transition-colors ${registerError ? "border-red-650" : ""
+                                    }`}
                             />
                             {registerError && (
                                 <span className="text-xs text-red-600 dark:text-red-400 mt-1 font-inter">
@@ -227,9 +222,9 @@ export function LoginPopover() {
                     {/* Button (light) */}
                     <button
                         type="submit"
-                        className="flex justify-center items-center w-full h-[41px] bg-[#A6252A] hover:bg-[#8B1E22] transition-colors rounded-[10px] text-white font-sarabun font-medium text-base cursor-pointer"
+                        className="flex justify-center items-center w-full h-[41px] bg-primary-600 hover:bg-primary-700 transition-colors rounded-[10px] text-white font-sarabun font-medium text-base disabled:opacity-75 cursor-pointer"
                     >
-                        {locale === "ar" ? "متابعة التسجيل" : "Continue to Register"}
+                        {t("continueToRegister")}
                     </button>
                 </form>
             )}

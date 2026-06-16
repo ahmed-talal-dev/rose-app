@@ -15,7 +15,12 @@
     "shopNow": "Shop Now",
     "learnMore": "Learn More",
     "viewMore": "View More",
-    "back": "Back"
+    "back": "Back",
+    "removeFromWishlist": "Remove from Wishlist",
+    "removedFromWishlist": "Removed from wishlist!",
+    "addedToWishlist": "Added to wishlist!",
+    "addedToCart": "Product added to cart!",
+    "currency": "EGP"
   },
   "navbar": {
     "home": "Home",
@@ -39,7 +44,8 @@
     "login": "Login",
     "productsYouMayLike": "Products you may like:",
     "noProductsFound": "No products found",
-    "searchRating": "Rating: {rating}/5 ({count} ratings)"
+    "searchRating": "Rating: {rating}/5 ({count} ratings)",
+    "langToggle": "العربية"
   },
   "notifications": {
     "title": "Notifications ({count})",
@@ -201,6 +207,8 @@
         "createAccount": "Create one now!",
         "showPassword": "Show password",
         "hidePassword": "Hide password",
+        "registerTab": "Register",
+        "continueToRegister": "Continue to Register",
         "success": "Logged in successfully!",
         "invalidCredentials": "Invalid username or password",
         "validation": {
@@ -267,7 +275,9 @@
           "confirmPasswordRequired": "Please confirm your password",
           "passwordsMismatch": "Passwords do not match",
           "otpRequired": "Please enter the verification code",
-          "otpInvalid": "Invalid or expired verification code"
+          "otpInvalid": "Invalid or expired verification code",
+          "fixErrors": "Please correct the errors in the form.",
+          "registrationFailed": "Registration failed, please try again."
         }
       }
     },
@@ -286,6 +296,7 @@
         "success": "Password reset link sent to your email",
         "checkEmail": "Check your email",
         "checkEmailSubtitle": "We sent you a password reset link",
+        "enterCode": "Enter Verification Code",
         "validation": {
           "emailRequired": "Email is required",
           "emailInvalid": "Invalid email address"
@@ -300,6 +311,7 @@
       "form": {
         "passwordLabel": "Password",
         "confirmLabel": "Confirm Password",
+        "resetCodeLabel": "Verification Code (6 digits)",
         "submit": "Reset Password",
         "submitting": "Resetting...",
         "success": "Your password has been successfully reset.",
@@ -307,6 +319,7 @@
         "needHelp": "Need help?",
         "contactUs": "Contact us",
         "validation": {
+          "resetCodeMin": "Verification code must be 6 digits",
           "passwordMin": "Password must be at least 8 characters",
           "passwordUppercase": "Must contain at least one uppercase letter",
           "passwordNumber": "Must contain at least one number",
@@ -343,7 +356,25 @@
     "priceLabel": "Price",
     "availability": "Availability",
     "descriptionLabel": "Description",
-    "noDescription": "No description available."
+    "noDescription": "No description available.",
+    "leftInStock": "left in stock",
+    "ratingLabel": "Rating:",
+    "ratings": "ratings",
+    "reviewsTitle": "Product Reviews",
+    "generalRating": "General rating:",
+    "noReviews": "No reviews yet for this product. Be the first to write a review!",
+    "yourRating": "Your rating:",
+    "reviewTitleLabel": "Title",
+    "reviewTitlePlaceholder": "Enter review title",
+    "reviewTextLabel": "Review",
+    "reviewTextPlaceholder": "What do you think of this product?",
+    "addReviewButton": "Add Review",
+    "reviewCommentRequired": "Please write a review comment",
+    "reviewSuccess": "Review added successfully!",
+    "relatedProducts": "Related Products",
+    "hot": "HOT",
+    "new": "NEW",
+    "noImage": "No Image"
   },
   "cart": {
     "title": "Cart",
@@ -397,7 +428,26 @@
     "couponOffDisplay": "{percent}% OFF",
     "editAddressTitle": "Edit Address",
     "deleteConfirm": "Are you sure you want to delete this address?",
-    "myAddresses": "My Addresses"
+    "myAddresses": "My Addresses",
+    "geolocationUnsupported": "Geolocation is not supported by your browser",
+    "geolocationFailed": "Failed to retrieve your location",
+    "addressDeleted": "Address deleted successfully!",
+    "addressUpdated": "Address updated successfully!",
+    "addressSaved": "Address saved successfully!",
+    "selectAddressFirst": "Please select a shipping address first",
+    "finalizingOrder": "Finalizing order...",
+    "enterAddressDetails": "Enter address details",
+    "findYourLocation": "Find Your Location",
+    "cityPlaceholder": "Enter city name",
+    "streetPlaceholder": "Enter your full address",
+    "phonePlaceholder": "Phone number",
+    "addressLabel": "Address Label",
+    "findMyLocation": "Find My Location",
+    "confirm": "Confirm",
+    "labelHome": "Home",
+    "labelWork": "Work",
+    "labelFamily": "Family",
+    "fillError": "Please fill in all required fields."
   },
   "orders": {
     "title": "Orders",
@@ -421,7 +471,8 @@
     "delivered": "Delivered",
     "ratingLabel": "Rating: {rating}/5",
     "ratingsCount": "({count} ratings)",
-    "noOrders": "No orders found"
+    "noOrders": "No orders found",
+    "orderDateFormat": "{day} {month}, {year} at {hours}:{minutes} {ampm}"
   },
   "profile": {
     "title": "Account Settings",
@@ -455,6 +506,11 @@
     "uploadError": "Failed to upload photo. Max size is 5MB.",
     "fillError": "Please fill in all required fields.",
     "passwordMatchError": "Passwords do not match.",
-    "changePassword": "Change Password"
+    "changePassword": "Change Password",
+    "savingChanges": "Saving changes...",
+    "changingPassword": "Changing password...",
+    "deletingAccount": "Deleting account...",
+    "deleteSuccess": "Account deleted successfully",
+    "loggingOut": "Logging out..."
   }
 }

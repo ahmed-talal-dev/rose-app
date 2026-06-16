@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const addToCartSchema = z.object({
-    productId: z.string().uuid("Invalid product ID"),
+    productId: z.string().min(1, "Invalid product ID"),
     quantity: z
         .number()
         .int("Quantity must be a whole number")

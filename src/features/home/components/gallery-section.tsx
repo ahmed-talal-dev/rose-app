@@ -48,7 +48,7 @@ export function GallerySection() {
                 {/* Header: w: 534px, h: 70px */}
                 <div className="w-full max-w-[534px] h-[70px] relative flex flex-col items-center select-none">
                     {/* GALLERY Eyebrow */}
-                    <span className="text-[#FF668B] font-sarabun font-bold text-base leading-[21px] tracking-[0.25em] uppercase text-center w-full">
+                    <span className="text-rose-500 font-sarabun font-bold text-base leading-[21px] tracking-[0.25em] uppercase text-center w-full">
                         {t("eyebrow")}
                     </span>
 
@@ -58,10 +58,10 @@ export function GallerySection() {
                         <div className="absolute w-[402px] h-[17px] inset-s-0 top-[24px] bg-[#FDCFD4]/50 dark:bg-[#4A1519]/40 rounded-e-[20px]" />
 
                         {/* Rectangle 2 Accent Line */}
-                        <div className="absolute w-[157px] h-[2px] inset-s-0 top-[39px] bg-[#A6252A] dark:bg-[#FF668B]" />
+                        <div className="absolute w-[157px] h-[2px] inset-s-0 top-[39px] bg-primary-600 dark:bg-rose-500" />
 
                         {/* Text */}
-                        <h2 className="absolute inset-x-0 top-0 font-sarabun font-bold text-[36px] leading-[36px] text-[#A6252A] dark:text-[#FDCFD4] z-10 whitespace-nowrap">
+                        <h2 className="absolute inset-x-0 top-0 font-sarabun font-bold text-[36px] leading-[36px] text-primary-600 dark:text-[#FDCFD4] z-10 whitespace-nowrap">
                             {t("title")}
                         </h2>
                     </div>

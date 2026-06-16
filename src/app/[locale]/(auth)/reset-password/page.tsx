@@ -10,7 +10,7 @@ export default async function ResetPasswordPage() {
     const alternateLocale = locale === "ar" ? "en" : "ar";
 
     return (
-        <main className="min-h-screen bg-white dark:bg-[#1c1d21] overflow-hidden transition-colors duration-300">
+        <main className="min-h-screen bg-white dark:bg-zinc-950 overflow-hidden transition-colors duration-300">
             <div className="grid min-h-screen grid-cols-1 min-[560px]:grid-cols-[minmax(340px,49%)_minmax(0,1fr)] lg:grid-cols-[700px_minmax(0,1fr)]">
 
                 {/* Left — Form */}
@@ -23,7 +23,7 @@ export default async function ResetPasswordPage() {
                         <Link
                             href="/reset-password"
                             locale={alternateLocale}
-                            className="text-base font-normal text-zinc-700 dark:text-zinc-300 transition-colors hover:text-[#A6252A] dark:hover:text-[#FFA3B9] font-zain"
+                            className="text-base font-normal text-zinc-700 dark:text-zinc-300 transition-colors hover:text-primary-600 dark:hover:text-rose-300 font-zain"
                         >
                             {t("languageSwitch")}
                         </Link>
@@ -42,7 +42,7 @@ export default async function ResetPasswordPage() {
                         <div className="flex w-full flex-col gap-6">
                             {/* Header */}
                             <div className="flex flex-col gap-1 border-b border-zinc-200 dark:border-zinc-800 pb-4">
-                                <h1 className="text-2xl font-bold text-[#A6252A] dark:text-[#FFA3B9] transition-colors">
+                                <h1 className="text-2xl font-bold text-primary-600 dark:text-rose-300 transition-colors">
                                     {t("title")}
                                 </h1>
                                 <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -64,12 +64,13 @@ export default async function ResetPasswordPage() {
                     </div>
                 </section>
 
-                {/* Right — Cover */}
-                <section className="relative hidden h-screen overflow-hidden bg-[#212226] min-[560px]:block">
+                {/* Right — Cover Image */}
+                <section className="relative hidden h-screen overflow-hidden bg-zinc-900 min-[560px]:block">
                     <Image
                         src="/images/Cover.svg"
                         alt={t("coverAlt")}
                         fill
+                        sizes="(min-width: 1024px) 700px, 50vw"
                         className="object-cover object-center"
                         priority
                     />

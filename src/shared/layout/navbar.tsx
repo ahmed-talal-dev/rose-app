@@ -41,6 +41,7 @@ import { useProducts } from "@/features/products/hooks";
 
 export function Navbar() {
     const t = useTranslations("navbar");
+    const tCommon = useTranslations("common");
     const locale = useLocale();
     const pathname = usePathname();
     const router = useRouter();
@@ -112,7 +113,7 @@ export function Navbar() {
             <>
                 {parts.map((part, index) =>
                     regex.test(part) ? (
-                        <span key={index} className="text-[#A6252A] dark:text-rose-400 font-bold">
+                        <span key={index} className="text-primary-600 dark:text-rose-400 font-bold">
                             {part}
                         </span>
                     ) : (
@@ -207,14 +208,14 @@ export function Navbar() {
                             >
                                 {isSearchLoading ? (
                                     <div className="py-8 flex justify-center items-center">
-                                        <Loader2 className="size-6 animate-spin text-[#A6252A]" />
+                                        <Loader2 className="size-6 animate-spin text-primary-600" />
                                     </div>
                                 ) : (
                                     <div className="flex flex-col w-full">
                                         {/* Header if search query is empty */}
                                         {!searchQuery.trim() && (
                                             <div className="px-4 pt-4 pb-2 text-start">
-                                                <span className="text-[#741C21] dark:text-rose-400 font-bold text-sm">
+                                                <span className="text-primary-700 dark:text-rose-400 font-bold text-sm">
                                                     {t("productsYouMayLike")}
                                                 </span>
                                             </div>
@@ -241,13 +242,13 @@ export function Navbar() {
                                                             alt={product.title}
                                                             className="w-14 h-14 object-cover rounded-xl shrink-0"
                                                         />
-                                                        
+
                                                         <div className="flex-1 flex flex-col items-start gap-1.5 text-start min-w-0 font-sarabun">
                                                             <h4 className="text-zinc-900 dark:text-zinc-150 text-sm font-semibold truncate w-full">
                                                                 {highlightText(product.title, searchQuery)}
                                                             </h4>
                                                             <span className="text-zinc-950 dark:text-zinc-200 text-sm font-bold">
-                                                                {product.price} EGP
+                                                                {product.price} {tCommon("currency")}
                                                             </span>
                                                         </div>
 
@@ -375,7 +376,7 @@ export function Navbar() {
                             onClick={toggleLocale}
                             className="hidden sm:flex flex-row items-center px-3 self-stretch text-sm lg:text-base font-medium text-zinc-700 dark:text-zinc-200 hover:text-red-800 dark:hover:text-rose-400 transition-colors whitespace-nowrap"
                         >
-                            {locale === "en" ? "العربية" : "English"}
+                            {t("langToggle")}
                         </button>
 
                         <div className="flex items-center justify-center px-1">
@@ -395,7 +396,7 @@ export function Navbar() {
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:block bg-[#741C21] dark:bg-zinc-900 border-t border-transparent dark:border-zinc-800 transition-colors duration-300">
+            <nav className="hidden lg:block bg-primary-700 dark:bg-zinc-900 border-t border-transparent dark:border-zinc-800 transition-colors duration-300">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-row justify-center items-center gap-2 lg:gap-4 h-12">
                         {navLinks.map((link) => {
@@ -407,27 +408,27 @@ export function Navbar() {
                                     key={link.href}
                                     href={link.href}
                                     className={`relative flex flex-row justify-center items-center px-3 gap-2 h-full transition-all ${isActive
-                                        ? "text-[#FFC2D0]"
-                                        : "text-zinc-50 dark:text-zinc-300 hover:text-[#FFC2D0] dark:hover:text-white"
+                                        ? "text-rose-200"
+                                        : "text-zinc-50 dark:text-zinc-300 hover:text-rose-200 dark:hover:text-white"
                                         }`}
                                     data-active={isActive}
                                 >
                                     <LinkIcon
                                         className={`w-4 lg:w-5 h-4 lg:h-5 shrink-0 transition-colors ${isActive
-                                            ? "text-[#FFC2D0]"
+                                            ? "text-rose-200"
                                             : "text-zinc-50 dark:text-zinc-300"
                                             }`}
                                         strokeWidth={isActive ? 2 : 1.5}
                                     />
                                     <span
-                                        className={`text-sm lg:text-base font-sarabun whitespace-nowrap transition-colors ${isActive ? "font-bold text-[#FFC2D0]" : "font-medium"
+                                        className={`text-sm lg:text-base font-sarabun whitespace-nowrap transition-colors ${isActive ? "font-bold text-rose-200" : "font-medium"
                                             }`}
                                     >
                                         {link.label}
                                     </span>
 
                                     {isActive && (
-                                        <span className="absolute bottom-0 left-0 w-full h-[3px] bg-[#FFC2D0] rounded-t-sm" />
+                                        <span className="absolute bottom-0 left-0 w-full h-[3px] bg-rose-200 rounded-t-sm" />
                                     )}
                                 </Link>
                             );
@@ -466,7 +467,7 @@ export function Navbar() {
                             }}
                             className="sm:hidden flex items-center gap-2 px-2 py-2.5 text-sm font-medium text-red-800 dark:text-rose-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-xl w-full transition-colors text-start"
                         >
-                            {locale === "en" ? "العربية" : "English"}
+                            {t("langToggle")}
                         </button>
 
                         {/* Nav Links - Mobile */}

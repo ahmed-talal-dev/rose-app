@@ -50,7 +50,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
 
     return (
         <div className="flex justify-center items-center gap-1.5 py-8 select-none">
-            
+
             {/* First Page button */}
             <button
                 onClick={() => onPageChange(1)}
@@ -89,11 +89,10 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
                     <button
                         key={`page-${page}`}
                         onClick={() => onPageChange(Number(page))}
-                        className={`size-8 flex items-center justify-center border text-sm font-semibold rounded-md font-sarabun transition-all cursor-pointer ${
-                            isActive
-                                ? "bg-[#A6252A] border-[#A6252A] text-white"
+                        className={`size-8 flex items-center justify-center border text-sm font-semibold rounded-md font-sarabun transition-all cursor-pointer ${isActive
+                                ? "bg-primary-600 border-primary-600 text-white"
                                 : "border-zinc-200 dark:border-zinc-700 text-zinc-650 dark:text-zinc-350 hover:bg-zinc-50 dark:hover:bg-zinc-800"
-                        }`}
+                            }`}
                         aria-label={`Page ${page}`}
                         aria-current={isActive ? "page" : undefined}
                     >

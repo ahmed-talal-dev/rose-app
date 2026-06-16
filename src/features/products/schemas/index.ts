@@ -2,9 +2,9 @@ import { z } from "zod";
 import { paginationSchema } from "@/shared/schemas/shared.schema";
 
 export const productParamsSchema = paginationSchema.extend({
-    categoryId: z.string().uuid().optional(),
-    subCategoryId: z.string().uuid().optional(),
-    occasionId: z.string().uuid().optional(),
+    categoryId: z.string().optional(),
+    subCategoryId: z.string().optional(),
+    occasionId: z.string().optional(),
     minPrice: z.coerce.number().min(0).optional(),
     maxPrice: z.coerce.number().min(0).optional(),
     search: z.string().optional(),
@@ -34,9 +34,9 @@ export const createProductSchema = z.object({
         .optional(),
     cover: z.string().url("Cover must be a valid URL"),
     gallery: z.array(z.string().url()).optional(),
-    categoryId: z.string().uuid("Invalid category ID"),
-    subCategoryId: z.string().uuid().optional(),
-    occasionIds: z.array(z.string().uuid()).optional(),
+    categoryId: z.string().min(1, "Invalid category ID"),
+    subCategoryId: z.string().optional(),
+    occasionIds: z.array(z.string()).optional(),
 }).refine((data) => {
     if (data.discountType === "PERCENT" && data.discountValue !== undefined) {
         return data.discountValue <= 100;

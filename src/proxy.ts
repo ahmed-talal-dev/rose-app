@@ -8,17 +8,11 @@ const intlMiddleware = createIntlMiddleware(routing);
 
 const protectedRoutes = [
     "/profile",
-    "/cart",
     "/checkout",
     "/orders",
     "/wishlist",
-    "/products",
-    "/categories",
-    "/occasions",
-    "/contact",
-    "/about"
 ];
-const adminRoutes = ["/dashboard", "/products/manage", "/categories", "/coupons", "/blogs", "/testimonials", "/audit-logs"];
+const adminRoutes = ["/dashboard", "/products/manage", "/categories/manage", "/coupons", "/blogs", "/testimonials", "/audit-logs"];
 const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password"];
 
 export default auth(async (req: NextRequest & { auth: Session | null }) => {

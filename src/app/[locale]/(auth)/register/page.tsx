@@ -11,7 +11,7 @@ export default async function RegisterPage() {
     const alternateLocale = isArabic ? "en" : "ar";
 
     return (
-        <main className="min-h-screen bg-white dark:bg-[#121214] overflow-hidden transition-colors duration-300">
+        <main className="min-h-screen bg-white dark:bg-zinc-950 overflow-hidden transition-colors duration-300">
             <div className="grid min-h-screen grid-cols-1 min-[560px]:grid-cols-[minmax(340px,49%)_minmax(0,1fr)] lg:grid-cols-[700px_minmax(0,1fr)]">
 
                 {/* Left — Form Side */}
@@ -24,7 +24,7 @@ export default async function RegisterPage() {
                         <Link
                             href="/register"
                             locale={alternateLocale}
-                            className="text-base font-normal text-zinc-700 dark:text-zinc-300 transition-colors hover:text-[#A6252A] dark:hover:text-[#FFA3B9] font-zain"
+                            className="text-base font-normal text-zinc-700 dark:text-zinc-300 transition-colors hover:text-primary-600 dark:hover:text-rose-300 font-zain"
                         >
                             {t("languageSwitch")}
                         </Link>
@@ -48,7 +48,7 @@ export default async function RegisterPage() {
                             {/* Title */}
                             <div className="flex w-full flex-col items-center justify-center border-b border-zinc-200 dark:border-zinc-800 pb-4 text-center shrink-0 transition-colors">
                                 <h1
-                                    className="text-[36px] sm:text-[48px] leading-tight sm:leading-14.25 text-[#A6252A] dark:text-[#FFA3B9] transition-colors"
+                                    className="text-[36px] sm:text-[48px] leading-tight sm:leading-14.25 text-primary-600 dark:text-rose-300 transition-colors"
                                     style={
                                         isArabic
                                             ? undefined
@@ -75,7 +75,7 @@ export default async function RegisterPage() {
                 </section>
 
                 {/* Right — Cover Image */}
-                <section className="relative hidden h-screen overflow-hidden bg-[#212226] min-[560px]:block">
+                <section className="relative hidden h-screen overflow-hidden bg-zinc-900 min-[560px]:block">
                     <Image
                         src="/images/Cover.svg"
                         alt={t("coverAlt")}

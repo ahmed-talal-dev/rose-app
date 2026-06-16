@@ -79,7 +79,7 @@ export function TestimonialsSection() {
             {/* Header: width 562px, height 70px on desktop */}
             <div className="w-full max-w-[562px] lg:h-[70px] flex flex-col items-center lg:justify-between relative px-4 sm:px-0 gap-2 lg:gap-0">
                 {/* Eyebrow: height 21px */}
-                <span className="w-full text-center text-[16px] font-bold tracking-[0.25em] uppercase text-[#FF668B] h-[21px] flex items-center justify-center">
+                <span className="w-full text-center text-[16px] font-bold tracking-[0.25em] uppercase text-rose-500 h-[21px] flex items-center justify-center">
                     {t("eyebrow")}
                 </span>
 
@@ -91,10 +91,10 @@ export function TestimonialsSection() {
                     />
 
                     {/* Rectangle 2 (darker red accent line): width 157px, height 2px, top 39px */}
-                    <div className="absolute w-[110px] sm:w-[157px] h-[2px] bg-[#A6252A] dark:bg-[#FF668B] inset-x-0 mx-auto top-[39px]" />
+                    <div className="absolute w-[110px] sm:w-[157px] h-[2px] bg-primary-600 dark:bg-rose-500 inset-x-0 mx-auto top-[39px]" />
 
                     {/* Heading text: height 41px, font-size 36px, color #A6252A */}
-                    <h2 className="relative font-sarabun font-bold text-[26px] sm:text-[36px] leading-[41px] text-[#A6252A] dark:text-[#FDCFD4] z-10 text-center select-none whitespace-nowrap">
+                    <h2 className="relative font-sarabun font-bold text-[26px] sm:text-[36px] leading-[41px] text-primary-600 dark:text-[#FDCFD4] z-10 text-center select-none whitespace-nowrap">
                         {t("title")}
                     </h2>
                 </div>

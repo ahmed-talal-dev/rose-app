@@ -249,7 +249,7 @@ export default function CheckoutPage() {
     // Geolocation handler
     const handleGeolocateUser = () => {
         if (!navigator.geolocation) {
-            toast.error(locale === "ar" ? "تحديد الموقع الجغرافي غير مدعوم في متصفحك" : "Geolocation is not supported by your browser");
+            toast.error(t("geolocationUnsupported"));
             return;
         }
 
@@ -265,7 +265,7 @@ export default function CheckoutPage() {
                 }
             },
             (error) => {
-                toast.error(locale === "ar" ? "فشل الحصول على موقعك الجغرافي" : "Failed to retrieve your location");
+                toast.error(t("geolocationFailed"));
                 console.error("Geolocation error:", error);
             }
         );
@@ -500,12 +500,12 @@ export default function CheckoutPage() {
                 }
                 return updated;
             });
-            toast.success(locale === "ar" ? "تم حذف العنوان بنجاح!" : "Address deleted successfully!");
+            toast.success(t("addressDeleted"));
             setAddressToDeleteId(null);
         } else {
             deleteAddressMutation.mutate(id, {
                 onSuccess: () => {
-                    toast.success(locale === "ar" ? "تم حذف العنوان بنجاح!" : "Address deleted successfully!");
+                    toast.success(t("addressDeleted"));
                     if (selectedAddressId === id) {
                         const remaining = (addressesData || []).filter((addr: any) => addr.id !== id);
                         if (remaining.length > 0) {
@@ -527,7 +527,7 @@ export default function CheckoutPage() {
     const handleSaveAddressSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!newAddressTitle || !newAddressCity || !newAddressStreet || !newAddressPhone) {
-            toast.error(locale === "ar" ? "برجاء ملء جميع الحقول المطلوبة" : "Please fill in all required fields");
+            toast.error(t("fillError"));
             return;
         }
 
@@ -546,7 +546,7 @@ export default function CheckoutPage() {
                             : addr
                     )
                 );
-                toast.success(locale === "ar" ? "تم تعديل العنوان بنجاح!" : "Address updated successfully!");
+                toast.success(t("addressUpdated"));
                 setModalView("list");
                 setEditingAddressId(null);
             } else {
@@ -562,7 +562,7 @@ export default function CheckoutPage() {
                     },
                     {
                         onSuccess: () => {
-                            toast.success(locale === "ar" ? "تم تعديل العنوان بنجاح!" : "Address updated successfully!");
+                            toast.success(t("addressUpdated"));
                             setModalView("list");
                             setEditingAddressId(null);
                         },
@@ -583,7 +583,7 @@ export default function CheckoutPage() {
                     },
                     {
                         onSuccess: (newAddr) => {
-                            toast.success(locale === "ar" ? "تم حفظ العنوان بنجاح!" : "Address saved successfully!");
+                            toast.success(t("addressSaved"));
                             setSelectedAddressId(newAddr.id);
                             setModalView("list");
                         },
@@ -606,7 +606,7 @@ export default function CheckoutPage() {
                     },
                 ]);
                 setSelectedAddressId(newId);
-                toast.success(locale === "ar" ? "تم حفظ العنوان بنجاح!" : "Address saved successfully!");
+                toast.success(t("addressSaved"));
                 setModalView("list");
             }
         }
@@ -661,7 +661,7 @@ export default function CheckoutPage() {
 
     const handleFinalizeCheckout = () => {
         if (!selectedAddressId) {
-            toast.error(locale === "ar" ? "برجاء تحديد عنوان الشحن أولاً" : "Please select a shipping address first");
+            toast.error(t("selectAddressFirst"));
             return;
         }
 
@@ -677,7 +677,7 @@ export default function CheckoutPage() {
             const toastId = toast.loading(
                 paymentMethod === "CREDIT_CARD"
                     ? t("redirectingStripe")
-                    : (locale === "ar" ? "جاري إتمام الطلب..." : "Finalizing order...")
+                    : t("finalizingOrder")
             );
 
             setTimeout(() => {
@@ -973,7 +973,7 @@ export default function CheckoutPage() {
                                     {tCart("subtotal")}
                                 </span>
                                 <span className="font-sarabun font-semibold text-[20px] leading-none text-[#27272A] dark:text-zinc-100">
-                                    {subtotal.toFixed(2)} EGP
+                                    {subtotal.toFixed(2)} {tCommon("currency")}
                                 </span>
                             </div>
 
@@ -995,7 +995,7 @@ export default function CheckoutPage() {
                                     {tCart("total")}
                                 </span>
                                 <span className="font-sarabun font-bold text-[24px] leading-none text-[#A6252A] dark:text-rose-400">
-                                    {total.toFixed(2)} EGP
+                                    {total.toFixed(2)} {tCommon("currency")}
                                 </span>
                             </div>
                         </div>
@@ -1209,8 +1209,8 @@ export default function CheckoutPage() {
                                     )}
                                     <span className="font-sarabun font-bold text-[24px] leading-none text-[#A6252A] dark:text-rose-400">
                                         {formStep === 1
-                                            ? (locale === "ar" ? "أدخل تفاصيل العنوان" : "Enter address details")
-                                            : (locale === "ar" ? "تحديد موقعك" : "Find Your Location")}
+                                            ? t("enterAddressDetails")
+                                            : t("findYourLocation")}
                                     </span>
                                 </div>
 
@@ -1220,13 +1220,13 @@ export default function CheckoutPage() {
                                             {/* City */}
                                             <div className="flex flex-col gap-[6px] w-full">
                                                 <label className="text-[14px] font-medium text-[#27272A] dark:text-zinc-300 font-inter">
-                                                    {locale === "ar" ? "المدينة" : "City"}
+                                                    {t("cityLabel")}
                                                 </label>
                                                 <input
                                                     type="text"
                                                     value={newAddressCity}
                                                     onChange={(e) => setNewAddressCity(e.target.value)}
-                                                    placeholder={locale === "ar" ? "أدخل اسم المدينة" : "Enter city name"}
+                                                    placeholder={t("cityPlaceholder")}
                                                     className="h-[49px] p-[16px] bg-white dark:bg-zinc-900 border border-[#D4D4D8] dark:border-zinc-700 rounded-[10px] text-[14px] font-inter outline-none focus:border-[#A6252A] transition-colors text-zinc-800 dark:text-zinc-100 placeholder-[#A1A1AA] w-full"
                                                     required
                                                 />
@@ -1235,12 +1235,12 @@ export default function CheckoutPage() {
                                             {/* Address */}
                                             <div className="flex flex-col gap-[6px] w-full">
                                                 <label className="text-[14px] font-medium text-[#27272A] dark:text-zinc-300 font-inter">
-                                                    {locale === "ar" ? "العنوان" : "Address"}
+                                                    {t("streetLabel")}
                                                 </label>
                                                 <textarea
                                                     value={newAddressStreet}
                                                     onChange={(e) => setNewAddressStreet(e.target.value)}
-                                                    placeholder={locale === "ar" ? "أدخل عنوانك بالتفصيل" : "Enter your full address"}
+                                                    placeholder={t("streetPlaceholder")}
                                                     className="h-[150px] min-h-[150px] p-[16px] bg-white dark:bg-zinc-900 border border-[#D4D4D8] dark:border-zinc-700 rounded-[10px] text-[14px] font-inter outline-none focus:border-[#A6252A] transition-colors text-zinc-800 dark:text-zinc-100 placeholder-[#A1A1AA] w-full resize-none"
                                                     required
                                                 />
@@ -1249,13 +1249,13 @@ export default function CheckoutPage() {
                                             {/* Phone */}
                                             <div className="flex flex-col gap-[6px] w-full relative">
                                                 <label className="text-[14px] font-medium text-[#27272A] dark:text-zinc-300 font-inter">
-                                                    {locale === "ar" ? "الهاتف" : "Phone"}
+                                                    {t("phoneLabel")}
                                                 </label>
                                                 <PhoneInput
                                                     id="phone"
                                                     value={newAddressPhone}
                                                     onChange={(val) => setNewAddressPhone(val)}
-                                                    placeholder={locale === "ar" ? "رقم الهاتف" : "Phone number"}
+                                                    placeholder={t("phonePlaceholder")}
                                                     hasError={false}
                                                 />
                                             </div>
@@ -1266,7 +1266,7 @@ export default function CheckoutPage() {
                                                     type="button"
                                                     onClick={() => {
                                                         if (!newAddressCity || !newAddressStreet || !newAddressPhone) {
-                                                            toast.error(locale === "ar" ? "برجاء ملء جميع الحقول المطلوبة" : "Please fill in all required fields");
+                                                            toast.error(t("fillError"));
                                                             return;
                                                         }
                                                         setFormStep(2);
@@ -1274,7 +1274,7 @@ export default function CheckoutPage() {
                                                     className="flex flex-row justify-center items-center p-[10px_16px] gap-[10px] w-full h-[50px] bg-[#A6252A] hover:bg-[#8B1E22] text-white rounded-[10px] cursor-pointer border-none transition-colors"
                                                 >
                                                     <span className="font-sarabun font-medium text-[16px] leading-none text-white">
-                                                        {locale === "ar" ? "التالي" : "Next"}
+                                                        {t("next")}
                                                     </span>
                                                 </button>
                                             </div>
@@ -1284,14 +1284,12 @@ export default function CheckoutPage() {
                                             {/* Select Address Label */}
                                             <div className="flex flex-col gap-[6px] w-full">
                                                 <label className="text-[14px] font-medium text-[#27272A] dark:text-zinc-300 font-inter">
-                                                    {locale === "ar" ? "تصنيف العنوان" : "Address Label"}
+                                                    {t("addressLabel")}
                                                 </label>
                                                 <div className="grid grid-cols-3 gap-3 w-full">
                                                     {["Home", "Work", "Family"].map((labelName) => {
                                                         const isLabelSelected = newAddressTitle === labelName;
-                                                        const labelDisplay = locale === "ar"
-                                                            ? (labelName === "Home" ? "منزل" : labelName === "Work" ? "عمل" : "عائلة")
-                                                            : labelName;
+                                                        const labelDisplay = t(`label${labelName}`);
                                                         return (
                                                             <button
                                                                 key={labelName}
@@ -1321,7 +1319,7 @@ export default function CheckoutPage() {
                                                     className="absolute top-4 right-4 z-[1000] flex flex-row items-center gap-[8px] px-[16px] py-[10px] h-[40px] bg-white hover:bg-zinc-50 text-[#A6252A] border border-[#A6252A] rounded-[8px] shadow-md transition-colors cursor-pointer font-sarabun font-bold text-[14px] outline-none"
                                                 >
                                                     <Locate className="w-[16px] h-[16px] text-[#A6252A]" />
-                                                    <span>{locale === "ar" ? "تحديد موقعي" : "Find My Location"}</span>
+                                                    <span>{t("findMyLocation")}</span>
                                                 </button>
                                             </div>
 
@@ -1337,8 +1335,8 @@ export default function CheckoutPage() {
                                                     )}
                                                     <span className="font-sarabun font-medium text-[16px] leading-none text-white">
                                                         {editingAddressId
-                                                            ? (locale === "ar" ? "تعديل العنوان" : "Edit Address")
-                                                            : (locale === "ar" ? "إضافة العنوان" : "Add Address")}
+                                                            ? t("editAddressTitle")
+                                                            : t("addAddressTitle")}
                                                     </span>
                                                 </button>
                                             </div>
@@ -1350,7 +1348,7 @@ export default function CheckoutPage() {
                     </div>
                 </div>
             )}
- 
+
             {/* Delete Confirmation Modal */}
             {addressToDeleteId && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-fade-in">
@@ -1361,17 +1359,17 @@ export default function CheckoutPage() {
                         >
                             <X className="w-[20px] h-[20px]" />
                         </button>
- 
+
                         <div className="w-20 h-20 rounded-full bg-zinc-50 dark:bg-zinc-800/50 flex justify-center items-center mt-2">
                             <div className="w-14 h-14 rounded-full bg-zinc-100 dark:bg-zinc-800 flex justify-center items-center text-zinc-500 dark:text-zinc-400">
                                 <Trash2 className="w-6 h-6" />
                             </div>
                         </div>
- 
+
                         <span className="font-sarabun font-bold text-[18px] text-zinc-800 dark:text-zinc-100 leading-snug px-2">
                             {t("deleteConfirm") || "Are you sure you want to delete this address?"}
                         </span>
- 
+
                         <div className="flex flex-row gap-3 w-full mt-2">
                             <button
                                 type="button"
@@ -1387,7 +1385,7 @@ export default function CheckoutPage() {
                                 className="flex-1 py-3 bg-[#E53935] hover:bg-[#D32F2F] disabled:opacity-50 disabled:cursor-not-allowed rounded-xl text-[16px] font-semibold text-white cursor-pointer border-none transition-colors flex justify-center items-center gap-2"
                             >
                                 {deleteAddressMutation.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
-                                <span>{locale === "ar" ? "تأكيد" : "Confirm"}</span>
+                                <span>{t("confirm")}</span>
                             </button>
                         </div>
                     </div>

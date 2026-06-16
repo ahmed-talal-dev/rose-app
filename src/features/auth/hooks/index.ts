@@ -1,3 +1,8 @@
+// ─── Auth Hooks ───────────────────────────────────────────────────────────────
+// React Query mutations and queries for all auth operations.
+// All mutations expose the ApiError type for typed error handling in components.
+// ─────────────────────────────────────────────────────────────────────────────
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { signIn, signOut } from "next-auth/react";
 import {
@@ -12,98 +17,102 @@ import {
     deleteAccount,
     register,
 } from "../apis";
-import { RegisterSchema } from "../schemas";
+import { type RegisterSchema } from "../schemas";
+import { ApiError } from "@/shared/lib/apis/api-error";
 
-// Get profile
+// Re-export ApiError so components can import it from one place
+export { ApiError };
+
+// ── Query Keys ────────────────────────────────────────────────────────────────
+
+export const authKeys = {
+    profile: ["profile"] as const,
+};
+
+// ── Queries ───────────────────────────────────────────────────────────────────
+
 export const useProfile = () =>
     useQuery({
-        queryKey: ["profile"],
+        queryKey: authKeys.profile,
         queryFn: getProfile,
     });
 
-// Register
+// ── Mutations ─────────────────────────────────────────────────────────────────
+
 export const useRegister = () =>
-    useMutation({
-        mutationFn: (data: RegisterSchema) => register(data),
+    useMutation<unknown, ApiError, RegisterSchema>({
+        mutationFn: (data) => register(data),
     });
 
-// Login
 export const useLogin = () =>
     useMutation({
-        mutationFn: async (data: { username: string; password: string }) => {
+        mutationFn: async (data: { email: string; password: string }) => {
             const res = await signIn("credentials", { ...data, redirect: false });
             if (res?.error) throw new Error("Invalid email or password");
             return res;
         },
     });
 
-// Logout
 export const useLogout = () =>
     useMutation({
         mutationFn: () => signOut({ redirect: false }),
     });
 
-// Check email
 export const useCheckEmail = () =>
-    useMutation({
-        mutationFn: (email: string) => checkEmail(email),
+    useMutation<unknown, ApiError, string>({
+        mutationFn: (email) => checkEmail(email),
     });
 
-// Send verification
 export const useSendVerification = () =>
-    useMutation({
-        mutationFn: ({ email, redirectUrl }: { email: string; redirectUrl?: string }) =>
-            sendVerification(email, redirectUrl),
+    useMutation<unknown, ApiError, { email: string; redirectUrl?: string }>({
+        mutationFn: ({ email, redirectUrl }) => sendVerification(email, redirectUrl),
     });
 
-// Verify email
 export const useVerifyEmail = () =>
-    useMutation({
-        mutationFn: (data: { email: string; code: string }) => verifyEmail(data),
+    useMutation<unknown, ApiError, { email: string; code: string }>({
+        mutationFn: (data) => verifyEmail(data),
     });
 
-// Forgot password
 export const useForgotPassword = () =>
-    useMutation({
-        mutationFn: ({ email, redirectUrl }: { email: string; redirectUrl?: string }) =>
-            forgotPassword(email, redirectUrl ?? `${process.env.NEXT_PUBLIC_APP_URL}/en/reset-password`),
+    useMutation<unknown, ApiError, { email: string; redirectUrl?: string }>({
+        mutationFn: ({ email, redirectUrl }) =>
+            forgotPassword(
+                email,
+                redirectUrl ?? `${process.env.NEXT_PUBLIC_APP_URL}/en/reset-password`
+            ),
     });
 
-// Reset password
 export const useResetPassword = () =>
-    useMutation({
-        mutationFn: (data: {
-            token: string;
-            newPassword: string;
-            confirmPassword: string;
-        }) => resetPassword(data),
+    useMutation<
+        unknown,
+        ApiError,
+        { token: string; newPassword: string; confirmPassword: string }
+    >({
+        mutationFn: (data) => resetPassword(data),
     });
 
-// Update profile
 export const useUpdateProfile = () => {
     const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (data: FormData | object) => updateProfile(data),
+    return useMutation<unknown, ApiError, FormData | object>({
+        mutationFn: (data) => updateProfile(data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["profile"] });
+            queryClient.invalidateQueries({ queryKey: authKeys.profile });
         },
     });
 };
 
-// Change password
 export const useChangePassword = () =>
-    useMutation({
-        mutationFn: (data: {
-            currentPassword: string;
-            newPassword: string;
-            confirmPassword: string;
-        }) => changePassword(data),
+    useMutation<
+        unknown,
+        ApiError,
+        { currentPassword: string; newPassword: string; confirmPassword: string }
+    >({
+        mutationFn: (data) => changePassword(data),
     });
 
-// Delete account
 export const useDeleteAccount = () => {
     const queryClient = useQueryClient();
-    return useMutation({
+    return useMutation<unknown, ApiError, void>({
         mutationFn: deleteAccount,
         onSuccess: () => {
             queryClient.clear();

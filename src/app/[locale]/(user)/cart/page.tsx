@@ -72,7 +72,7 @@ export default function CartPage() {
     const items = cartData?.cartItems ?? [];
     const productsCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
-    const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rose-app.elevate-bootcamp.cloud";
+    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://rose-app.elevate-bootcamp.cloud";
 
     const resolveImageUrl = (url: string) => {
         if (!url) return "/images/placeholder.svg";
@@ -167,7 +167,7 @@ export default function CartPage() {
                                 {t("title")}
                             </h1>
                             <span className="font-sarabun font-medium text-[16px] leading-[16px] pb-[6px] text-[#A1A1AA] dark:text-zinc-400">
-                                {productsCount} products
+                                {productsCount === 1 ? t("productCountSingle") : t("productsCount", { count: productsCount })}
                             </span>
                         </div>
 
@@ -178,7 +178,7 @@ export default function CartPage() {
                         >
                             <BrushCleaning className="w-[20px] h-[20px] text-[#A6252A]" />
                             <span className="font-mulish font-semibold text-[14px] leading-[150%] text-[#A6252A]">
-                                Clear Cart
+                                {t("clearCart")}
                             </span>
                         </button>
                     </div>
@@ -253,7 +253,7 @@ export default function CartPage() {
                                                 <div className="flex flex-row items-center p-0 h-[30px] shrink-0">
                                                     <span className="font-sarabun font-semibold text-[20px] leading-none text-[#A6252A] dark:text-rose-400 flex items-center gap-1.5">
                                                         <span className="font-medium text-[14px] opacity-80">(×{item.quantity})</span>
-                                                        <span className="font-bold">{unitPrice.toFixed(2)} EGP</span>
+                                                        <span className="font-bold">{unitPrice.toFixed(2)} {tCommon("currency")}</span>
                                                     </span>
                                                 </div>
 
@@ -349,7 +349,7 @@ export default function CartPage() {
                                     {t("subtotal")}
                                 </span>
                                 <span className="font-sarabun font-semibold text-[20px] leading-none text-[#27272A] dark:text-zinc-100">
-                                    {subtotal.toFixed(2)} EGP
+                                    {subtotal.toFixed(2)} {tCommon("currency")}
                                 </span>
                             </div>
 
@@ -362,7 +362,7 @@ export default function CartPage() {
                                     {t("total")}
                                 </span>
                                 <span className="font-sarabun font-bold text-[24px] leading-none text-[#A6252A] dark:text-rose-400">
-                                    {total.toFixed(2)} EGP
+                                    {total.toFixed(2)} {tCommon("currency")}
                                 </span>
                             </div>
                         </div>

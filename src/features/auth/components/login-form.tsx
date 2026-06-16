@@ -25,7 +25,10 @@ export function LoginForm() {
     const loginSchema = useMemo(
         () =>
             z.object({
-                username: z.string().min(1, t("validation.usernameRequired")),
+                email: z
+                    .string()
+                    .min(1, t("validation.emailRequired"))
+                    .email(t("validation.emailInvalid")),
                 password: z.string().min(8, t("validation.passwordMin")),
             }),
         [t]
@@ -57,18 +60,18 @@ export function LoginForm() {
 
                 {/* Email */}
                 <div className="flex w-full flex-col gap-1.5">
-                    <Label htmlFor="username" className="text-sm font-medium text-zinc-800 dark:text-zinc-300 font-inter">
-                        {t("usernameLabel")}
+                    <Label htmlFor="email" className="text-sm font-medium text-zinc-800 dark:text-zinc-300 font-inter">
+                        {t("emailLabel")}
                     </Label>
                     <Input
-                        id="username"
-                        type="text"
-                        placeholder={t("usernamePlaceholder")}
-                        {...register("username")}
-                        className={`h-12.25 rounded-[10px] px-4 text-zinc-900 dark:text-zinc-100 bg-white dark:bg-[#3A3B3F] border-zinc-200 dark:border-zinc-700 text-sm font-inter focus-visible:ring-1 focus-visible:ring-primary-700 dark:focus-visible:ring-[#FFA3B9] placeholder:text-zinc-400 dark:placeholder:text-zinc-500 ${errors.username ? "border-red-500" : ""}`}
+                        id="email"
+                        type="email"
+                        placeholder={t("emailPlaceholder")}
+                        {...register("email")}
+                        className={`h-12.25 rounded-[10px] px-4 text-zinc-900 dark:text-zinc-100 bg-white dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 text-sm font-inter focus-visible:ring-1 focus-visible:ring-primary-700 dark:focus-visible:ring-rose-300 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 ${errors.email ? "border-red-500" : ""}`}
                     />
-                    {errors.username && (
-                        <p className="text-xs text-red-600 dark:text-red-400 mt-0.5 font-inter">{errors.username.message}</p>
+                    {errors.email && (
+                        <p className="text-xs text-red-600 dark:text-red-400 mt-0.5 font-inter">{errors.email.message}</p>
                     )}
                 </div>
 
@@ -83,7 +86,7 @@ export function LoginForm() {
                             type={showPassword ? "text" : "password"}
                             placeholder={t("passwordPlaceholder")}
                             {...register("password")}
-                            className={`h-12.25 rounded-[10px] px-4 pe-11 text-sm text-zinc-900 dark:text-zinc-100 bg-white dark:bg-[#3A3B3F] border-zinc-200 dark:border-zinc-700 font-inter focus-visible:ring-1 focus-visible:ring-primary-700 dark:focus-visible:ring-[#FFA3B9] placeholder:text-zinc-400 dark:placeholder:text-zinc-500 ${errors.password ? "border-red-500" : ""}`}
+                            className={`h-12.25 rounded-[10px] px-4 pe-11 text-sm text-zinc-900 dark:text-zinc-100 bg-white dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 font-inter focus-visible:ring-1 focus-visible:ring-primary-700 dark:focus-visible:ring-rose-300 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 ${errors.password ? "border-red-500" : ""}`}
                         />
                         <button
                             type="button"
@@ -105,7 +108,7 @@ export function LoginForm() {
                     {/* Forgot Password  */}
                     <Link
                         href="/forgot-password"
-                        className="self-end text-sm font-semibold text-primary-700 dark:text-[#FFA3B9] hover:underline font-sarabun transition-colors"
+                        className="self-end text-sm font-semibold text-primary-700 dark:text-rose-300 hover:underline font-sarabun transition-colors"
                     >
                         {t("forgotPassword")}
                     </Link>
@@ -117,7 +120,7 @@ export function LoginForm() {
             <div className="flex items-center gap-2.5">
                 <Checkbox
                     id="remember"
-                    className="size-5 rounded-[6px] border-primary-700 dark:border-[#FFA3B9] data-[state=checked]:bg-primary-700 dark:data-[state=checked]:bg-[#FFA3B9] dark:data-[state=checked]:text-zinc-900"
+                    className="size-5 rounded-[8px] border-primary-700 dark:border-rose-300 data-[state=checked]:bg-primary-700 dark:data-[state=checked]:bg-rose-300 dark:data-[state=checked]:text-zinc-900"
                 />
                 <Label
                     htmlFor="remember"
@@ -131,7 +134,7 @@ export function LoginForm() {
                 <Button
                     type="submit"
                     disabled={isPending}
-                    className="h-10.25 w-full rounded-[10px] bg-primary-700 dark:bg-[#FFA3B9] text-base font-semibold text-white dark:text-[#212226] hover:bg-primary-800 dark:hover:bg-[#ffbccc] transition-colors font-sarabun"
+                    className="h-10.25 w-full rounded-[10px] bg-primary-700 dark:bg-rose-300 text-base font-medium text-white dark:text-zinc-900 hover:bg-primary-800 dark:hover:bg-rose-400 transition-colors font-sarabun"
                 >
                     {isPending ? (
                         <div className="flex items-center gap-2">
@@ -144,12 +147,12 @@ export function LoginForm() {
                 </Button>
 
                 <div className="flex w-full flex-col items-center gap-4 text-center mt-2">
-                    <div className="w-full border-t border-zinc-200 dark:border-zinc-700" />
+                    <div className="w-full border-t border-zinc-300 dark:border-zinc-700" />
                     <p className="text-sm font-medium text-zinc-800 dark:text-zinc-300 font-sarabun">
                         {t("noAccount")}{" "}
                         <Link
                             href="/register"
-                            className="font-semibold text-primary-700 dark:text-[#FFA3B9] hover:underline font-sarabun transition-colors"
+                            className="font-semibold text-primary-700 dark:text-rose-300 hover:underline font-sarabun transition-colors"
                         >
                             {t("createAccount")}
                         </Link>

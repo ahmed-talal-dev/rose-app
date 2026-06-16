@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -15,9 +15,10 @@ import { useResetPassword } from "../hooks";
 
 export function ResetPasswordForm() {
     const t = useTranslations("auth.resetPassword.form");
+    const locale = useLocale();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const token = searchParams.get("token") ?? "";
+    const tokenFromUrl = searchParams.get("token") ?? "";
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const { mutate: resetPassword, isPending } = useResetPassword();
@@ -25,6 +26,7 @@ export function ResetPasswordForm() {
     const schema = useMemo(
         () =>
             z.object({
+                resetCode: z.string().min(6, t("validation.resetCodeMin") || "Reset code must be 6 digits"),
                 newPassword: z
                     .string()
                     .min(8, t("validation.passwordMin"))
@@ -44,15 +46,18 @@ export function ResetPasswordForm() {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<FormData>({ resolver: zodResolver(schema) });
+    } = useForm<FormData>({
+        resolver: zodResolver(schema),
+        defaultValues: {
+            resetCode: tokenFromUrl,
+            newPassword: "",
+            confirmPassword: ""
+        }
+    });
 
     const onSubmit = (data: FormData) => {
-        if (!token) {
-            toast.error(t("invalidToken"));
-            return;
-        }
         resetPassword(
-            { token, newPassword: data.newPassword, confirmPassword: data.confirmPassword },
+            { token: data.resetCode, newPassword: data.newPassword, confirmPassword: data.confirmPassword },
             {
                 onSuccess: () => {
                     toast.success(t("success"));
@@ -67,6 +72,24 @@ export function ResetPasswordForm() {
         <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-9">
             <div className="flex flex-col gap-4 w-full">
 
+                {/* Reset Code */}
+                <div className="flex flex-col gap-1.5 w-full">
+                    <Label htmlFor="resetCode" className="text-sm font-medium text-zinc-800 dark:text-zinc-300">
+                        {t("resetCodeLabel")}
+                    </Label>
+                    <Input
+                        id="resetCode"
+                        type="text"
+                        maxLength={6}
+                        placeholder="123456"
+                        {...register("resetCode")}
+                        className={`h-12.25 rounded-[10px] border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-100 px-4 text-sm focus-visible:ring-rose-300 ${errors.resetCode ? "border-red-500" : ""}` }
+                    />
+                    {errors.resetCode && (
+                        <p className="text-sm text-red-600 dark:text-red-400">{errors.resetCode.message}</p>
+                    )}
+                </div>
+
                 {/* Password */}
                 <div className="flex flex-col gap-1.5 w-full">
                     <Label htmlFor="newPassword" className="text-sm font-medium text-zinc-800 dark:text-zinc-300">
@@ -78,7 +101,7 @@ export function ResetPasswordForm() {
                             type={showPassword ? "text" : "password"}
                             placeholder="••••••••"
                             {...register("newPassword")}
-                            className={`h-12.25 rounded-[10px] border-zinc-300 dark:border-zinc-700 bg-white dark:bg-[#2a2b2f] text-zinc-800 dark:text-zinc-100 px-4 pe-11 text-sm focus-visible:ring-[#FFA3B9] ${errors.newPassword ? "border-red-500" : ""}`}
+                            className={`h-12.25 rounded-[10px] border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-100 px-4 pe-11 text-sm focus-visible:ring-rose-300 ${errors.newPassword ? "border-red-500" : ""}`}
                         />
                         <button
                             type="button"
@@ -104,7 +127,7 @@ export function ResetPasswordForm() {
                             type={showConfirm ? "text" : "password"}
                             placeholder="••••••••"
                             {...register("confirmPassword")}
-                            className={`h-12.25 rounded-[10px] border-zinc-300 dark:border-zinc-700 bg-white dark:bg-[#2a2b2f] text-zinc-800 dark:text-zinc-100 px-4 pe-11 text-sm focus-visible:ring-[#FFA3B9] ${errors.confirmPassword ? "border-red-500" : ""}`}
+                            className={`h-12.25 rounded-[10px] border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-100 px-4 pe-11 text-sm focus-visible:ring-rose-300 ${errors.confirmPassword ? "border-red-500" : ""}`}
                         />
                         <button
                             type="button"
@@ -125,7 +148,7 @@ export function ResetPasswordForm() {
                 <button
                     type="submit"
                     disabled={isPending}
-                    className="w-full h-[41px] bg-[#A6252A] dark:bg-[#FFA3B9] hover:bg-[#741C21] dark:hover:bg-[#ff85a2] text-white dark:text-[#1c1d21] font-semibold text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2 shadow-sm"
+                    className="w-full h-[41px] bg-primary-600 dark:bg-rose-300 hover:bg-primary-700 dark:hover:bg-rose-400 text-white dark:text-zinc-900 font-semibold text-base rounded-[10px] transition-colors font-sarabun disabled:opacity-70 flex items-center justify-center gap-2 shadow-sm"
                 >
                     {isPending ? (
                         <><Loader2 className="size-4 animate-spin" />{t("submitting")}</>
@@ -136,7 +159,7 @@ export function ResetPasswordForm() {
                     <div className="w-full border-t border-zinc-200 dark:border-zinc-800" />
                     <p className="text-sm font-medium text-zinc-800 dark:text-zinc-300 font-sarabun">
                         {t("needHelp")}{" "}
-                        <Link href="/contact" className="font-semibold text-[#A6252A] dark:text-[#FFA3B9] hover:underline">
+                        <Link href="/contact" className="font-semibold text-primary-600 dark:text-rose-300 hover:underline">
                             {t("contactUs")}
                         </Link>
                     </p>

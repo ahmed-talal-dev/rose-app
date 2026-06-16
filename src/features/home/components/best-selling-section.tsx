@@ -16,6 +16,7 @@ function toNum(val: unknown): number {
 export function BestSellingSection() {
     const t = useTranslations("home.bestSelling");
     const tCommon = useTranslations("common");
+    const tProducts = useTranslations("products");
     const sliderRef = useRef<HTMLDivElement>(null);
     const { data: session } = useSession();
     const router = useRouter();
@@ -51,7 +52,7 @@ export function BestSellingSection() {
                                 className="font-sarabun font-bold text-[30px] leading-[100%] tracking-normal align-middle text-primary-700 dark:text-[#A6252A]"
                             >
                                 {t.rich("title", {
-                                    pink: (chunks) => <span className="text-[#FF668B] dark:text-[#FDCFD4]">{chunks}</span>
+                                    pink: (chunks) => <span className="text-rose-500 dark:text-[#FDCFD4]">{chunks}</span>
                                 })}
                             </h2>
                             <p
@@ -108,7 +109,7 @@ export function BestSellingSection() {
                                         product.discountType === "PERCENT"
                                             ? `-${discountVal}% OFF`
                                             : product.discountType === "FIXED"
-                                                ? `-${discountVal} EGP`
+                                                ? `-${discountVal} ${tCommon("currency")}`
                                                 : null;
 
                                     return (
@@ -134,13 +135,13 @@ export function BestSellingSection() {
                                                     {/* NEW badge — light */}
                                                     {product.discountType && !isOutOfStock && (
                                                         <span className="bg-muted dark:bg-[#3A393E] text-muted-foreground dark:text-[#D1D1D6] text-xs font-sarabun font-medium px-2 py-0.5 rounded-full">
-                                                            NEW
+                                                            {tProducts("new")}
                                                         </span>
                                                     )}
                                                     {/* HOT badge — light maroon */}
                                                     {toNum(product.rating) >= 4.5 && !isOutOfStock && (
                                                         <span className="bg-primary-50 text-primary-600 dark:bg-[#FDF0F1] dark:text-[#A6252A] text-xs font-sarabun font-medium px-2 py-0.5 rounded-full">
-                                                            HOT
+                                                            {tProducts("hot")}
                                                         </span>
                                                     )}
                                                     {/* Discount badge — red */}
@@ -152,7 +153,7 @@ export function BestSellingSection() {
                                                     {/* Out of stock badge */}
                                                     {isOutOfStock && (
                                                         <span className="bg-red-600 text-rose-50 text-xs font-sarabun font-medium px-2 py-0.5 rounded-full">
-                                                            OUT OF STOCK
+                                                            {tProducts("outOfStock")}
                                                         </span>
                                                     )}
                                                 </div>
@@ -184,11 +185,11 @@ export function BestSellingSection() {
                                                         {/* Price */}
                                                         <div className="flex items-baseline gap-2 font-sarabun font-medium text-base text-primary-700 dark:text-[#FDCFD4]">
                                                             <span>
-                                                                {discounted ? discounted.toFixed(2) : price.toFixed(2)} EGP
+                                                                {discounted ? discounted.toFixed(2) : price.toFixed(2)} {tCommon("currency")}
                                                             </span>
                                                             {discounted && (
                                                                 <span className="text-sm text-muted-foreground dark:text-[#D1D1D6]/60 line-through">
-                                                                    {price.toFixed(2)} EGP
+                                                                    {price.toFixed(2)} {tCommon("currency")}
                                                                 </span>
                                                             )}
                                                         </div>

@@ -27,7 +27,7 @@ export function FeaturesBar() {
                                 />
                             </div>
                             <div className="flex flex-col justify-center items-start gap-1 sm:gap-[5px]">
-                                <p className="text-[16px] sm:text-[18px] lg:text-[20px] font-semibold leading-[100%] text-[#A6252A] dark:text-[#FDCFD4] font-sarabun">
+                                <p className="text-[16px] sm:text-[18px] lg:text-[20px] font-semibold leading-[100%] text-primary-600 dark:text-[#FDCFD4] font-sarabun">
                                     {t(`${key}.title`)}
                                 </p>
                                 <p className="text-[12px] sm:text-[14px] font-normal leading-[100%] text-muted-foreground dark:text-[#D1D1D6] font-sarabun">

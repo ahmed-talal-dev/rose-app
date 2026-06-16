@@ -135,7 +135,7 @@ export function NotificationsDropdown() {
                     )}
                 >
                     {/* Header */}
-                    <div className="bg-[#741C21] h-[52px] w-[336px] px-4 py-3 flex items-center justify-between shrink-0">
+                    <div className="bg-primary-700 h-[52px] w-[336px] px-4 py-3 flex items-center justify-between shrink-0">
                         <h3 className="font-bold text-[20px] leading-none text-white">
                             {hasData ? t("notifications.title", { count: notifications.length }) : t("notifications.titleEmpty")}
                         </h3>
@@ -152,8 +152,8 @@ export function NotificationsDropdown() {
                             className="flex items-center gap-1.5 bg-transparent border-none outline-none cursor-pointer disabled:opacity-50 transition-colors group"
                         >
                             {/* lucide/brush-cleaning */}
-                            <BrushCleaning className="w-[18px] h-[18px] text-[#A1A1AA] group-hover:text-red-800 dark:group-hover:text-rose-400 transition-colors" strokeWidth={1.25} />
-                            <span className="font-semibold text-[12px] leading-none text-[#A1A1AA] group-hover:text-red-800 dark:group-hover:text-rose-400 transition-colors">
+                            <BrushCleaning className="w-[18px] h-[18px] text-zinc-400 group-hover:text-red-800 dark:group-hover:text-rose-400 transition-colors" strokeWidth={1.25} />
+                            <span className="font-semibold text-[12px] leading-none text-zinc-400 group-hover:text-red-800 dark:group-hover:text-rose-400 transition-colors">
                                 {t("notifications.clearAll")}
                             </span>
                         </button>
@@ -163,8 +163,8 @@ export function NotificationsDropdown() {
                             className="flex items-center gap-1.5 bg-transparent border-none outline-none cursor-pointer disabled:opacity-50 transition-colors group"
                         >
                             {/* lucide/check-check */}
-                            <CheckCheck className="w-[15px] h-[15px] text-[#A1A1AA] group-hover:text-red-800 dark:group-hover:text-rose-400 transition-colors" strokeWidth={1.25} />
-                            <span className="font-semibold text-[12px] leading-none text-[#A1A1AA] group-hover:text-red-800 dark:group-hover:text-rose-400 transition-colors">
+                            <CheckCheck className="w-[15px] h-[15px] text-zinc-400 group-hover:text-red-800 dark:group-hover:text-rose-400 transition-colors" strokeWidth={1.25} />
+                            <span className="font-semibold text-[12px] leading-none text-zinc-400 group-hover:text-red-800 dark:group-hover:text-rose-400 transition-colors">
                                 {t("notifications.markAllRead")}
                             </span>
                         </button>
@@ -172,16 +172,16 @@ export function NotificationsDropdown() {
 
                     {/* List / Empty Body */}
                     <div className={cn(
-                        "w-[336px] bg-white dark:bg-zinc-900 border-t border-[#D4D4D8] dark:border-zinc-800 shrink-0 overflow-y-auto",
+                        "w-[336px] bg-white dark:bg-zinc-900 border-t border-zinc-300 dark:border-zinc-800 shrink-0 overflow-y-auto",
                         hasData ? "h-[600px]" : "h-[224px]"
                     )}>
                         {notifications.length === 0 ? (
                             /* Empty State matches design exactly */
                             <div className="flex flex-col items-center justify-center h-full w-full select-none gap-2.5">
                                 {/* lucide/bell-off */}
-                                <BellOff className="w-[50px] h-[50px] text-[#71717A]" strokeWidth={1.75} />
+                                <BellOff className="w-[50px] h-[50px] text-zinc-500" strokeWidth={1.75} />
                                 {/* Text */}
-                                <p className="font-medium text-[14px] leading-none text-[#71717A]">
+                                <p className="font-medium text-[14px] leading-none text-zinc-500">
                                     {t("notifications.empty")}
                                 </p>
                             </div>
@@ -191,13 +191,13 @@ export function NotificationsDropdown() {
                                     <div
                                         key={notif.id}
                                         className={cn(
-                                            "box-sizing-border-box flex flex-col items-start p-4 gap-1.5 w-[336px] h-[100px] border-t border-[#D4D4D8] dark:border-zinc-800 shrink-0 relative",
-                                            notif.isRead ? "bg-white dark:bg-zinc-900" : "bg-[#E4E4E7] dark:bg-zinc-800"
+                                            "box-sizing-border-box flex flex-col items-start p-4 gap-1.5 w-[336px] h-[100px] border-t border-zinc-300 dark:border-zinc-800 shrink-0 relative",
+                                            notif.isRead ? "bg-white dark:bg-zinc-900" : "bg-zinc-200 dark:bg-zinc-800"
                                         )}
                                     >
                                         {/* Header */}
                                         <div className="flex flex-row justify-between items-center p-0 gap-2.5 w-[304px] h-[20px] shrink-0">
-                                            <h4 className="font-semibold text-[16px] leading-none text-[#27272A] dark:text-zinc-100 truncate max-w-[208px] text-start">
+                                            <h4 className="font-semibold text-[16px] leading-none text-zinc-800 dark:text-zinc-100 truncate max-w-[208px] text-start">
                                                 {notif.title}
                                             </h4>
                                             <button
@@ -207,12 +207,12 @@ export function NotificationsDropdown() {
                                                 }}
                                                 className="p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-full transition-colors cursor-pointer outline-none border-none bg-transparent shrink-0"
                                             >
-                                                <EllipsisVertical className="w-5 h-5 text-[#A1A1AA]" strokeWidth={1.5} />
+                                                <EllipsisVertical className="w-5 h-5 text-zinc-400" strokeWidth={1.5} />
                                             </button>
                                         </div>
 
                                         {/* Message Body */}
-                                        <p className="w-[304px] h-[42px] font-normal text-[14px] leading-[1.2] text-[#71717A] dark:text-zinc-400 text-start line-clamp-3 overflow-hidden shrink-0">
+                                        <p className="w-[304px] h-[42px] font-normal text-[14px] leading-[1.2] text-zinc-500 dark:text-zinc-400 text-start line-clamp-3 overflow-hidden shrink-0">
                                             {notif.message}
                                         </p>
 
@@ -239,12 +239,12 @@ export function NotificationsDropdown() {
                                                         className={cn(
                                                             "flex items-center gap-2 px-3 py-2 text-xs font-semibold w-full transition-colors border-none outline-none bg-transparent cursor-pointer",
                                                             notif.isRead
-                                                                ? "text-[#A1A1AA] cursor-not-allowed"
-                                                                : "text-[#27272A] dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                                                                ? "text-zinc-400 cursor-not-allowed"
+                                                                : "text-zinc-800 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800"
                                                         )}
                                                     >
                                                         <Check className={cn("w-[15px] h-[15px]", notif.isRead ? "text-[#A1A1AA]" : "text-[#71717A] dark:text-zinc-400")} strokeWidth={1.5} />
-                                                        <span>{t("notifications.markAsRead")}</span>
+                                                        <Check className={cn("w-[15px] h-[15px]", notif.isRead ? "text-zinc-400" : "text-zinc-500 dark:text-zinc-400")} strokeWidth={1.5} />
                                                     </button>
                                                     <button
                                                         onClick={(e) => {

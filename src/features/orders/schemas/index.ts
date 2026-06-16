@@ -8,7 +8,7 @@ export const orderParamsSchema = paginationSchema.extend({
 });
 
 export const createOrderSchema = z.object({
-    addressId: z.string().uuid("Invalid address ID"),
+    addressId: z.string().min(1, "Invalid address ID"),
     paymentMethod: z.enum(["CASH_ON_DELIVERY", "CREDIT_CARD"]),
     couponCode: z
         .string()

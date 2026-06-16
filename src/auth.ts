@@ -6,18 +6,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         CredentialsProvider({
             name: "credentials",
             credentials: {
-                username: { label: "Username", type: "text" },
+                email: { label: "Email", type: "email" },
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
                 try {
                     const res = await fetch(
-                        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
+                        `${process.env.NEXT_PUBLIC_API_URL}/auth/signin`,
                         {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
-                                username: credentials?.username,
+                                email: credentials?.email,
                                 password: credentials?.password,
                             }),
                         }
@@ -25,14 +25,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
                     const data = await res.json();
 
-                    if (!res.ok || !data.status) return null;
+                    if (!res.ok || !data.token) return null;
 
                     return {
-                        id: data.payload.user.id,
-                        email: data.payload.user.email,
-                        name: data.payload.user.username,
-                        role: data.payload.user.role,
-                        token: data.payload.token,
+                        id: data.user._id,
+                        email: data.user.email,
+                        name: `${data.user.firstName} ${data.user.lastName}`,
+                        role: data.user.role,
+                        token: data.token,
                     };
                 } catch {
                     return null;

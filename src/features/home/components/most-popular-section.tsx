@@ -17,6 +17,7 @@ function toNum(val: unknown): number {
 export function MostPopularSection() {
     const t = useTranslations("home.mostPopular");
     const tCommon = useTranslations("common");
+    const tProducts = useTranslations("products");
     const [activeOccasionId, setActiveOccasionId] = useState<string | undefined>(undefined);
     const [hoveredId, setHoveredId] = useState<string | null>(null);
     const { data: session } = useSession();
@@ -39,10 +40,10 @@ export function MostPopularSection() {
                     {/* Title */}
                     <div className="relative">
                         {/* Pink highlight behind text */}
-                        <div className="absolute bottom-0 left-0 h-[17px] w-[154px] bg-[#FFE0E7] dark:bg-[#4A1519]/40 rounded-r-[20px]" />
+                        <div className="absolute bottom-0 left-0 h-[17px] w-[154px] bg-rose-100 dark:bg-[#4A1519]/40 rounded-r-[20px]" />
                         {/* Underline */}
-                        <div className="absolute -bottom-[2px] inset-s-0 h-[2px] w-[60px] bg-[#A6252A] dark:bg-[#FDCFD4]" />
-                        <h2 className="relative font-sarabun font-bold text-[36px] leading-[100%] text-[#A6252A] dark:text-[#FDCFD4] z-10">
+                        <div className="absolute -bottom-[2px] inset-s-0 h-[2px] w-[60px] bg-primary-600 dark:bg-[#FDCFD4]" />
+                        <h2 className="relative font-sarabun font-bold text-[36px] leading-[100%] text-primary-600 dark:text-[#FDCFD4] z-10">
                             {t("title")}
                         </h2>
                     </div>
@@ -60,7 +61,7 @@ export function MostPopularSection() {
                             <button
                                 key={occ.id}
                                 onClick={() => setActiveOccasionId(occ.id)}
-                                className={`shrink-0 font-sarabun font-medium text-base leading-[100%] transition-colors whitespace-nowrap ${activeOccasionId === occ.id ? "text-[#A6252A] dark:text-[#FDCFD4]" : "text-zinc-700 dark:text-muted-foreground hover:text-[#A6252A] dark:hover:text-[#FDCFD4]"
+                                className={`shrink-0 font-sarabun font-medium text-base leading-[100%] transition-colors whitespace-nowrap ${activeOccasionId === occ.id ? "text-primary-600 dark:text-[#FDCFD4]" : "text-zinc-700 dark:text-muted-foreground hover:text-primary-600 dark:hover:text-[#FDCFD4]"
                                     }`}
                             >
                                 {occ.title}
@@ -90,7 +91,7 @@ export function MostPopularSection() {
                                 product.discountType === "PERCENT"
                                     ? `-${discountVal}% OFF`
                                     : product.discountType === "FIXED"
-                                        ? `-${discountVal} EGP`
+                                        ? `-${discountVal} ${tCommon("currency")}`
                                         : null;
 
                             return (
@@ -116,18 +117,18 @@ export function MostPopularSection() {
                                         {/* Badges — top end */}
                                         <div className="absolute top-2.5 end-2.5 flex gap-1.5 flex-wrap justify-end">
                                             {isHot && !isOutOfStock && (
-                                                <span className="bg-[#FFE0E7] text-[#A6252A] dark:bg-[#4A1519] dark:text-[#FDCFD4] text-[12px] font-sarabun font-medium px-2 py-0.5 rounded-full leading-[100%]">
-                                                    HOT
+                                                <span className="bg-rose-100 text-primary-600 dark:bg-[#4A1519] dark:text-[#FDCFD4] text-[12px] font-sarabun font-medium px-2 py-0.5 rounded-full leading-[100%]">
+                                                    {tProducts("hot")}
                                                 </span>
                                             )}
                                             {discountLabel && !isOutOfStock && (
-                                                <span className="bg-[#FBEAEA] text-[#A6252A] dark:bg-[#FDCFD4] dark:text-[#4A1519] text-[12px] font-sarabun font-medium px-2 py-0.5 rounded-full leading-[100%]">
-                                                    NEW
+                                                <span className="bg-primary-50 text-primary-600 dark:bg-[#FDCFD4] dark:text-[#4A1519] text-[12px] font-sarabun font-medium px-2 py-0.5 rounded-full leading-[100%]">
+                                                    {tProducts("new")}
                                                 </span>
                                             )}
                                             {isOutOfStock && (
-                                                <span className="bg-[#A6252A] text-white text-[12px] font-sarabun font-medium px-2 py-0.5 rounded-full leading-[100%]">
-                                                    OUT OF STOCK
+                                                <span className="bg-primary-600 text-white text-[12px] font-sarabun font-medium px-2 py-0.5 rounded-full leading-[100%]">
+                                                    {tProducts("outOfStock")}
                                                 </span>
                                             )}
                                         </div>
@@ -143,13 +144,13 @@ export function MostPopularSection() {
                                                     }}
                                                     className="w-[30px] h-[30px] bg-card rounded-full flex items-center justify-center hover:bg-muted transition-colors"
                                                 >
-                                                    <Heart className="size-5 text-[#A6252A] dark:text-[#FDCFD4]" />
+                                                    <Heart className="size-5 text-primary-600 dark:text-[#FDCFD4]" />
                                                 </button>
                                                 <Link
                                                     href={`/products/${product.id}`}
                                                     className="w-[30px] h-[30px] bg-card rounded-full flex items-center justify-center hover:bg-muted transition-colors"
                                                 >
-                                                    <Eye className="size-5 text-[#A6252A] dark:text-[#FDCFD4]" />
+                                                    <Eye className="size-5 text-primary-600 dark:text-[#FDCFD4]" />
                                                 </Link>
                                             </div>
                                         )}
@@ -159,7 +160,7 @@ export function MostPopularSection() {
                                     <div className="flex items-end justify-between gap-2">
                                         <div className="flex flex-col gap-3 flex-1 min-w-0">
                                             {/* Title */}
-                                            <h3 className="font-sarabun font-semibold text-[18px] leading-[100%] text-[#A6252A] dark:text-[#FDCFD4] truncate">
+                                            <h3 className="font-sarabun font-semibold text-[18px] leading-[100%] text-primary-600 dark:text-[#FDCFD4] truncate">
                                                 {product.title}
                                             </h3>
 
@@ -179,13 +180,13 @@ export function MostPopularSection() {
                                                 </div>
 
                                                 {/* Price */}
-                                                <div className="flex items-end gap-2 font-sarabun font-medium text-[16px] leading-[100%] text-[#A6252A] dark:text-[#FDCFD4]">
+                                                <div className="flex items-end gap-2 font-sarabun font-medium text-[16px] leading-[100%] text-primary-600 dark:text-[#FDCFD4]">
                                                     <span>
-                                                        {discounted ? discounted.toFixed(2) : price.toFixed(2)} EGP
+                                                        {discounted ? discounted.toFixed(2) : price.toFixed(2)} {tCommon("currency")}
                                                     </span>
                                                     {discounted && (
                                                         <span className="text-sm text-muted-foreground line-through">
-                                                            {price.toFixed(2)} EGP
+                                                            {price.toFixed(2)} {tCommon("currency")}
                                                         </span>
                                                     )}
                                                 </div>
@@ -200,7 +201,7 @@ export function MostPopularSection() {
                                                     router.push("/login");
                                                 }
                                             }}
-                                            className="shrink-0 size-[42px] flex items-center justify-center bg-primary-600 hover:bg-primary-700 dark:bg-[#A6252A] dark:hover:bg-[#4A1519] disabled:opacity-50 disabled:cursor-not-allowed rounded-full shadow-[0_0_40px_5px_rgba(0,0,0,0.05)] transition-colors"
+                                            className="shrink-0 size-[42px] flex items-center justify-center bg-primary-600 hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-[#4A1519] disabled:opacity-50 disabled:cursor-not-allowed rounded-full shadow-[0_0_40px_5px_rgba(0,0,0,0.05)] transition-colors"
                                         >
                                             <ShoppingCart className="size-5 text-primary-50" />
                                         </button>

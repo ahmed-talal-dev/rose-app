@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
             // },
             {
                 protocol: "https",
+                hostname: "flower.elevateegy.com",
+            },
+            {
+                protocol: "https",
                 hostname: "rose-app.elevate-bootcamp.cloud",
             },
             {

@@ -32,7 +32,21 @@ export default function ProductsPage() {
 
     // Parse params from URL
     const activeCategoryId = searchParams.get("category") || null;
-    const activeOccasionId = searchParams.get("occasion") || null;
+    const rawOccasion = searchParams.get("occasion") || null;
+    const occasionSlugToId: Record<string, string> = {
+        "wedding": "69d988724461df0f939b57ea",
+        "anniversary": "69d988734461df0f939b57f3",
+        "engagement": "69d988724461df0f939b57ea",
+        "graduation": "69d988734461df0f939b57ed",
+        "birthday": "69d988734461df0f939b57f0",
+        "new-year": "69d988734461df0f939b57f6",
+        "valentine's-day": "69d988734461df0f939b57f9",
+        "mother's-day": "69d988744461df0f939b57fc",
+        "father's-day": "69d988744461df0f939b57ff",
+        "christmas": "69d988744461df0f939b5802",
+        "easter": "69d988744461df0f939b5805",
+    };
+    const activeOccasionId = (rawOccasion && occasionSlugToId[rawOccasion.toLowerCase()]) || rawOccasion;
     const activeRating = searchParams.get("rating") ? Number(searchParams.get("rating")) : null;
     const activeMinPrice = searchParams.get("minPrice") || "";
     const activeMaxPrice = searchParams.get("maxPrice") || "";

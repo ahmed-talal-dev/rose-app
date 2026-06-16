@@ -20,6 +20,7 @@ function toNum(val: unknown): number {
 
 export function ProductCard({ product }: ProductCardProps) {
     const t = useTranslations("common");
+    const tProducts = useTranslations("products");
     const locale = useLocale();
     const router = useRouter();
     const { data: session } = useSession();
@@ -62,7 +63,7 @@ export function ProductCard({ product }: ProductCardProps) {
             removeFromWishlistMutation.mutate(product.id, {
                 onSuccess: (data) => {
                     console.log("[Wishlist Success] Removed successfully", data);
-                    toast.success(locale === "ar" ? "تمت الإزالة من المفضلة!" : "Removed from wishlist!");
+                    toast.success(t("removedFromWishlist"));
                 },
                 onError: (err) => {
                     console.error("[Wishlist Error] Failed to remove", err);
@@ -73,7 +74,7 @@ export function ProductCard({ product }: ProductCardProps) {
             addToWishlistMutation.mutate(product.id, {
                 onSuccess: (data) => {
                     console.log("[Wishlist Success] Added successfully", data);
-                    toast.success(locale === "ar" ? "تمت الإضافة إلى المفضلة!" : "Added to wishlist!");
+                    toast.success(t("addedToWishlist"));
                 },
                 onError: (err) => {
                     console.error("[Wishlist Error] Failed to add", err);
@@ -100,7 +101,7 @@ export function ProductCard({ product }: ProductCardProps) {
             {
                 onSuccess: (data) => {
                     console.log("[Cart Success] Added to cart successfully!", data);
-                    toast.success(locale === "ar" ? "تمت إضافة المنتج إلى السلة!" : "Product added to cart!");
+                    toast.success(t("addedToCart"));
                 },
                 onError: (err) => {
                     console.error("[Cart Error] Failed to add to cart", err);
@@ -134,30 +135,30 @@ export function ProductCard({ product }: ProductCardProps) {
                     />
                 ) : (
                     <div className="w-full h-full flex items-center justify-center text-zinc-400 text-xs">
-                        No Image
+                        {tProducts("noImage")}
                     </div>
                 )}
 
                 {/* Top-left Badges */}
                 <div className="absolute top-[10px] left-[10px] flex flex-row items-center gap-[6px] z-10 pointer-events-none">
                     {toNum(product.rating) >= 4.5 && !isOutOfStock && (
-                        <div className="flex justify-center items-center px-[8px] py-[2px] bg-[#FBEAEA] rounded-full h-[16px]">
-                            <span className="font-sarabun font-medium text-[12px] leading-none text-[#A6252A]">
-                                HOT
+                        <div className="flex justify-center items-center px-[8px] py-[2px] bg-primary-50 rounded-full h-[16px]">
+                            <span className="font-sarabun font-medium text-[12px] leading-none text-primary-600">
+                                {tProducts("hot")}
                             </span>
                         </div>
                     )}
                     {isOutOfStock && (
-                        <div className="flex justify-center items-center px-[8px] py-[2px] bg-[#DC2626] rounded-full h-[16px]">
-                            <span className="font-sarabun font-medium text-[12px] leading-none text-[#FFF1F5]">
-                                OUT OF STOCK
+                        <div className="flex justify-center items-center px-[8px] py-[2px] bg-red-600 rounded-full h-[16px]">
+                            <span className="font-sarabun font-medium text-[12px] leading-none text-rose-50">
+                                {tProducts("outOfStock")}
                             </span>
                         </div>
                     )}
                     {product.discountType && !isOutOfStock && (
                         <div className="flex justify-center items-center px-[8px] py-[2px] bg-zinc-100 rounded-full h-[16px]">
                             <span className="font-sarabun font-medium text-[12px] leading-none text-zinc-700">
-                                NEW
+                                {tProducts("new")}
                             </span>
                         </div>
                     )}
@@ -172,17 +173,17 @@ export function ProductCard({ product }: ProductCardProps) {
                         className="flex flex-row justify-center items-center px-[6px] py-0 gap-[6px] h-[30px] bg-white rounded-[1000px] shadow-md hover:bg-zinc-50 transition-colors border-none cursor-pointer"
                     >
                         {isWishlistLoading ? (
-                            <Loader2 className="w-[20px] h-[20px] animate-spin text-[#A6252A]" />
+                            <Loader2 className="w-[20px] h-[20px] animate-spin text-primary-600" />
                         ) : (
                             <Heart
-                                className={`w-[20px] h-[20px] ${isInWishlist ? "fill-[#A6252A] text-[#A6252A]" : "text-[#A6252A]"}`}
+                                className={`w-[20px] h-[20px] ${isInWishlist ? "fill-primary-600 text-primary-600" : "text-primary-600"}`}
                                 strokeWidth={1.5}
                             />
                         )}
-                        <span className="font-sarabun font-medium text-[12px] leading-none text-[#A6252A] whitespace-nowrap">
+                        <span className="font-sarabun font-medium text-[12px] leading-none text-primary-600 whitespace-nowrap">
                             {isInWishlist
-                                ? (locale === "ar" ? "إزالة من المفضلة" : "Remove from Wishlist")
-                                : (locale === "ar" ? "أضف إلى المفضلة" : "Add to Wishlist")
+                                ? t("removeFromWishlist")
+                                : t("addToWishlist")
                             }
                         </span>
                     </button>
@@ -193,7 +194,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="flex flex-col justify-end items-start w-[270px] gap-[12px] flex-1">
 
                 <Link href={`/products/${product.id}`} className="block w-full">
-                    <h3 className="font-sarabun font-semibold text-[18px] leading-none text-[#741C21] dark:text-[#E07A7D] hover:text-[#A6252A] dark:hover:text-[#D75458] transition-colors truncate">
+                    <h3 className="font-sarabun font-semibold text-[18px] leading-none text-primary-700 dark:text-primary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors truncate">
                         {product.title}
                     </h3>
                 </Link>
@@ -206,19 +207,19 @@ export function ProductCard({ product }: ProductCardProps) {
                                 <Star
                                     key={i}
                                     className={`w-[16.88px] h-[15px] ${i < Math.round(toNum(product.rating))
-                                            ? "fill-[#FBA707] text-[#FBA707]"
-                                            : "fill-transparent text-[#FBA707]"
+                                        ? "fill-yellow-500 text-yellow-500"
+                                        : "fill-transparent text-yellow-500"
                                         }`}
                                     strokeWidth={1.5}
                                 />
                             ))}
                         </div>
 
-                        <div className="flex flex-row items-end gap-[8px] w-full font-sarabun font-medium text-[16px] leading-none text-[#741C21] dark:text-[#E07A7D]">
-                            <span>{discounted ? discounted.toFixed(2) : price.toFixed(2)} EGP</span>
+                        <div className="flex flex-row items-end gap-[8px] w-full font-sarabun font-medium text-[16px] leading-none text-primary-700 dark:text-primary-300">
+                            <span>{discounted ? discounted.toFixed(2) : price.toFixed(2)} {t("currency")}</span>
                             {discounted && (
                                 <span className="line-through opacity-70">
-                                    {price.toFixed(2)} EGP
+                                    {price.toFixed(2)} {t("currency")}
                                 </span>
                             )}
                         </div>
@@ -228,12 +229,12 @@ export function ProductCard({ product }: ProductCardProps) {
                         aria-label={t("addToCart")}
                         disabled={isOutOfStock || addToCartMutation.isPending}
                         onClick={handleAddToCart}
-                        className="flex items-center justify-center w-[42px] h-[42px] bg-[#A6252A] shadow-[0_0_40px_5px_rgba(0,0,0,0.05)] hover:scale-105 disabled:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-full transition-all duration-200 focus:outline-none border-none cursor-pointer shrink-0"
+                        className="flex items-center justify-center w-[42px] h-[42px] bg-primary-600 shadow-[0_0_40px_5px_rgba(0,0,0,0.05)] hover:scale-105 disabled:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-full transition-all duration-200 focus:outline-none border-none cursor-pointer shrink-0"
                     >
                         {addToCartMutation.isPending ? (
                             <Loader2 className="w-[24px] h-[24px] animate-spin text-white" />
                         ) : (
-                            <ShoppingCart className="w-[24px] h-[24px] text-[#FBEAEA]" strokeWidth={1.5} />
+                            <ShoppingCart className="w-[24px] h-[24px] text-primary-50" strokeWidth={1.5} />
                         )}
                     </button>
                 </div>

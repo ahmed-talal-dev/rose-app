@@ -70,7 +70,7 @@ export default function ProductDetailPage() {
     if (isLoading) {
         return (
             <div className="mx-auto max-w-7xl px-4 py-20 flex flex-col items-center justify-center gap-4">
-                <Loader2 className="size-10 animate-spin text-[#A6252A]" />
+                <Loader2 className="size-10 animate-spin text-primary-600" />
                 <span className="text-zinc-500 dark:text-zinc-400 font-sarabun text-sm">
                     {tCommon("loading")}
                 </span>
@@ -89,7 +89,7 @@ export default function ProductDetailPage() {
                 </p>
                 <Link
                     href="/products"
-                    className="mt-6 px-5 py-2.5 bg-[#A6252A] hover:bg-[#741C21] text-white text-sm font-semibold rounded-xl font-sarabun transition-colors"
+                    className="mt-6 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold rounded-xl font-sarabun transition-colors"
                 >
                     {t("backToProducts") || "Back to Products"}
                 </Link>
@@ -112,7 +112,7 @@ export default function ProductDetailPage() {
         product.discountType === "PERCENT"
             ? `-${discountVal}% OFF`
             : product.discountType === "FIXED"
-                ? `-${discountVal} EGP`
+                ? `-${discountVal} ${tCommon("currency")}`
                 : null;
 
     // Wishlist check
@@ -127,13 +127,13 @@ export default function ProductDetailPage() {
         if (isInWishlist) {
             removeFromWishlistMutation.mutate(product.id, {
                 onSuccess: () => {
-                    toast.success(locale === "ar" ? "تمت الإزالة من المفضلة!" : "Removed from wishlist!");
+                    toast.success(tCommon("removedFromWishlist"));
                 },
             });
         } else {
             addToWishlistMutation.mutate(product.id, {
                 onSuccess: () => {
-                    toast.success(locale === "ar" ? "تمت الإضافة إلى المفضلة!" : "Added to wishlist!");
+                    toast.success(tCommon("addedToWishlist"));
                 },
             });
         }
@@ -149,7 +149,7 @@ export default function ProductDetailPage() {
             { productId: product.id, quantity: 1 },
             {
                 onSuccess: () => {
-                    toast.success(locale === "ar" ? "تمت إضافة المنتج إلى السلة!" : "Added to cart successfully!");
+                    toast.success(tCommon("addedToCart"));
                 },
                 onError: (err) => {
                     toast.error(err.message || "Failed to add to cart");
@@ -166,7 +166,7 @@ export default function ProductDetailPage() {
         }
 
         if (!reviewBody.trim()) {
-            toast.error(locale === "ar" ? "برجاء كتابة التعليق" : "Please write a review comment");
+            toast.error(t("reviewCommentRequired"));
             return;
         }
 
@@ -180,7 +180,7 @@ export default function ProductDetailPage() {
             },
             {
                 onSuccess: () => {
-                    toast.success(locale === "ar" ? "تم إضافة التقييم بنجاح!" : "Review added successfully!");
+                    toast.success(t("reviewSuccess"));
                     setRating(5);
                     setReviewTitle("");
                     setReviewBody("");
@@ -192,7 +192,7 @@ export default function ProductDetailPage() {
         );
     };
 
-    const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rose-app.elevate-bootcamp.cloud";
+    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://rose-app.elevate-bootcamp.cloud";
 
     const resolveImageUrl = (url: string) => {
         if (!url) return "/images/placeholder.svg";
@@ -305,7 +305,7 @@ export default function ProductDetailPage() {
                                         key={index}
                                         onClick={() => setSelectedImage(imgUrl)}
                                         className={`relative w-[91px] h-[111px] rounded-[8px] overflow-hidden border-2 bg-zinc-50 shrink-0 cursor-pointer transition-colors ${isCurrent
-                                            ? "border-[#A6252A]"
+                                            ? "border-primary-600"
                                             : "border-transparent"
                                             }`}
                                     >
@@ -336,27 +336,27 @@ export default function ProductDetailPage() {
                         <div className="flex flex-row items-center p-0 gap-3.5 w-full lg:w-[357px] lg:h-[32px] shrink-0">
                             <div className="flex flex-row items-center p-0 gap-1.5 w-[194px] lg:h-[30px] shrink-0">
                                 {discounted && (
-                                    <span className="w-[51px] lg:h-[30px] font-sarabun font-bold text-[30px] leading-none text-[#D4D4D8] dark:text-zinc-650 line-through">
+                                    <span className="w-[51px] lg:h-[30px] font-sarabun font-bold text-[30px] leading-none text-zinc-300 dark:text-zinc-650 line-through">
                                         {price.toFixed(0)}
                                     </span>
                                 )}
-                                <span className="w-[137px] lg:h-[30px] font-sarabun font-bold text-[30px] leading-none text-[#27272A] dark:text-zinc-100">
-                                    {(discounted || price).toFixed(2)} EGP
+                                <span className="w-[137px] lg:h-[30px] font-sarabun font-bold text-[30px] leading-none text-zinc-800 dark:text-zinc-100">
+                                    {(discounted || price).toFixed(2)} {tCommon("currency")}
                                 </span>
                             </div>
 
                             {/* Stock Indicator */}
                             {product.stock > 0 ? (
-                                <div className="flex flex-row items-center justify-center px-3 py-1.5 gap-1.5 w-[149px] h-8 bg-[#F4F4F5] dark:bg-zinc-800 rounded-[16px] shrink-0">
+                                <div className="flex flex-row items-center justify-center px-3 py-1.5 gap-1.5 w-[149px] h-8 bg-zinc-100 dark:bg-zinc-800 rounded-[16px] shrink-0">
                                     <Package className="size-5 text-zinc-500 dark:text-zinc-400 shrink-0" strokeWidth={1.5} />
-                                    <span className="w-[99px] h-3.5 font-sarabun font-medium text-[14px] leading-none text-[#27272A] dark:text-zinc-350 truncate">
-                                        {product.stock} {locale === "ar" ? "في المخزون" : "left in stock"}
+                                    <span className="w-[99px] h-3.5 font-sarabun font-medium text-[14px] leading-none text-zinc-800 dark:text-zinc-350 truncate">
+                                        {product.stock} {t("leftInStock")}
                                     </span>
                                 </div>
                             ) : (
                                 <div className="flex flex-row items-center justify-center px-3 py-1.5 gap-1.5 w-[149px] h-8 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/30 rounded-[16px] shrink-0">
-                                    <span className="font-sarabun font-semibold text-[14px] leading-none text-red-650 dark:text-red-400">
-                                        {locale === "ar" ? "نفذ" : "Out of Stock"}
+                                    <span className="font-sarabun font-semibold text-[14px] leading-none text-red-600 dark:text-red-400">
+                                        {t("outOfStock")}
                                     </span>
                                 </div>
                             )}
@@ -364,13 +364,13 @@ export default function ProductDetailPage() {
                     </div>
 
                     {/* Line 4 */}
-                    <div className="w-full lg:w-[605px] h-0 border-t border-[#F4F4F5] dark:border-zinc-850 shrink-0" />
+                    <div className="w-full lg:w-[605px] h-0 border-t border-zinc-100 dark:border-zinc-850 shrink-0 mt-8" />
 
                     {/* Rating row */}
                     <div className="flex flex-row items-center p-0 gap-1.5 w-full lg:w-[605px] h-5 shrink-0">
                         <Star className="size-5 fill-[#FFA508] text-[#FFA508] shrink-0" strokeWidth={1.5} />
-                        <span className="w-[91px] h-4 font-sarabun font-normal text-[16px] leading-none text-black dark:text-zinc-300">
-                            {locale === "ar" ? "تقييم:" : "Rating:"} {toNum(product.rating).toFixed(1)}/5
+                        <span className="w-[91px] h-4 font-sarabun font-normal text-[16px] leading-none text-black dark:text-zinc-300 ">
+                            {t("ratingLabel")} {toNum(product.rating).toFixed(1)}/5
                         </span>
                         <button
                             type="button"
@@ -382,12 +382,12 @@ export default function ProductDetailPage() {
                             }}
                             className="w-[73px] h-4 font-sarabun font-medium text-[16px] leading-none text-[#155DFC] dark:text-blue-400 hover:underline border-none bg-transparent cursor-pointer text-start"
                         >
-                            ({product.ratings || 0} {locale === "ar" ? "تقييمات" : "ratings"})
+                            ({product.ratings || 0} {t("ratings")})
                         </button>
                     </div>
 
                     {/* Line 5 */}
-                    <div className="w-full lg:w-[605px] h-0 border-t border-[#F4F4F5] dark:border-zinc-850 shrink-0" />
+                    <div className="w-full lg:w-[605px] h-0 border-t border-zinc-100 dark:border-zinc-850 shrink-0" />
 
                     {/* Description */}
                     <div className="flex flex-row justify-center items-start p-0 gap-2.5 w-full lg:w-[605px] flex-1 shrink-0">
@@ -432,7 +432,7 @@ export default function ProductDetailPage() {
                                 <>
                                     <ShoppingCart className="w-[25px] h-[25px] text-white shrink-0" strokeWidth={1.75} />
                                     <span className="w-20 h-4 font-sarabun font-medium text-[16px] leading-none text-white text-center">
-                                        {locale === "ar" ? "إضافة للسلة" : "Add to Cart"}
+                                        {tCommon("addToCart")}
                                     </span>
                                 </>
                             )}
@@ -450,19 +450,19 @@ export default function ProductDetailPage() {
                     {/* Heading Component */}
                     <div className="relative w-[268px] h-[41px] shrink-0">
                         {/* Rectangle 1 (underlying soft-pink highlight) */}
-                        <div className="absolute w-[154px] h-[17px] left-0 top-[24px] bg-[#FFE0E7] dark:bg-[#741C21]/40 rounded-r-[20px]" />
+                        <div className="absolute w-[154px] h-[17px] left-0 top-[24px] bg-rose-100 dark:bg-[#741C21]/40 rounded-r-[20px]" />
                         {/* Rectangle 2 (darker pink accent line) */}
-                        <div className="absolute w-[60px] h-[2px] left-0 top-[39px] bg-[#E65073]" />
+                        <div className="absolute w-[60px] h-[2px] left-0 top-[39px] bg-rose-600" />
                         {/* Title text */}
-                        <h2 className="absolute w-[268px] h-[36px] left-0 top-0 font-sarabun font-bold text-[36px] leading-none text-[#741C21] dark:text-rose-300 flex items-center z-10">
-                            {locale === "ar" ? "تقييمات المنتج" : "Product Reviews"}
+                        <h2 className="absolute w-[268px] h-[36px] left-0 top-0 font-sarabun font-bold text-[36px] leading-none text-primary-700 dark:text-rose-300 flex items-center z-10">
+                            {t("reviewsTitle")}
                         </h2>
                     </div>
 
                     {/* General rating details row */}
                     <div className="flex flex-col items-start p-0 gap-[4px] shrink-0 mt-2">
-                        <span className="font-sarabun font-semibold text-[20px] leading-none text-[#27272A] dark:text-zinc-200">
-                            {locale === "ar" ? "التقييم العام:" : "General rating:"}
+                        <span className="font-sarabun font-semibold text-[20px] leading-none text-zinc-800 dark:text-zinc-200">
+                            {t("generalRating")}
                         </span>
 
                         <div className="flex flex-col items-start p-0 gap-[4px] shrink-0">
@@ -472,8 +472,8 @@ export default function ProductDetailPage() {
                                     {toNum(product.rating).toFixed(1)}
                                 </span>
                                 {/* Changed color from #155DFC to #A1A1AA and size to 14px to match the date style */}
-                                <span className="font-sarabun font-medium text-[14px] leading-none text-[#A1A1AA] dark:text-zinc-500 cursor-pointer hover:underline">
-                                    ({reviewsList.length} {locale === "ar" ? "تقييمات" : "ratings"})
+                                <span className="font-sarabun font-medium text-[14px] leading-none text-zinc-400 dark:text-zinc-500 cursor-pointer hover:underline">
+                                    ({reviewsList.length} {t("ratings")})
                                 </span>
                             </div>
 
@@ -495,7 +495,7 @@ export default function ProductDetailPage() {
                 </div>
 
                 {/* Full width Horizontal Line */}
-                <div className="w-full h-px bg-[#E4E4E7] dark:bg-zinc-800 shrink-0" />
+                <div className="w-full h-px bg-zinc-200 dark:bg-zinc-800 shrink-0" />
 
                 {/* Form and Reviews Content Horizontal Flex */}
                 <div className="flex flex-col lg:flex-row items-start p-0 gap-[20px] w-full shrink-0">
@@ -505,9 +505,7 @@ export default function ProductDetailPage() {
                         {reviewsList.length === 0 ? (
                             <div className="flex flex-col items-center justify-center p-10 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-100 dark:border-zinc-800 rounded-[12px] text-center gap-3 w-full">
                                 <span className="text-zinc-500 dark:text-zinc-400 font-sarabun text-[16px]">
-                                    {locale === "ar"
-                                        ? "لا توجد تقييمات بعد لهذا المنتج. كن أول من يكتب تقييماً!"
-                                        : "No reviews yet for this product. Be the first to write a review!"}
+                                    {t("noReviews")}
                                 </span>
                             </div>
                         ) : (
@@ -520,18 +518,18 @@ export default function ProductDetailPage() {
                                     return (
                                         <div
                                             key={review.id}
-                                            className="box-border flex flex-col items-start p-0 pb-[16px] mb-[16px] gap-[10px] w-full lg:w-[742px] border-b border-[#F4F4F5] dark:border-zinc-800 shrink-0 last:border-b-0"
+                                            className="box-border flex flex-col items-start p-0 pb-[16px] mb-[16px] gap-[10px] w-full lg:w-[742px] border-b border-zinc-100 dark:border-zinc-800 shrink-0 last:border-b-0"
                                         >
                                             {/* User Row */}
                                             <div className="flex flex-row items-center p-0 px-[3px] gap-[10px] shrink-0">
-                                                <div className="flex flex-row justify-center items-center w-[45px] h-[45px] bg-[#A6252A] rounded-full shrink-0 font-sarabun font-semibold text-[20px] leading-none text-white select-none">
+                                                <div className="flex flex-row justify-center items-center w-[45px] h-[45px] bg-primary-600 rounded-full shrink-0 font-sarabun font-semibold text-[20px] leading-none text-white select-none">
                                                     {initial}
                                                 </div>
                                                 <div className="flex flex-col items-start justify-center shrink-0 gap-[4px]">
-                                                    <span className="font-sarabun font-semibold text-[16px] leading-none text-[#27272A] dark:text-zinc-200">
+                                                    <span className="font-sarabun font-semibold text-[16px] leading-none text-zinc-800 dark:text-zinc-200">
                                                         {name}
                                                     </span>
-                                                    <span className="font-sarabun font-medium text-[14px] leading-none text-[#A1A1AA] dark:text-zinc-500 whitespace-nowrap">
+                                                    <span className="font-sarabun font-medium text-[14px] leading-none text-zinc-400 dark:text-zinc-500 whitespace-nowrap">
                                                         {formatDate(review.createdAt)}
                                                     </span>
                                                 </div>
@@ -585,7 +583,7 @@ export default function ProductDetailPage() {
                         {/* Rating selector row */}
                         <div className="flex flex-row items-center py-[10px] px-0 gap-[10px] w-full h-[45px] shrink-0">
                             <span className="font-sarabun font-medium text-[16px] leading-none text-[#27272A] dark:text-zinc-200 select-none">
-                                {locale === "ar" ? "تقييمك:" : "Your rating:"}
+                                {t("yourRating")}
                             </span>
                             <div className="flex flex-row items-center p-0 gap-[4px] h-[25px] shrink-0">
                                 {Array.from({ length: 5 }).map((_, i) => {
@@ -614,31 +612,27 @@ export default function ProductDetailPage() {
                         {/* Title input field */}
                         <div className="flex flex-col items-start p-0 gap-[6px] w-full lg:w-[484px] shrink-0">
                             <label className="font-inter font-medium text-[14px] leading-none text-[#27272A] dark:text-zinc-300">
-                                {locale === "ar" ? "العنوان" : "Title"}
+                                {t("reviewTitleLabel")}
                             </label>
                             <input
                                 type="text"
-                                placeholder={locale === "ar" ? "اكتب عنوان التقييم" : "Enter review title"}
+                                placeholder={t("reviewTitlePlaceholder")}
                                 value={reviewTitle}
                                 onChange={(e) => setReviewTitle(e.target.value)}
-                                className="box-border flex flex-row items-center px-[16px] w-full h-[49px] bg-white dark:bg-zinc-800 border border-[#D4D4D8] dark:border-zinc-700 rounded-[10px] text-[14px] text-[#27272A] dark:text-zinc-100 font-inter placeholder-[#A1A1AA] outline-none focus:border-[#A6252A] transition-colors"
+                                className="box-border flex flex-row items-center px-[16px] w-full h-[49px] bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-[10px] text-[14px] text-zinc-800 dark:text-zinc-100 font-inter placeholder:text-zinc-400 outline-none focus:border-primary-600 transition-colors"
                             />
                         </div>
 
                         {/* Review body textarea */}
                         <div className="flex flex-col items-start p-0 gap-[6px] w-full lg:w-[484px] shrink-0">
                             <label className="font-inter font-medium text-[14px] leading-none text-[#27272A] dark:text-zinc-300">
-                                {locale === "ar" ? "التقييم" : "Review"}
+                                {t("reviewTextLabel")}
                             </label>
                             <textarea
-                                placeholder={
-                                    locale === "ar"
-                                        ? "ما هو رأيك في هذا المنتج؟"
-                                        : "What do you think of this product?"
-                                }
+                                placeholder={t("reviewTextPlaceholder")}
                                 value={reviewBody}
                                 onChange={(e) => setReviewBody(e.target.value)}
-                                className="box-border flex flex-row items-start p-[16px] w-full min-h-[150px] h-[150px] bg-white dark:bg-zinc-800 border border-[#D4D4D8] dark:border-zinc-700 rounded-[10px] text-[14px] text-[#27272A] dark:text-zinc-100 font-inter placeholder-[#A1A1AA] outline-none focus:border-[#A6252A] transition-colors resize-y"
+                                className="box-border flex flex-row items-start p-[16px] w-full min-h-[150px] h-[150px] bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-[10px] text-[14px] text-zinc-800 dark:text-zinc-100 font-inter placeholder:text-zinc-400 outline-none focus:border-primary-600 transition-colors resize-y"
                             />
                         </div>
 
@@ -646,13 +640,13 @@ export default function ProductDetailPage() {
                         <button
                             type="submit"
                             disabled={createReviewMutation.isPending}
-                            className="flex flex-row justify-center items-center px-[16px] w-full lg:w-[484px] h-[44px] bg-[#A6252A] hover:bg-[#8B1E22] disabled:bg-[#D4D4D8] disabled:opacity-70 transition-colors rounded-[10px] cursor-pointer border-none shadow-sm text-white font-sarabun font-medium text-[16px] leading-none mt-2 outline-none"
+                            className="flex flex-row justify-center items-center px-[16px] w-full lg:w-[484px] h-[44px] bg-primary-600 hover:bg-[#8B1E22] disabled:bg-zinc-300 disabled:opacity-70 transition-colors rounded-[10px] cursor-pointer border-none shadow-sm text-white font-sarabun font-medium text-[16px] leading-none mt-2 outline-none"
                         >
                             {createReviewMutation.isPending ? (
                                 <Loader2 className="w-[20px] h-[20px] animate-spin text-white" />
                             ) : (
                                 <span>
-                                    {locale === "ar" ? "إضافة تقييم" : "Add Review"}
+                                    {t("addReviewButton")}
                                 </span>
                             )}
                         </button>
@@ -669,7 +663,7 @@ export default function ProductDetailPage() {
                         <div className="absolute w-[154px] h-[17px] left-0 top-[24px] bg-[#FFE0E7] dark:bg-[#741C21]/40 rounded-r-[20px]" />
                         <div className="absolute w-[60px] h-[2px] left-0 top-[39px] bg-[#E65073]" />
                         <h2 className="absolute w-[279px] h-[36px] left-0 top-0 font-sarabun font-bold text-[36px] leading-none text-[#741C21] dark:text-rose-300 flex items-center z-10">
-                            {locale === "ar" ? "منتجات ذات صلة" : "Related Products"}
+                            {t("relatedProducts")}
                         </h2>
                     </div>
 

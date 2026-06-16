@@ -247,7 +247,7 @@ export default function OrdersPage() {
     }
 
     const allProducts = productsData?.data || [];
-    const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rose-app.elevate-bootcamp.cloud";
+    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://rose-app.elevate-bootcamp.cloud";
 
     const resolveImageUrl = (url: string) => {
         if (!url) return "/images/placeholder.svg";
@@ -269,11 +269,15 @@ export default function OrdersPage() {
         hours = hours % 12;
         hours = hours ? hours : 12;
 
-        if (locale === "ar") {
-            const arAmPm = ampm === "AM" ? "ص" : "م";
-            return `${day} ${month}، ${year} في ${hours}:${minutes} ${arAmPm}`;
-        }
-        return `${day} ${month}, ${year} at ${hours}:${minutes} ${ampm}`;
+        const formattedAmPm = locale === "ar" ? (ampm === "AM" ? "ص" : "م") : ampm;
+        return t("orderDateFormat", {
+            day: String(day),
+            month,
+            year: String(year),
+            hours: String(hours),
+            minutes,
+            ampm: formattedAmPm
+        });
     };
 
     const toggleOrderItems = (orderId: string) => {
@@ -373,7 +377,7 @@ export default function OrdersPage() {
                                                 {t("totalPrice") || "Total Price:"}
                                             </span>
                                             <span className="text-[20px] font-bold text-zinc-800 dark:text-zinc-100">
-                                                {order.total.toLocaleString()} EGP
+                                                {order.total.toLocaleString()} {tCommon("currency")}
                                             </span>
                                             {showPaidBadge && (
                                                 <span className="bg-[#00BC7D] text-white font-bold text-[12px] px-[10px] py-[2px] rounded-full flex items-center justify-center gap-1">
@@ -480,7 +484,7 @@ export default function OrdersPage() {
                                                                         (x{item.quantity})
                                                                     </span>
                                                                     <span className="text-[16px] font-bold text-zinc-800 dark:text-zinc-200">
-                                                                        {item.price.toLocaleString()} EGP
+                                                                        {item.price.toLocaleString()} {tCommon("currency")}
                                                                     </span>
                                                                 </div>
                                                             </div>

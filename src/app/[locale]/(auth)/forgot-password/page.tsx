@@ -11,7 +11,7 @@ export default async function ForgotPasswordPage() {
     const alternateLocale = isArabic ? "en" : "ar";
 
     return (
-        <main className="min-h-screen bg-white dark:bg-[#1c1d21] overflow-hidden transition-colors duration-300">
+        <main className="min-h-screen bg-white dark:bg-zinc-950 overflow-hidden transition-colors duration-300">
             <div className="grid min-h-screen grid-cols-1 min-[560px]:grid-cols-[minmax(340px,49%)_minmax(0,1fr)] lg:grid-cols-[700px_minmax(0,1fr)]">
 
                 <section className="relative flex min-h-screen w-full flex-col items-center justify-between px-5 py-6 min-[560px]:px-6 lg:px-0 lg:py-0 overflow-y-auto no-scrollbar">
@@ -23,7 +23,7 @@ export default async function ForgotPasswordPage() {
                         <Link
                             href="/forgot-password"
                             locale={alternateLocale}
-                            className="text-base font-normal text-zinc-700 dark:text-zinc-300 transition-colors hover:text-[#A6252A] dark:hover:text-[#FFA3B9] font-zain"
+                            className="text-base font-normal text-zinc-700 dark:text-zinc-300 transition-colors hover:text-primary-600 dark:hover:text-rose-300 font-zain"
                         >
                             {t("languageSwitch")}
                         </Link>
@@ -62,8 +62,8 @@ export default async function ForgotPasswordPage() {
                     </div>
                 </section>
 
-                {/* Cover Image */}
-                <section className="relative hidden h-screen overflow-hidden bg-[#212226] min-[560px]:block">
+                {/* Right — Cover Image */}
+                <section className="relative hidden h-screen overflow-hidden bg-zinc-900 min-[560px]:block">
                     <Image
                         src="/images/Cover.svg"
                         alt={t("coverAlt")}

@@ -6,7 +6,7 @@ export const paginationSchema = z.object({
 });
 
 export const idSchema = z.object({
-    id: z.string().uuid("Invalid ID format"),
+    id: z.string().min(1, "Invalid ID format"),
 });
 
 export type PaginationSchema = z.infer<typeof paginationSchema>;

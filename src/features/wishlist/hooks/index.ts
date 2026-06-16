@@ -1,6 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getWishlist, addToWishlist, removeFromWishlist } from "../apis";
 
+export const wishlistKeys = {
+    all: ["wishlist"] as const,
+};
+
 export const useWishlist = () =>
     useQuery({
         queryKey: ["wishlist"],

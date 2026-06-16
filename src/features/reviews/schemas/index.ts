@@ -2,12 +2,12 @@ import { z } from "zod";
 import { paginationSchema } from "@/shared/schemas/shared.schema";
 
 export const reviewParamsSchema = paginationSchema.extend({
-    productId: z.string().uuid().optional(),
-    userId: z.string().uuid().optional(),
+    productId: z.string().optional(),
+    userId: z.string().optional(),
 });
 
 export const createReviewSchema = z.object({
-    productId: z.string().uuid("Invalid product ID"),
+    productId: z.string().min(1, "Invalid product ID"),
     rating: z
         .number()
         .int("Rating must be a whole number")
