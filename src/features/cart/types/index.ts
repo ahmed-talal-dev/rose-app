@@ -1,17 +1,24 @@
-export type CartItem = {
+export type DiscountType = "PERCENT" | "FIXED";
+
+export type CartProduct = {
     id: string;
-    productId: string;
-    quantity: number;
-    product: {
-        id: string;
-        title: string;
-        price: number;
-        cover: string;
-        stock: number;
-    };
+    title: string;
+    price: number;
+    discountType: DiscountType | null;
+    discountValue: number | null;
+    cover: string;
+    stock: number;
+    rating: number;
+    ratings: number;
 };
 
-export type Cart = {
+export type CartItem = {
+    id: string;
+    quantity: number;
+    product: CartProduct;
+};
+
+export type CartData = {
     id: string;
     cartItems: CartItem[];
 };

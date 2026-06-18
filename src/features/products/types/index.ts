@@ -16,6 +16,8 @@ export type Product = {
     gallery: string[];
     categoryId: string;
     subCategoryId?: string;
+    occasionId?: string;
+    sold?: number;
     createdAt: string;
     updatedAt: string;
 };

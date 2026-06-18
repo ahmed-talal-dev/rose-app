@@ -1,55 +1,26 @@
 import { fetchClient } from "@/shared/lib/apis/fetch.client";
+import { CartData, AddToCartInput, UpdateCartInput } from "../types";
 
-// ─── Types ──────────────────────────────────────────────────────────────────
-
-export interface CartProduct {
-    id: string;
-    title: string;
-    price: number;
-    discountType: "PERCENT" | "FIXED" | null;
-    discountValue: number | null;
-    cover: string;
-    stock: number;
-    rating: number;
-    ratings: number;
-}
-
-export interface CartItem {
-    id: string;
-    quantity: number;
-    product: CartProduct;
-}
-
-export interface CartData {
-    id: string;
-    cartItems: CartItem[];
-}
-
-// ─── API Functions ───────────────────────────────────────────────────────────
-
-/** GET /api/cart — جلب السلة */
+/** GET /api/cart — Retrieve user's cart */
 export const getCart = async (): Promise<CartData> => {
     return fetchClient<CartData>("/api/cart");
 };
 
-/** POST /api/cart — إضافة منتج للسلة */
-export const addToCart = async (body: {
-    productId: string;
-    quantity?: number;
-}): Promise<CartData> => {
+/** POST /api/cart — Add a product to the cart */
+export const addToCart = async (body: AddToCartInput): Promise<CartData> => {
     return fetchClient<CartData>("/api/cart", {
         method: "POST",
         body: JSON.stringify(body),
     });
 };
 
-/** PATCH /api/cart/:id — تعديل كمية منتج */
+/** PATCH /api/cart/:id — Update cart item quantity */
 export const updateCartItem = async ({
     id,
     body,
 }: {
     id: string;
-    body: { quantity: number };
+    body: UpdateCartInput;
 }): Promise<CartData> => {
     return fetchClient<CartData>(`/api/cart/${id}`, {
         method: "PATCH",
@@ -57,12 +28,12 @@ export const updateCartItem = async ({
     });
 };
 
-/** DELETE /api/cart/:id — إزالة منتج واحد */
+/** DELETE /api/cart/:id — Remove a single product from the cart */
 export const removeCartItem = async (id: string): Promise<void> => {
     await fetchClient(`/api/cart/${id}`, { method: "DELETE" });
 };
 
-/** DELETE /api/cart — تفريغ السلة كاملة */
+/** DELETE /api/cart — Clear all products from the cart */
 export const clearCart = async (): Promise<void> => {
     await fetchClient("/api/cart", { method: "DELETE" });
 };

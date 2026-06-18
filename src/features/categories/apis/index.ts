@@ -16,7 +16,7 @@ export const createCategory = (body: CreateCategoryInput) =>
 
 export const updateCategory = (id: string, body: UpdateCategoryInput) =>
     fetchClient<Category>(`/api/categories/${id}`, {
-        method: "PATCH",
+        method: "PUT",
         body: JSON.stringify(body),
     });
 
