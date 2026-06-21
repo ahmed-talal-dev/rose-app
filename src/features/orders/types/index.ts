@@ -19,12 +19,20 @@ export type PaymentStatus =
     | "REFUNDED"
     | "CANCELLED";
 
-export type OrderItem = {
-    id: string;
-    productId: string;
-    quantity: number;
-    price: number;
-};
+export interface OrderItemProduct {
+  title: string;
+  image: string;
+  rating: number;
+  reviewsCount: number;
+}
+
+export interface OrderItem {
+  id: string;
+  productId: string;
+  quantity: number;
+  price: number;
+  product?: OrderItemProduct;
+}
 
 export type Order = {
     id: string;
@@ -33,7 +41,7 @@ export type Order = {
     couponId?: string;
     status: OrderStatus;
     paymentMethod: PaymentMethod;
-    paymentStatus: PaymentStatus;
+    paymentStatus: string;
     subtotal: number;
     discount: number;
     shipping: number;
@@ -43,13 +51,14 @@ export type Order = {
     items: OrderItem[];
     createdAt: string;
     updatedAt: string;
+    deliveryStatus: string;
 };
 
 export type OrdersParams = PaginationParams;
 
-export type CreateOrderInput = {
+export interface CreateOrderInput {
     addressId: string;
-    paymentMethod: PaymentMethod;
+    paymentMethod: "CASH_ON_DELIVERY" | "CREDIT_CARD";
     couponCode?: string;
     notes?: string;
-};
+}

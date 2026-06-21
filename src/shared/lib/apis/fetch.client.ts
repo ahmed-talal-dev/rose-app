@@ -18,16 +18,19 @@ export class ApiError extends Error {
     }
 }
 
+type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
+
 // Helper to recursively map backend keys to old keys
-function mapBackendKeys(obj: any): any {
+function mapBackendKeys(obj: JsonValue): JsonValue {
     if (Array.isArray(obj)) {
         return obj.map(mapBackendKeys);
     }
     if (obj !== null && typeof obj === "object") {
-        const mapped: any = {};
-        for (const key of Object.keys(obj)) {
+        const objRecord = obj as Record<string, JsonValue>;
+        const mapped: Record<string, JsonValue> = {};
+        for (const key of Object.keys(objRecord)) {
             let newKey = key;
-            let val = obj[key];
+            let val = objRecord[key];
 
             if (key === "_id") {
                 newKey = "id";
@@ -39,9 +42,9 @@ function mapBackendKeys(obj: any): any {
                 newKey = "rating";
             } else if (key === "rateCount") {
                 newKey = "ratings";
-            } else if (key === "quantity" && ("title" in obj || "priceAfterDiscount" in obj || "sold" in obj)) {
+            } else if (key === "quantity" && ("title" in objRecord || "priceAfterDiscount" in objRecord || "sold" in objRecord)) {
                 newKey = "stock";
-            } else if (key === "name" && ("productsCount" in obj || "slug" in obj)) {
+            } else if (key === "name" && ("productsCount" in objRecord || "slug" in objRecord)) {
                 newKey = "title";
             } else if (key === "username") {
                 newKey = "title";
@@ -59,11 +62,12 @@ function mapBackendKeys(obj: any): any {
 
             // Special mapping for cartItems inside cart
             if (key === "cartItems" && Array.isArray(val)) {
-                val = val.map((item: any) => {
-                    const mappedProduct = mapBackendKeys(item.product);
+                val = val.map((itemVal) => {
+                    const item = itemVal as Record<string, JsonValue>;
+                    const mappedProduct = mapBackendKeys(item?.product) as Record<string, JsonValue> | null;
                     return {
                         ...item,
-                        id: mappedProduct?.id || item.id || item._id,
+                        id: mappedProduct?.id || item?.id || item?._id || null,
                         product: mappedProduct
                     };
                 });
@@ -72,15 +76,17 @@ function mapBackendKeys(obj: any): any {
             if (key === "category") {
                 if (typeof val === "string") {
                     mapped["categoryId"] = val;
-                } else if (val && typeof val === "object") {
-                    mapped["categoryId"] = val.id || val._id || "";
+                } else if (val && typeof val === "object" && !Array.isArray(val)) {
+                    const valRecord = val as Record<string, JsonValue>;
+                    mapped["categoryId"] = valRecord.id || valRecord._id || "";
                 }
             }
             if (key === "occasion") {
                 if (typeof val === "string") {
                     mapped["occasionId"] = val;
-                } else if (val && typeof val === "object") {
-                    mapped["occasionId"] = val.id || val._id || "";
+                } else if (val && typeof val === "object" && !Array.isArray(val)) {
+                    const valRecord = val as Record<string, JsonValue>;
+                    mapped["occasionId"] = valRecord.id || valRecord._id || "";
                 }
             }
 
@@ -130,43 +136,7 @@ export async function fetchClient<T>(
         finalEndpoint = "/auth/forgotPassword";
         if (init.body && typeof init.body === "string") {
             const bodyObj = JSON.parse(init.body);
-            if (typeof window !== "undefined") {
-                window.localStorage.setItem("reset_email", bodyObj.email || "");
-            }
             init.body = JSON.stringify({ email: bodyObj.email });
-        }
-    } else if (finalEndpoint === "/auth/reset-password") {
-        // Reset password needs verify reset code and then reset password
-        if (init.body && typeof init.body === "string") {
-            const bodyObj = JSON.parse(init.body);
-            const email = (typeof window !== "undefined" && window.localStorage.getItem("reset_email")) || "";
-            
-            // 1. Verify Reset Code
-            const verifyRes = await fetch(`${BASE_URL}/auth/verifyResetCode`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ resetCode: bodyObj.token })
-            });
-            if (!verifyRes.ok) {
-                let errData;
-                try { errData = await verifyRes.json(); } catch {}
-                throw new ApiError(errData?.error || errData?.message || "Failed to verify reset code", verifyRes.status);
-            }
-
-            // 2. Perform Reset Password
-            const resetRes = await fetch(`${BASE_URL}/auth/resetPassword`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, newPassword: bodyObj.newPassword })
-            });
-            if (!resetRes.ok) {
-                let errData;
-                try { errData = await resetRes.json(); } catch {}
-                throw new ApiError(errData?.error || errData?.message || "Failed to reset password", resetRes.status);
-            }
-
-            // Return mock successful payload
-            return { status: true } as unknown as T;
         }
     } else if (finalEndpoint.startsWith("/users/profile")) {
         // GET profile: GET /auth/profile-data
@@ -194,13 +164,19 @@ export async function fetchClient<T>(
                         body: uploadFd
                     });
                     if (!uploadRes.ok) {
-                        let errData;
-                        try { errData = await uploadRes.json(); } catch {}
-                        throw new ApiError(errData?.error || errData?.message || "Failed to upload photo", uploadRes.status);
+                        let errData: Record<string, unknown> | null = null;
+                        try { errData = await uploadRes.json() as Record<string, unknown>; } catch {}
+                        const errMsg =
+                            typeof errData?.error === "string"
+                                ? errData.error
+                                : typeof errData?.message === "string"
+                                ? errData.message
+                                : "Failed to upload photo";
+                        throw new ApiError(errMsg, uploadRes.status);
                     }
                 }
 
-                const editProfileBody: Record<string, any> = {};
+                const editProfileBody: Record<string, unknown> = {};
                 if (formData.has("firstName")) editProfileBody.firstName = formData.get("firstName");
                 if (formData.has("lastName")) editProfileBody.lastName = formData.get("lastName");
                 if (formData.has("phone")) editProfileBody.phone = formData.get("phone");
@@ -242,7 +218,7 @@ export async function fetchClient<T>(
         }
         if (init.body && typeof init.body === "string") {
             const bodyObj = JSON.parse(init.body);
-            const newBody: Record<string, any> = {
+            const newBody: Record<string, unknown> = {
                 username: bodyObj.title || "Home",
                 city: bodyObj.city,
                 street: bodyObj.street,
@@ -260,36 +236,6 @@ export async function fetchClient<T>(
                 rating: bodyObj.rating,
                 comment: bodyObj.comment
             });
-        }
-    } else if (finalEndpoint === "/orders" && method === "POST") {
-        if (init.body && typeof init.body === "string") {
-            const bodyObj = JSON.parse(init.body);
-            const addressId = bodyObj.addressId;
-            const isCard = bodyObj.paymentMethod === "CREDIT_CARD";
-
-            const addresses = await fetchClient<any[]>("/api/addresses");
-            const address = addresses.find((addr: any) => addr.id === addressId);
-            if (!address) {
-                throw new ApiError("Selected address not found", 400);
-            }
-
-            const newOrderBody = {
-                shippingAddress: {
-                    street: address.street,
-                    phone: address.phone,
-                    city: address.city,
-                    lat: address.lat || "0",
-                    long: address.long || "0"
-                }
-            };
-
-            if (isCard) {
-                const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-                finalEndpoint = `/orders/checkout?url=${encodeURIComponent(appUrl)}`;
-            } else {
-                finalEndpoint = "/orders";
-            }
-            init.body = JSON.stringify(newOrderBody);
         }
     }
 
@@ -311,16 +257,7 @@ export async function fetchClient<T>(
             if (key === "categoryId" || key === "category") {
                 mappedParams["category"] = String(value);
             } else if (key === "occasionId" || key === "occasion") {
-                let valStr = String(value);
-                if (valStr === "wedding") {
-                    mappedParams["occasion"] = "69d988724461df0f939b57ea";
-                } else if (valStr === "anniversary") {
-                    mappedParams["occasion"] = "69d988734461df0f939b57f3";
-                } else if (valStr === "engagement") {
-                    mappedParams["occasion"] = "69d988724461df0f939b57ea";
-                } else {
-                    mappedParams["occasion"] = valStr;
-                }
+                mappedParams["occasion"] = String(value);
             } else if (key === "minPrice") {
                 mappedParams["price[gte]"] = String(value);
             } else if (key === "maxPrice") {
@@ -349,7 +286,7 @@ export async function fetchClient<T>(
 
     const res = await fetch(url.toString(), { ...init, method, headers });
 
-    let data: any;
+    let data: unknown;
     try {
         data = await res.json();
     } catch {
@@ -357,50 +294,63 @@ export async function fetchClient<T>(
     }
 
     if (!res.ok) {
-        const errMsg = data.error || data.message || "Something went wrong";
-        throw new ApiError(errMsg, res.status, data.errors);
+        const errData = data as Record<string, unknown>;
+        const errMsg =
+            typeof errData?.error === "string"
+                ? errData.error
+                : typeof errData?.message === "string"
+                ? errData.message
+                : "Something went wrong";
+        throw new ApiError(
+            errMsg,
+            res.status,
+            Array.isArray(errData?.errors) ? (errData.errors as Array<{ path: string; message: string }>) : undefined
+        );
     }
 
+    const payload = data as Record<string, unknown>;
+
     if (finalEndpoint === "/wishlist" && method === "GET") {
-        const products = data.wishlist?.products || [];
-        const mappedProducts = mapBackendKeys(products);
+        const wishlistObj = payload.wishlist as Record<string, unknown> | undefined;
+        const products = wishlistObj?.products || [];
+        const mappedProducts = mapBackendKeys(products as JsonValue);
         return {
             data: mappedProducts
-        } as unknown as T;
+        } as T;
     }
 
     if (finalEndpoint.startsWith("/addresses")) {
-        const addrList = data.address || data.addresses;
+        const addrList = payload.address || payload.addresses;
         if (Array.isArray(addrList)) {
-            const mappedList = mapBackendKeys(addrList);
+            const mappedList = mapBackendKeys(addrList as JsonValue);
             if (method === "GET") {
-                return mappedList as unknown as T;
+                return mappedList as T;
             } else {
-                return (mappedList.length > 0 ? mappedList[0] : null) as unknown as T;
+                return (Array.isArray(mappedList) && mappedList.length > 0 ? mappedList[0] : null) as T;
             }
         }
     }
 
-    if (data.token && data.user) {
-        const mappedUser = mapBackendKeys(data.user);
+    if (payload.token && payload.user) {
+        const mappedUser = mapBackendKeys(payload.user as JsonValue);
         return {
             user: mappedUser,
-            token: data.token
-        } as unknown as T;
+            token: payload.token
+        } as T;
     }
 
-    if (data.user && !data.token) {
-        return mapBackendKeys(data.user) as unknown as T;
+    if (payload.user && !payload.token) {
+        return mapBackendKeys(payload.user as JsonValue) as T;
     }
 
-    if (data.cart) {
-        const mappedCart = mapBackendKeys(data.cart);
+    if (payload.cart) {
+        const mappedCart = mapBackendKeys(payload.cart as JsonValue) as Record<string, unknown>;
         mappedCart.id = mappedCart.id || "cart_id";
-        return mappedCart as unknown as T;
+        return mappedCart as T;
     }
 
-    if (data.metadata) {
-        const rawMeta = data.metadata;
+    if (payload.metadata) {
+        const rawMeta = payload.metadata as Record<string, unknown>;
         const metadata = {
             page: rawMeta.currentPage || 1,
             limit: rawMeta.limit || 10,
@@ -408,31 +358,32 @@ export async function fetchClient<T>(
             totalPages: rawMeta.totalPages || 1
         };
 
-        let listData: any[] = [];
-        for (const key of Object.keys(data)) {
-            if (Array.isArray(data[key]) && key !== "errors") {
-                listData = data[key];
+        let listData: unknown[] = [];
+        for (const key of Object.keys(payload)) {
+            if (Array.isArray(payload[key]) && key !== "errors") {
+                listData = payload[key] as unknown[];
                 break;
             }
         }
 
-        const mappedData = mapBackendKeys(listData);
+        const mappedData = mapBackendKeys(listData as JsonValue);
         return {
             data: mappedData,
             metadata
-        } as unknown as T;
+        } as T;
     }
 
     // If it's a single resource response under a key like product, category, occasion, order, etc.
     const resourceKeys = ["product", "category", "occasion", "order", "address", "coupon", "notification"];
     for (const key of resourceKeys) {
-        if (data[key] && typeof data[key] === "object") {
-            if (Array.isArray(data[key])) {
-                if (data[key].length > 0) {
-                    return mapBackendKeys(data[key][0]) as unknown as T;
+        if (payload[key] && typeof payload[key] === "object") {
+            const val = payload[key];
+            if (Array.isArray(val)) {
+                if (val.length > 0) {
+                    return mapBackendKeys(val[0] as JsonValue) as T;
                 }
             } else {
-                return mapBackendKeys(data[key]) as unknown as T;
+                return mapBackendKeys(val as JsonValue) as T;
             }
         }
     }
@@ -440,14 +391,14 @@ export async function fetchClient<T>(
     // If it is a list response but without metadata (e.g. addresses, wishlist)
     const listKeys = ["addresses", "wishlist", "products", "categories", "occasions", "orders", "notifications", "coupons"];
     for (const key of listKeys) {
-        if (data[key] && Array.isArray(data[key])) {
-            return mapBackendKeys(data[key]) as unknown as T;
+        if (payload[key] && Array.isArray(payload[key])) {
+            return mapBackendKeys(payload[key] as JsonValue) as T;
         }
     }
 
-    if (data.data) {
-        return mapBackendKeys(data.data) as unknown as T;
+    if (payload.data) {
+        return mapBackendKeys(payload.data as JsonValue) as T;
     }
 
-    return mapBackendKeys(data) as unknown as T;
+    return mapBackendKeys(payload as JsonValue) as T;
 }

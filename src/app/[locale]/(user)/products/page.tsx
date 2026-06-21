@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { useSearchParams } from "next/navigation";
 import { useProducts } from "@/features/products/hooks";
@@ -10,7 +10,7 @@ import { ProductCard } from "@/features/products/components/product-card";
 import { SidebarFilters } from "@/features/products/components/sidebar-filters";
 import { Pagination } from "@/features/products/components/pagination";
 import { ProductCardSkeleton } from "@/features/home/components/product-card-skeleton";
-import { Filter, SlidersHorizontal, ChevronDown, RefreshCw, X } from "lucide-react";
+import { Filter, SlidersHorizontal, ChevronDown, X } from "lucide-react";
 import { useState, useTransition } from "react";
 import {
     DropdownMenu,
@@ -19,10 +19,10 @@ import {
     DropdownMenuItem,
 } from "@/shared/ui/dropdown-menu";
 
+const PRODUCTS_PAGE_LIMIT = 9;
+
 export default function ProductsPage() {
     const t = useTranslations("products");
-    const tCommon = useTranslations("common");
-    const locale = useLocale();
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -30,23 +30,8 @@ export default function ProductsPage() {
 
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-    // Parse params from URL
     const activeCategoryId = searchParams.get("category") || null;
     const rawOccasion = searchParams.get("occasion") || null;
-    const occasionSlugToId: Record<string, string> = {
-        "wedding": "69d988724461df0f939b57ea",
-        "anniversary": "69d988734461df0f939b57f3",
-        "engagement": "69d988724461df0f939b57ea",
-        "graduation": "69d988734461df0f939b57ed",
-        "birthday": "69d988734461df0f939b57f0",
-        "new-year": "69d988734461df0f939b57f6",
-        "valentine's-day": "69d988734461df0f939b57f9",
-        "mother's-day": "69d988744461df0f939b57fc",
-        "father's-day": "69d988744461df0f939b57ff",
-        "christmas": "69d988744461df0f939b5802",
-        "easter": "69d988744461df0f939b5805",
-    };
-    const activeOccasionId = (rawOccasion && occasionSlugToId[rawOccasion.toLowerCase()]) || rawOccasion;
     const activeRating = searchParams.get("rating") ? Number(searchParams.get("rating")) : null;
     const activeMinPrice = searchParams.get("minPrice") || "";
     const activeMaxPrice = searchParams.get("maxPrice") || "";
@@ -55,14 +40,14 @@ export default function ProductsPage() {
     const activeSortOrder = (searchParams.get("sortOrder") as "asc" | "desc") || "desc";
     const activePage = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
 
-    const limit = 9; // Grid of 3x3
-
-    // Fetch filters options
     const { data: categoriesData } = useCategories({ limit: 100 });
     const { data: occasionsData } = useOccasions({ limit: 100 });
 
-    // Fetch products list dynamically from backend
-    // When searching, fetch all products for client-side filtering (API doesn't support search param)
+    const occasions = occasionsData?.data || [];
+    const activeOccasionId = rawOccasion
+        ? (((occasions as unknown) as { _id: string; slug: string }[]).find((o) => o.slug === rawOccasion.toLowerCase())?._id ?? rawOccasion)
+        : null;
+
     const { data: productsData, isLoading: isProductsLoading } = useProducts({
         categoryId: activeCategoryId || undefined,
         occasionId: activeOccasionId || undefined,
@@ -71,41 +56,35 @@ export default function ProductsPage() {
         sortBy: activeSortBy,
         sortOrder: activeSortOrder,
         page: activeSearch ? undefined : activePage,
-        limit: activeSearch ? 200 : limit,
+        limit: activeSearch ? 200 : PRODUCTS_PAGE_LIMIT,
     });
 
     const categories = categoriesData?.data || [];
-    const occasions = occasionsData?.data || [];
     const allProducts = productsData?.data || [];
     const meta = productsData?.metadata;
 
-    // Client-side search filter (API doesn't support search param)
     const searchFiltered = activeSearch
         ? allProducts.filter((p) =>
             p.title.toLowerCase().includes(activeSearch.toLowerCase())
         )
         : allProducts;
 
-    // Filter products client-side for rating filter
     const displayedProducts = activeRating
         ? searchFiltered.filter((p) => Math.round(Number(p.rating)) >= activeRating)
         : searchFiltered;
 
-    // For search, we handle pagination client-side
     const paginatedProducts = activeSearch
-        ? displayedProducts.slice((activePage - 1) * limit, activePage * limit)
+        ? displayedProducts.slice((activePage - 1) * PRODUCTS_PAGE_LIMIT, activePage * PRODUCTS_PAGE_LIMIT)
         : displayedProducts;
 
     const totalPages = activeSearch
-        ? Math.ceil(displayedProducts.length / limit) || 1
+        ? Math.ceil(displayedProducts.length / PRODUCTS_PAGE_LIMIT) || 1
         : meta?.totalPages || 1;
 
-    // Update query parameters in the URL
     const updateParams = (newParams: Record<string, string | number | null>) => {
         const params = new URLSearchParams(searchParams.toString());
         
-        // Reset page to 1 on filter changes (except when specifically changing the page)
-        if (!newParams.hasOwnProperty("page")) {
+        if (!Object.hasOwn(newParams, "page")) {
             params.set("page", "1");
         }
 
@@ -122,7 +101,6 @@ export default function ProductsPage() {
         });
     };
 
-    // Filter Handlers
     const handleCategoryChange = (id: string | null) => {
         updateParams({ category: id });
     };
@@ -166,12 +144,10 @@ export default function ProductsPage() {
 
     return (
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-            
-            {/* Mobile-only Filter & Sort Toolbar */}
             <div className="flex lg:hidden justify-between items-center pb-4 border-b border-zinc-200 dark:border-zinc-800 mb-6 w-full">
                 <button
                     onClick={() => setMobileFiltersOpen(true)}
-                    className="flex items-center gap-2 px-3 py-1.5 border border-zinc-200 dark:border-zinc-700 rounded-xl text-xs font-medium text-zinc-750 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                    className="flex items-center gap-2 px-3 py-1.5 border border-zinc-200 dark:border-zinc-700 rounded-xl text-xs font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
                 >
                     <Filter className="size-3.5" />
                     <span>{t("filters")}</span>
@@ -179,13 +155,13 @@ export default function ProductsPage() {
 
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <button className="flex items-center gap-2 px-3 py-1.5 border border-zinc-200 dark:border-zinc-700 rounded-xl text-xs font-medium text-zinc-750 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors cursor-pointer">
+                        <button className="flex items-center gap-2 px-3 py-1.5 border border-zinc-200 dark:border-zinc-700 rounded-xl text-xs font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors cursor-pointer">
                             <SlidersHorizontal className="size-3.5" />
                             <span>{currentSortOption.label}</span>
                             <ChevronDown className="size-3 text-zinc-400" />
                         </button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-[180px] bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl p-1 z-50">
+                    <DropdownMenuContent className="w-44 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl p-1 z-50">
                         {sortOptions.map((option) => (
                             <DropdownMenuItem
                                 key={option.label}
@@ -200,8 +176,6 @@ export default function ProductsPage() {
             </div>
 
             <div className="flex flex-col lg:flex-row gap-8 items-start">
-                
-                {/* ── Desktop Sidebar Filters ── */}
                 <div className="hidden lg:block shrink-0">
                     <SidebarFilters
                         categories={categories}
@@ -219,16 +193,13 @@ export default function ProductsPage() {
                     />
                 </div>
 
-                {/* ── Mobile Sidebar Filters drawer/modal ── */}
                 {mobileFiltersOpen && (
                     <div className="fixed inset-0 z-50 lg:hidden flex justify-end">
-                        {/* Backdrop */}
                         <div
                             className="absolute inset-0 bg-black/50"
                             onClick={() => setMobileFiltersOpen(false)}
                         />
-                        {/* Drawer body */}
-                        <div className="relative w-[320px] max-w-full h-full bg-white dark:bg-zinc-900 shadow-2xl p-6 overflow-y-auto z-10 flex flex-col gap-4">
+                        <div className="relative w-80 max-w-full h-full bg-white dark:bg-zinc-900 shadow-2xl p-6 overflow-y-auto z-10 flex flex-col gap-4">
                             <div className="flex justify-between items-center pb-4 border-b border-zinc-100 dark:border-zinc-800">
                                 <span className="font-sarabun font-bold text-lg text-zinc-800 dark:text-zinc-100">
                                     {t("filters")}
@@ -273,19 +244,16 @@ export default function ProductsPage() {
                     </div>
                 )}
 
-                {/* ── Content Grid Area ── */}
                 <div className="flex-1 w-full">
                     {isProductsLoading || isPending ? (
-                        /* Loading state: skeleton grid */
                         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 justify-items-center">
-                            {Array.from({ length: 6 }).map((_, i) => (
-                                <div key={i} className="w-full flex justify-center">
+                            {Array.from({ length: 6 }, (_, i) => `skeleton-${i}`).map((skeletonKey) => (
+                                <div key={skeletonKey} className="w-full flex justify-center">
                                     <ProductCardSkeleton />
                                 </div>
                             ))}
                         </div>
                     ) : paginatedProducts.length === 0 ? (
-                        /* Empty state: No products found */
                         <div className="flex flex-col items-center justify-center py-20 text-center">
                             <SlidersHorizontal className="size-16 text-zinc-300 dark:text-zinc-700 mb-4 stroke-[1.25]" />
                             <h3 className="font-sarabun font-bold text-xl text-zinc-800 dark:text-zinc-200">
@@ -296,13 +264,12 @@ export default function ProductsPage() {
                             </p>
                             <button
                                 onClick={handleResetAll}
-                                className="mt-6 px-5 py-2.5 bg-[#A6252A] hover:bg-[#741C21] text-white text-sm font-semibold rounded-xl font-sarabun transition-colors border-none cursor-pointer"
+                                className="mt-6 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold rounded-xl font-sarabun transition-colors border-none cursor-pointer"
                             >
                                 {t("resetAllFilters")}
                             </button>
                         </div>
                     ) : (
-                        /* Products Grid */
                         <div className="flex flex-col gap-8">
                             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 justify-items-center">
                                 {paginatedProducts.map((product) => (
@@ -312,7 +279,6 @@ export default function ProductsPage() {
                                 ))}
                             </div>
 
-                            {/* Pagination component */}
                             <Pagination
                                 currentPage={activePage}
                                 totalPages={totalPages}

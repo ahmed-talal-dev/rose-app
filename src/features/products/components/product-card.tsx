@@ -30,9 +30,6 @@ export function ProductCard({ product }: ProductCardProps) {
     const removeFromWishlistMutation = useRemoveFromWishlist();
     const addToCartMutation = useAddToCart();
 
-    // Log the product data received by the component
-    console.log(`[ProductCard Rendered] Title: ${product.title}`, product);
-
     const price = toNum(product.price);
     const discountVal = toNum(product.discountValue);
     const isOutOfStock = product.stock === 0;
@@ -44,7 +41,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 ? price - discountVal
                 : null;
 
-    const isInWishlist = wishlistData?.data?.some((item) => item.id === product.id) || false;
+    const isInWishlist = wishlistData?.data?.some((wishlistItem) => wishlistItem.id === product.id) || false;
     const isWishlistLoading = addToWishlistMutation.isPending || removeFromWishlistMutation.isPending;
 
     const handleWishlistClick = (e: React.MouseEvent) => {
@@ -52,32 +49,25 @@ export function ProductCard({ product }: ProductCardProps) {
         e.stopPropagation();
 
         if (!session) {
-            console.log("[Wishlist Action] User not logged in, redirecting to login...");
             router.push("/login");
             return;
         }
 
-        console.log(`[Wishlist Action] Toggling wishlist for Product ID: ${product.id}`);
-
         if (isInWishlist) {
             removeFromWishlistMutation.mutate(product.id, {
-                onSuccess: (data) => {
-                    console.log("[Wishlist Success] Removed successfully", data);
+                onSuccess: () => {
                     toast.success(t("removedFromWishlist"));
                 },
                 onError: (err) => {
-                    console.error("[Wishlist Error] Failed to remove", err);
                     toast.error(err.message || "Failed to remove from wishlist");
                 },
             });
         } else {
             addToWishlistMutation.mutate(product.id, {
-                onSuccess: (data) => {
-                    console.log("[Wishlist Success] Added successfully", data);
+                onSuccess: () => {
                     toast.success(t("addedToWishlist"));
                 },
                 onError: (err) => {
-                    console.error("[Wishlist Error] Failed to add", err);
                     toast.error(err.message || "Failed to add to wishlist");
                 },
             });
@@ -89,22 +79,17 @@ export function ProductCard({ product }: ProductCardProps) {
         e.stopPropagation();
 
         if (!session) {
-            console.log("[Cart Action] User not logged in, redirecting to login...");
             router.push("/login");
             return;
         }
 
-        console.log(`[Cart Action] Attempting to add Product ID: ${product.id} to cart`);
-
         addToCartMutation.mutate(
             { productId: product.id, quantity: 1 },
             {
-                onSuccess: (data) => {
-                    console.log("[Cart Success] Added to cart successfully!", data);
+                onSuccess: () => {
                     toast.success(t("addedToCart"));
                 },
                 onError: (err) => {
-                    console.error("[Cart Error] Failed to add to cart", err);
                     toast.error(err.message || "Failed to add to cart");
                 },
             }
@@ -118,9 +103,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
     return (
         <div className="group relative w-[302px] h-[397px] bg-white dark:bg-zinc-900 rounded-2xl p-4 flex flex-col gap-4 transition-all duration-300">
-
-            {/* Image Cover Container */}
-            <div className="relative w-[270px] h-[272px] rounded-[12px] overflow-hidden bg-zinc-50 dark:bg-zinc-800">
+            <div className="relative w-[270px] h-[272px] rounded-xl overflow-hidden bg-zinc-50 dark:bg-zinc-800">
                 {imageUrl ? (
                     <Image
                         src={imageUrl}
@@ -139,48 +122,46 @@ export function ProductCard({ product }: ProductCardProps) {
                     </div>
                 )}
 
-                {/* Top-left Badges */}
-                <div className="absolute top-[10px] left-[10px] flex flex-row items-center gap-[6px] z-10 pointer-events-none">
+                <div className="absolute top-2.5 left-2.5 flex flex-row items-center gap-1.5 z-10 pointer-events-none">
                     {toNum(product.rating) >= 4.5 && !isOutOfStock && (
-                        <div className="flex justify-center items-center px-[8px] py-[2px] bg-primary-50 rounded-full h-[16px]">
-                            <span className="font-sarabun font-medium text-[12px] leading-none text-primary-600">
+                        <div className="flex justify-center items-center px-2 py-0.5 bg-primary-50 rounded-full h-4">
+                            <span className="font-sarabun font-medium text-xs leading-none text-primary-600">
                                 {tProducts("hot")}
                             </span>
                         </div>
                     )}
                     {isOutOfStock && (
-                        <div className="flex justify-center items-center px-[8px] py-[2px] bg-red-600 rounded-full h-[16px]">
-                            <span className="font-sarabun font-medium text-[12px] leading-none text-rose-50">
+                        <div className="flex justify-center items-center px-2 py-0.5 bg-red-600 rounded-full h-4">
+                            <span className="font-sarabun font-medium text-xs leading-none text-rose-50">
                                 {tProducts("outOfStock")}
                             </span>
                         </div>
                     )}
                     {product.discountType && !isOutOfStock && (
-                        <div className="flex justify-center items-center px-[8px] py-[2px] bg-zinc-100 rounded-full h-[16px]">
-                            <span className="font-sarabun font-medium text-[12px] leading-none text-zinc-700">
+                        <div className="flex justify-center items-center px-2 py-0.5 bg-zinc-100 rounded-full h-4">
+                            <span className="font-sarabun font-medium text-xs leading-none text-zinc-700">
                                 {tProducts("new")}
                             </span>
                         </div>
                     )}
                 </div>
 
-                {/* Hover Wishlist Pill Button */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
                     <button
                         aria-label={t("addToWishlist")}
                         disabled={isWishlistLoading}
                         onClick={handleWishlistClick}
-                        className="flex flex-row justify-center items-center px-[6px] py-0 gap-[6px] h-[30px] bg-white rounded-[1000px] shadow-md hover:bg-zinc-50 transition-colors border-none cursor-pointer"
+                        className="flex flex-row justify-center items-center px-1.5 py-0 gap-1.5 h-[30px] bg-white rounded-full shadow-md hover:bg-zinc-50 transition-colors border-none cursor-pointer"
                     >
                         {isWishlistLoading ? (
-                            <Loader2 className="w-[20px] h-[20px] animate-spin text-primary-600" />
+                            <Loader2 className="size-5 animate-spin text-primary-600" />
                         ) : (
                             <Heart
-                                className={`w-[20px] h-[20px] ${isInWishlist ? "fill-primary-600 text-primary-600" : "text-primary-600"}`}
+                                className={`size-5 ${isInWishlist ? "fill-primary-600 text-primary-600" : "text-primary-600"}`}
                                 strokeWidth={1.5}
                             />
                         )}
-                        <span className="font-sarabun font-medium text-[12px] leading-none text-primary-600 whitespace-nowrap">
+                        <span className="font-sarabun font-medium text-xs leading-none text-primary-600 whitespace-nowrap">
                             {isInWishlist
                                 ? t("removeFromWishlist")
                                 : t("addToWishlist")
@@ -190,23 +171,20 @@ export function ProductCard({ product }: ProductCardProps) {
                 </div>
             </div>
 
-            {/* Product Details */}
-            <div className="flex flex-col justify-end items-start w-[270px] gap-[12px] flex-1">
-
+            <div className="flex flex-col justify-end items-start w-[270px] gap-3 flex-1">
                 <Link href={`/products/${product.id}`} className="block w-full">
-                    <h3 className="font-sarabun font-semibold text-[18px] leading-none text-primary-700 dark:text-primary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors truncate">
+                    <h3 className="font-sarabun font-semibold text-lg leading-none text-primary-700 dark:text-primary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors truncate">
                         {product.title}
                     </h3>
                 </Link>
 
-                <div className="flex flex-row items-center w-full gap-[10px]">
-                    <div className="flex flex-col items-start flex-1 gap-[6px]">
-
-                        <div className="flex flex-row items-center gap-[4px] h-[15px]">
-                            {Array.from({ length: 5 }).map((_, i) => (
+                <div className="flex flex-row items-center w-full gap-2.5">
+                    <div className="flex flex-col items-start flex-1 gap-1.5">
+                        <div className="flex flex-row items-center gap-1 h-[15px]">
+                            {Array.from({ length: 5 }).map((_, index) => (
                                 <Star
-                                    key={i}
-                                    className={`w-[16.88px] h-[15px] ${i < Math.round(toNum(product.rating))
+                                    key={index}
+                                    className={`size-4 ${index < Math.round(toNum(product.rating))
                                         ? "fill-yellow-500 text-yellow-500"
                                         : "fill-transparent text-yellow-500"
                                         }`}
@@ -215,7 +193,7 @@ export function ProductCard({ product }: ProductCardProps) {
                             ))}
                         </div>
 
-                        <div className="flex flex-row items-end gap-[8px] w-full font-sarabun font-medium text-[16px] leading-none text-primary-700 dark:text-primary-300">
+                        <div className="flex flex-row items-end gap-2 w-full font-sarabun font-medium text-base leading-none text-primary-700 dark:text-primary-300">
                             <span>{discounted ? discounted.toFixed(2) : price.toFixed(2)} {t("currency")}</span>
                             {discounted && (
                                 <span className="line-through opacity-70">
@@ -229,12 +207,12 @@ export function ProductCard({ product }: ProductCardProps) {
                         aria-label={t("addToCart")}
                         disabled={isOutOfStock || addToCartMutation.isPending}
                         onClick={handleAddToCart}
-                        className="flex items-center justify-center w-[42px] h-[42px] bg-primary-600 shadow-[0_0_40px_5px_rgba(0,0,0,0.05)] hover:scale-105 disabled:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-full transition-all duration-200 focus:outline-none border-none cursor-pointer shrink-0"
+                        className="flex items-center justify-center size-10 bg-primary-600 shadow-[0_0_40px_5px_rgba(0,0,0,0.05)] hover:scale-105 disabled:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-full transition-all duration-200 focus:outline-none border-none cursor-pointer shrink-0"
                     >
                         {addToCartMutation.isPending ? (
-                            <Loader2 className="w-[24px] h-[24px] animate-spin text-white" />
+                            <Loader2 className="size-6 animate-spin text-white" />
                         ) : (
-                            <ShoppingCart className="w-[24px] h-[24px] text-primary-50" strokeWidth={1.5} />
+                            <ShoppingCart className="size-6 text-primary-50" strokeWidth={1.5} />
                         )}
                     </button>
                 </div>

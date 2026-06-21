@@ -120,3 +120,6 @@ export const useDeleteAccount = () => {
         },
     });
 };
+
+export * from "./use-profile-form";
+export * from "./use-password-form";

@@ -1,0 +1,73 @@
+"use client";
+
+import { useRef } from "react";
+import { useTranslations } from "next-intl";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ProductCard } from "@/features/products/components/product-card";
+import { Product } from "@/features/products/types";
+
+const SCROLL_OFFSET_PERCENTAGE = 0.75;
+
+interface RelatedProductsProps {
+    products: Product[];
+}
+
+export function RelatedProducts({ products }: RelatedProductsProps) {
+    const t = useTranslations("products");
+    const sliderRef = useRef<HTMLDivElement>(null);
+
+    const handleScrollSlider = (direction: "left" | "right") => {
+        if (sliderRef.current) {
+            const { scrollLeft, clientWidth } = sliderRef.current;
+            const scrollAmount = clientWidth * SCROLL_OFFSET_PERCENTAGE;
+            const targetScrollPosition =
+                direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount;
+            sliderRef.current.scrollTo({ left: targetScrollPosition, behavior: "smooth" });
+        }
+    };
+
+    if (products.length === 0) return null;
+
+    return (
+        <div className="mx-auto mt-4 flex w-full max-w-[1280px] flex-col items-start gap-4 bg-transparent pt-8 text-start">
+            <div className="relative h-10 w-[279px] shrink-0 ml-2.5">
+                <div className="absolute top-6 left-0 h-4 w-[154px] rounded-r-2xl bg-[#FFE0E7] dark:bg-[#741C21]/40" />
+                <div className="absolute top-[39px] left-0 h-0.5 w-[60px] bg-[#E65073]" />
+                <h2 className="absolute top-0 left-0 m-0 flex h-9 w-[279px] items-center font-sarabun text-4xl font-bold leading-none text-[#741C21] dark:text-rose-300 z-10">
+                    {t("relatedProducts")}
+                </h2>
+            </div>
+
+            <div className="relative flex w-full items-center justify-center">
+                <button
+                    type="button"
+                    onClick={() => handleScrollSlider("left")}
+                    className="absolute top-[146px] -left-4 z-10 flex h-8 w-8 -translate-y-1/2 cursor-pointer flex-col items-center justify-center rounded-full border-none bg-primary-600 shadow-md transition-colors hover:bg-primary-700 outline-none"
+                    aria-label="Previous products"
+                >
+                    <ChevronLeft className="h-5 w-5 text-white rtl:rotate-180" strokeWidth={2} />
+                </button>
+
+                <div
+                    ref={sliderRef}
+                    className="mx-auto flex w-full max-w-[1260px] flex-row items-start gap-4 overflow-x-auto p-2.5 scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+                >
+                    {products.map((productItem) => (
+                        <div key={productItem.id} className="shrink-0">
+                            <ProductCard product={productItem} />
+                        </div>
+                    ))}
+                </div>
+
+                <button
+                    type="button"
+                    onClick={() => handleScrollSlider("right")}
+                    className="absolute top-[146px] -right-4 z-10 flex h-8 w-8 -translate-y-1/2 cursor-pointer flex-col items-center justify-center rounded-full border-none bg-primary-600 shadow-md transition-colors hover:bg-primary-700 outline-none"
+                    aria-label="Next products"
+                >
+                    <ChevronRight className="h-5 w-5 text-white rtl:rotate-180" strokeWidth={2} />
+                </button>
+            </div>
+        </div>
+    );
+}

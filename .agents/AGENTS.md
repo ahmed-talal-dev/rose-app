@@ -20,9 +20,33 @@ NAMING:
 
 FUNCTIONS:
 - One responsibility per function. If you cannot name it without "and", split it.
-- Max ~30 lines per function. If it grows beyond that, extract.
+- Consider extraction when a function exceeds ~50 lines. Length is a signal, not a rule — a focused 60-line function is better than six poorly named ones.
 - No magic numbers. Every numeric literal gets a named constant with context:
   const MAX_RETRY_ATTEMPTS = 3
+
+REACT:
+- Keys must be stable IDs. Never use array indexes as keys.
+- Avoid prop drilling beyond two levels. Lift state or use context.
+- Prefer composition over inheritance.
+- Extract repeated JSX into a component after the third repetition.
+
+FORMS:
+- Validate on both client and server. Client validation is UX, not security.
+- Show validation messages at field level, not only at form level.
+- Disable the submit button during pending requests.
+- Preserve user input after validation errors. Never reset the form on failure.
+
+API:
+- All API calls belong in services/. Never call fetch directly from a component.
+- Normalize API responses before they reach components.
+- Centralize error handling. Components receive clean data or a typed error.
+
+TESTING:
+- Test behavior, not implementation details.
+- One assertion focus per test. If a test name contains "and", split it.
+- Avoid mocking unless necessary. Prefer real implementations where possible.
+- Critical business logic must have unit tests.
+- Key user flows must have integration tests.
 
 TYPESCRIPT:
 - No `any`. Ever. Use `unknown` and narrow it, or define the type properly.

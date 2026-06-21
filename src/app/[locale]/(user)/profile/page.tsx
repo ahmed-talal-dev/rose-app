@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale, useTranslations } from "next-intl";
+import {  useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useSession } from "next-auth/react";
 import { useState, useRef, useEffect } from "react";
@@ -12,7 +12,7 @@ import {
     useDeleteAccount,
     useLogout,
 } from "@/features/auth/hooks";
-import { PhoneInput, COUNTRIES } from "@/shared/ui/phone-input";
+import { PhoneInput } from "@/shared/ui/phone-input";
 import {
     User,
     Lock,
@@ -23,16 +23,17 @@ import {
     EyeOff,
     Trash2,
     X,
-    ChevronDown,
 } from "lucide-react";
 import Image from "next/image";
+import { resolveImageUrl } from "@/shared/lib/utils/resolve-image-url";
+import { useProfileForm } from "@/features/auth/hooks/use-profile-form";
+import { usePasswordForm } from "@/features/auth/hooks/use-password-form";
 
 export default function AccountSettingsPage() {
-    const locale = useLocale();
     const router = useRouter();
     const t = useTranslations("profile");
     const tCommon = useTranslations("common");
-    const { status, data: session } = useSession();
+    const { status } = useSession();
 
     const { data: profileData, isLoading: isProfileLoading } = useProfile();
     const updateProfileMutation = useUpdateProfile();
@@ -42,21 +43,30 @@ export default function AccountSettingsPage() {
 
     const [activeTab, setActiveTab] = useState<"profile" | "password">("profile");
 
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [phone, setPhone] = useState("");
-    const [phoneDialCode, setPhoneDialCode] = useState("+20");
-    const [gender, setGender] = useState<"MALE" | "FEMALE">("MALE");
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const profileForm = useProfileForm(profileData);
+    const passwordForm = usePasswordForm();
 
-    const [currentPassword, setCurrentPassword] = useState("");
-    const [newPassword, setNewPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-    const [showNewPassword, setShowNewPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const {
+        firstName, setFirstName,
+        lastName, setLastName,
+        email, setEmail,
+        phone, setPhone,
+        phoneDialCode, setPhoneDialCode,
+        gender, setGender,
+        selectedFile, setSelectedFile,
+        previewUrl,
+        initFromProfile,
+    } = profileForm;
+
+    const {
+        currentPassword, setCurrentPassword,
+        newPassword, setNewPassword,
+        confirmPassword, setConfirmPassword,
+        showCurrentPassword, setShowCurrentPassword,
+        showNewPassword, setShowNewPassword,
+        showConfirmPassword, setShowConfirmPassword,
+        reset: resetPasswordForm,
+    } = passwordForm;
 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -70,53 +80,25 @@ export default function AccountSettingsPage() {
 
     useEffect(() => {
         if (profileData) {
-            setFirstName(profileData.firstName || "");
-            setLastName(profileData.lastName || "");
-            setEmail(profileData.email || "");
-            setGender(profileData.gender?.toUpperCase() === "FEMALE" ? "FEMALE" : "MALE");
-
-            // Parse phone: extract dial code and number
-            const rawPhone = profileData.phone || "";
-            const matchedCountry = COUNTRIES.find((c) => rawPhone.startsWith(c.dialCode));
-            if (matchedCountry) {
-                setPhoneDialCode(matchedCountry.dialCode);
-                setPhone(rawPhone.slice(matchedCountry.dialCode.length));
-            } else {
-                setPhone(rawPhone);
-            }
+            initFromProfile(profileData);
         }
     }, [profileData]);
 
     if (status === "loading" || isProfileLoading) {
         return (
-            <div className="mx-auto max-w-[1280px] px-4 py-20 flex flex-col items-center justify-center gap-4">
-                <Loader2 className="w-[40px] h-[40px] animate-spin text-primary-600" />
-                <span className="text-zinc-500 dark:text-zinc-400 font-sarabun text-[14px]">
-                    {tCommon ? tCommon("loading") : "Loading..."}
+            <div className="mx-auto max-w-7xl px-4 py-20 flex flex-col items-center justify-center gap-4">
+                <Loader2 className="w-10 h-10 animate-spin text-primary-600" />
+                <span className="text-zinc-500 dark:text-zinc-400 font-sarabun text-sm">
+                    {tCommon("loading")}
                 </span>
             </div>
         );
     }
 
-    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://rose-app.elevate-bootcamp.cloud";
-    const resolveImageUrl = (url?: string) => {
-        if (!url) return null;
-        return url.startsWith("http") ? url : `${BASE_URL}${url}`;
-    };
-
     const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            if (file.size > 5 * 1024 * 1024) {
-                toast.error(t("uploadError") || "File too large");
-                return;
-            }
-            setSelectedFile(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreviewUrl(reader.result as string);
-            };
-            reader.readAsDataURL(file);
+            profileForm.handlePhotoChange(file, () => toast.error(t("uploadError")));
         }
     };
 
@@ -129,7 +111,7 @@ export default function AccountSettingsPage() {
 
         if (activeTab === "profile") {
             if (!firstName.trim() || !lastName.trim() || !phone.trim() || !email.trim()) {
-                toast.error(t("fillError") || "Fill required fields");
+                toast.error(t("fillError"));
                 return;
             }
 
@@ -155,21 +137,21 @@ export default function AccountSettingsPage() {
             updateProfileMutation.mutate(payload, {
                 onSuccess: () => {
                     toast.dismiss(toastId);
-                    toast.success(t("updateSuccess") || "Updated successfully");
+                    toast.success(t("updateSuccess"));
                     setSelectedFile(null);
                 },
-                onError: (err: any) => {
+                onError: (err: unknown) => {
                     toast.dismiss(toastId);
-                    toast.error(err.message || "Failed to update profile");
+                    toast.error(err instanceof Error ? err.message : t("genericError"));
                 },
             });
         } else {
             if (!currentPassword || !newPassword || !confirmPassword) {
-                toast.error(t("fillError") || "Fill required fields");
+                toast.error(t("fillError"));
                 return;
             }
             if (newPassword !== confirmPassword) {
-                toast.error(t("passwordMatchError") || "Passwords don't match");
+                toast.error(t("passwordMatchError"));
                 return;
             }
 
@@ -184,14 +166,12 @@ export default function AccountSettingsPage() {
                 {
                     onSuccess: () => {
                         toast.dismiss(toastId);
-                        toast.success(t("passwordSuccess") || "Password changed");
-                        setCurrentPassword("");
-                        setNewPassword("");
-                        setConfirmPassword("");
+                        toast.success(t("passwordSuccess"));
+                        resetPasswordForm();
                     },
-                    onError: (err: any) => {
+                    onError: (err: unknown) => {
                         toast.dismiss(toastId);
-                        toast.error(err.message || "Failed to change password");
+                        toast.error(err instanceof Error ? err.message : t("genericError"));
                     },
                 }
             );
@@ -211,9 +191,9 @@ export default function AccountSettingsPage() {
                 toast.success(t("deleteSuccess"));
                 router.push("/login");
             },
-            onError: (err: any) => {
+            onError: (err: unknown) => {
                 toast.dismiss(toastId);
-                toast.error(err.message || "Failed to delete account");
+                toast.error(err instanceof Error ? err.message : t("genericError"));
             },
         });
     };
@@ -225,9 +205,9 @@ export default function AccountSettingsPage() {
                 toast.dismiss(toastId);
                 router.push("/login");
             },
-            onError: (err: any) => {
+            onError: (err: unknown) => {
                 toast.dismiss(toastId);
-                toast.error(err.message || "Logout failed");
+                toast.error(err instanceof Error ? err.message : t("genericError"));
             },
         });
     };
@@ -235,42 +215,42 @@ export default function AccountSettingsPage() {
     const currentPhotoUrl = previewUrl || resolveImageUrl(profileData?.photo) || "/images/jake-miller.png";
 
     return (
-        <div className="flex flex-col items-start p-0 gap-[36px] w-full lg:w-[1280px] mx-auto mt-[40px] mb-[64px] font-sarabun px-4 lg:px-0">
+        <div className="flex flex-col items-start p-0 gap-9 w-full lg:w-[1280px] mx-auto mt-10 mb-16 font-sarabun px-4 lg:px-0">
 
-            <h1 className="w-full lg:w-[371px] h-[48px] font-sarabun font-bold text-[48px] leading-none text-zinc-800 dark:text-zinc-100 m-0 shrink-0">
-                {t("title") || "Account Settings"}
+            <h1 className="w-full lg:w-[371px] h-12 font-sarabun font-bold text-5xl leading-none text-zinc-800 dark:text-zinc-100 m-0 shrink-0">
+                {t("title")}
             </h1>
 
-            <div className="flex flex-col lg:flex-row items-start p-0 gap-[36px] w-full lg:w-[1280px] min-h-[720px] shrink-0">
+            <div className="flex flex-col lg:flex-row items-start p-0 gap-9 w-full lg:w-[1280px] min-h-[720px] shrink-0">
 
-                <div className="box-border flex flex-col items-start p-[16px] gap-[10px] w-full lg:w-[299px] lg:h-[720px] bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-[16px] shrink-0">
+                <div className="box-border flex flex-col items-start p-4 gap-[10px] w-full lg:w-[299px] lg:h-[720px] bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl shrink-0">
 
-                    <div className="flex flex-col items-start p-0 gap-[10px] w-full lg:w-[267px] flex-grow">
+                    <div className="flex flex-col items-start p-0 gap-[10px] w-full lg:w-[267px] grow">
                         <button
                             type="button"
                             onClick={() => setActiveTab("profile")}
-                            className={`flex flex-row items-center p-[12px_16px] gap-[10px] w-full h-[48px] rounded-[8px] transition-colors cursor-pointer border-none outline-none shrink-0 ${activeTab === "profile"
+                            className={`flex flex-row items-center px-4 py-3 gap-[10px] w-full h-12 rounded-lg transition-colors cursor-pointer border-none outline-none shrink-0 ${activeTab === "profile"
                                 ? "bg-zinc-800 dark:bg-zinc-800"
                                 : "bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
                                 }`}
                         >
-                            <User className={`w-[24px] h-[24px] shrink-0 ${activeTab === "profile" ? "text-white" : "text-zinc-800 dark:text-zinc-300"}`} strokeWidth={1.5} />
-                            <span className={`font-sarabun font-medium text-[16px] leading-none ${activeTab === "profile" ? "text-white" : "text-zinc-800 dark:text-zinc-300"}`}>
-                                {t("tabProfile") || "Profile"}
+                            <User className={`w-6 h-6 shrink-0 ${activeTab === "profile" ? "text-white" : "text-zinc-800 dark:text-zinc-300"}`} strokeWidth={1.5} />
+                            <span className={`font-sarabun font-medium text-base leading-none ${activeTab === "profile" ? "text-white" : "text-zinc-800 dark:text-zinc-300"}`}>
+                                {t("tabProfile")}
                             </span>
                         </button>
 
                         <button
                             type="button"
                             onClick={() => setActiveTab("password")}
-                            className={`flex flex-row items-center p-[12px_16px] gap-[10px] w-full h-[48px] rounded-[8px] transition-colors cursor-pointer border-none outline-none shrink-0 ${activeTab === "password"
+                            className={`flex flex-row items-center px-4 py-3 gap-[10px] w-full h-12 rounded-lg transition-colors cursor-pointer border-none outline-none shrink-0 ${activeTab === "password"
                                 ? "bg-zinc-800 dark:bg-zinc-800"
                                 : "bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
                                 }`}
                         >
-                            <Lock className={`w-[24px] h-[24px] shrink-0 ${activeTab === "password" ? "text-white" : "text-zinc-800 dark:text-zinc-300"}`} strokeWidth={1.5} />
-                            <span className={`font-sarabun font-medium text-[16px] leading-none ${activeTab === "password" ? "text-white" : "text-zinc-800 dark:text-zinc-300"}`}>
-                                {t("tabPassword") || "Change Password"}
+                            <Lock className={`w-6 h-6 shrink-0 ${activeTab === "password" ? "text-white" : "text-zinc-800 dark:text-zinc-300"}`} strokeWidth={1.5} />
+                            <span className={`font-sarabun font-medium text-base leading-none ${activeTab === "password" ? "text-white" : "text-zinc-800 dark:text-zinc-300"}`}>
+                                {t("tabPassword")}
                             </span>
                         </button>
                     </div>
@@ -278,21 +258,21 @@ export default function AccountSettingsPage() {
                     <button
                         type="button"
                         onClick={handleLogout}
-                        className="flex flex-row items-center p-[12px_16px] gap-[10px] w-full lg:w-[267px] h-[44px] bg-zinc-100 dark:bg-zinc-800 hover:opacity-80 rounded-[8px] transition-opacity cursor-pointer border-none outline-none shrink-0 mt-auto"
+                        className="flex flex-row items-center px-4 py-3 gap-[10px] w-full lg:w-[267px] h-11 bg-zinc-100 dark:bg-zinc-800 hover:opacity-80 rounded-lg transition-opacity cursor-pointer border-none outline-none shrink-0 mt-auto"
                     >
-                        <LogOut className="w-[20px] h-[20px] text-primary-500 rtl:rotate-180 shrink-0" strokeWidth={1.5} />
-                        <span className="font-sarabun font-medium text-[16px] leading-none text-primary-500">
-                            {t("tabLogout") || "Logout"}
+                        <LogOut className="w-5 h-5 text-primary-500 rtl:rotate-180 shrink-0" strokeWidth={1.5} />
+                        <span className="font-sarabun font-medium text-base leading-none text-primary-500">
+                            {t("tabLogout")}
                         </span>
                     </button>
                 </div>
 
-                <div className="flex flex-col items-start p-0 gap-[16px] w-full lg:w-[945px] shrink-0">
+                <div className="flex flex-col items-start p-0 gap-4 w-full lg:w-[945px] shrink-0">
 
                     {activeTab === "profile" ? (
                         <>
-                            <div className="flex flex-row items-center p-0 gap-[16px] w-full lg:w-[945px] h-[120px] shrink-0">
-                                <div className="box-border w-[120px] h-[120px] bg-zinc-50 border border-zinc-200 dark:border-zinc-700 rounded-full shrink-0 relative isolate">
+                            <div className="flex flex-row items-center p-0 gap-4 w-full lg:w-[945px] h-30 shrink-0">
+                                <div className="box-border w-30 h-30 bg-zinc-50 border border-zinc-200 dark:border-zinc-700 rounded-full shrink-0 relative isolate">
                                     <Image
                                         src={currentPhotoUrl}
                                         alt="Profile Photo"
@@ -303,9 +283,9 @@ export default function AccountSettingsPage() {
                                     <button
                                         type="button"
                                         onClick={triggerFileSelect}
-                                        className="box-border flex flex-row justify-center items-center p-0 gap-[10px] absolute w-[34px] h-[34px] right-[1px] rtl:right-auto rtl:left-[1px] bottom-0 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-600 rounded-full cursor-pointer z-10 outline-none transition-transform hover:scale-105"
+                                        className="box-border flex flex-row justify-center items-center p-0 gap-[10px] absolute w-8 h-8 right-px rtl:right-auto rtl:left-px bottom-0 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-600 rounded-full cursor-pointer z-10 outline-none transition-transform hover:scale-105"
                                     >
-                                        <UploadCloud className="w-[20px] h-[20px] text-zinc-800 dark:text-zinc-300 shrink-0" strokeWidth={1.5} />
+                                        <UploadCloud className="w-5 h-5 text-zinc-800 dark:text-zinc-300 shrink-0" strokeWidth={1.5} />
                                     </button>
                                     <input
                                         type="file"
@@ -316,44 +296,44 @@ export default function AccountSettingsPage() {
                                     />
                                 </div>
 
-                                <div className="flex flex-col items-start p-0 gap-[16px] w-full max-w-[432px] h-[68px] shrink-0">
-                                    <span className="w-[121px] h-[20px] font-sarabun font-semibold text-[20px] leading-none text-zinc-800 dark:text-zinc-100 whitespace-nowrap">
-                                        {t("uploadPhoto") || "Upload Photo"}
+                                <div className="flex flex-col items-start p-0 gap-4 w-full max-w-[432px] h-[68px] shrink-0">
+                                    <span className="w-[121px] h-[20px] font-sarabun font-semibold text-xl leading-none text-zinc-800 dark:text-zinc-100 whitespace-nowrap">
+                                        {t("uploadPhoto")}
                                     </span>
-                                    <span className="w-full lg:w-[432px] h-[32px] font-sarabun font-normal text-[16px] leading-none text-zinc-500 dark:text-zinc-400">
-                                        {t("uploadPhotoInfo") || "You can upload a .jpg, .png, or .gif photo with max size of 5MB."}
+                                    <span className="w-full lg:w-[432px] h-[32px] font-sarabun font-normal text-base leading-none text-zinc-500 dark:text-zinc-400">
+                                        {t("uploadPhotoInfo")}
                                     </span>
                                 </div>
                             </div>
 
                             <form onSubmit={handleSubmit} className="flex flex-col items-start p-0 gap-[10px] w-full lg:w-[945px] shrink-0">
 
-                                <div className="flex flex-col md:flex-row items-start p-0 gap-[20px] w-full lg:w-[945px] lg:h-[72px] shrink-0">
-                                    <div className="flex flex-col items-start p-0 gap-[6px] w-full lg:w-[462.5px] h-[72px] bg-white dark:bg-zinc-950 shrink-0">
-                                        <label className="w-[71px] h-[17px] font-inter font-medium text-[14px] leading-[17px] text-zinc-800 dark:text-zinc-300 whitespace-nowrap">
-                                            {t("firstName") || "First name"}
+                                <div className="flex flex-col md:flex-row items-start p-0 gap-5 w-full lg:w-[945px] lg:h-[72px] shrink-0">
+                                    <div className="flex flex-col items-start p-0 gap-1.5 w-full lg:w-[462.5px] h-[72px] bg-white dark:bg-zinc-950 shrink-0">
+                                        <label className="w-[71px] h-[17px] font-inter font-medium text-sm leading-[17px] text-zinc-800 dark:text-zinc-300 whitespace-nowrap">
+                                            {t("firstName")}
                                         </label>
-                                        <div className="box-border flex flex-row items-center p-[16px] gap-[8px] w-full lg:w-[462.5px] h-[49px] border border-zinc-300 dark:border-zinc-700 rounded-[10px] focus-within:border-primary-600 transition-colors shrink-0">
+                                        <div className="box-border flex flex-row items-center p-4 gap-2 w-full lg:w-[462.5px] h-12 border border-zinc-300 dark:border-zinc-700 rounded-xl focus-within:border-primary-600 transition-colors shrink-0">
                                             <input
                                                 type="text"
                                                 value={firstName}
                                                 onChange={(e) => setFirstName(e.target.value)}
-                                                className="w-full bg-transparent border-none outline-none font-inter font-normal text-[14px] leading-[17px] text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400"
+                                                className="w-full bg-transparent border-none outline-none font-inter font-normal text-sm leading-[17px] text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400"
                                                 required
                                             />
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-col items-start p-0 gap-[6px] w-full lg:w-[462.5px] h-[72px] bg-white dark:bg-zinc-950 shrink-0">
-                                        <label className="w-[70px] h-[17px] font-inter font-medium text-[14px] leading-[17px] text-zinc-800 dark:text-zinc-300 whitespace-nowrap">
-                                            {t("lastName") || "Last name"}
+                                    <div className="flex flex-col items-start p-0 gap-1.5 w-full lg:w-[462.5px] h-[72px] bg-white dark:bg-zinc-950 shrink-0">
+                                        <label className="w-[70px] h-[17px] font-inter font-medium text-sm leading-[17px] text-zinc-800 dark:text-zinc-300 whitespace-nowrap">
+                                            {t("lastName")}
                                         </label>
-                                        <div className="box-border flex flex-row items-center p-[16px] gap-[8px] w-full lg:w-[462.5px] h-[49px] border border-zinc-300 dark:border-zinc-700 rounded-[10px] focus-within:border-primary-600 transition-colors shrink-0">
+                                        <div className="box-border flex flex-row items-center p-4 gap-2 w-full lg:w-[462.5px] h-12 border border-zinc-300 dark:border-zinc-700 rounded-xl focus-within:border-primary-600 transition-colors shrink-0">
                                             <input
                                                 type="text"
                                                 value={lastName}
                                                 onChange={(e) => setLastName(e.target.value)}
-                                                className="w-full bg-transparent border-none outline-none font-inter font-normal text-[14px] leading-[17px] text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400"
+                                                className="w-full bg-transparent border-none outline-none font-inter font-normal text-sm leading-[17px] text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400"
                                                 required
                                             />
                                         </div>
@@ -361,25 +341,25 @@ export default function AccountSettingsPage() {
                                 </div>
 
                                 {/* Email Field */}
-                                <div className="flex flex-col items-start p-0 gap-[6px] w-full lg:w-[945px] h-[72px] bg-white dark:bg-zinc-950 shrink-0 mt-[6px]">
-                                    <label className="h-[17px] font-inter font-medium text-[14px] leading-[17px] text-zinc-800 dark:text-zinc-300">
-                                        {t("email") || "Email"}
+                                <div className="flex flex-col items-start p-0 gap-1.5 w-full lg:w-[945px] h-[72px] bg-white dark:bg-zinc-950 shrink-0 mt-1.5">
+                                    <label className="h-[17px] font-inter font-medium text-sm leading-[17px] text-zinc-800 dark:text-zinc-300">
+                                        {t("email")}
                                     </label>
-                                    <div className="box-border flex flex-row items-center p-[16px] gap-[8px] w-full lg:w-[945px] h-[49px] border border-zinc-300 dark:border-zinc-700 rounded-[10px] focus-within:border-primary-600 transition-colors shrink-0">
+                                    <div className="box-border flex flex-row items-center p-4 gap-2 w-full lg:w-[945px] h-12 border border-zinc-300 dark:border-zinc-700 rounded-xl focus-within:border-primary-600 transition-colors shrink-0">
                                         <input
                                             type="email"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             placeholder="example@email.com"
-                                            className="w-full bg-transparent border-none outline-none font-inter font-normal text-[14px] leading-[17px] text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400"
+                                            className="w-full bg-transparent border-none outline-none font-inter font-normal text-sm leading-[17px] text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400"
                                             required
                                         />
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col items-start p-0 gap-[6px] w-full lg:w-[945px] h-[76px] shrink-0 mt-[6px]">
-                                    <label className="h-[17px] font-inter font-medium text-[14px] leading-[17px] text-[#27272A] dark:text-zinc-300 whitespace-nowrap">
-                                        {t("phone") || "Phone"}
+                                <div className="flex flex-col items-start p-0 gap-1.5 w-full lg:w-[945px] h-[76px] shrink-0 mt-1.5">
+                                    <label className="h-[17px] font-inter font-medium text-sm leading-[17px] text-zinc-800 dark:text-zinc-300 whitespace-nowrap">
+                                        {t("phone")}
                                     </label>
                                     <div className="w-full lg:w-[945px] h-[53px]">
                                         <PhoneInput
@@ -387,46 +367,45 @@ export default function AccountSettingsPage() {
                                             onChange={(val) => setPhone(val || "")}
                                             onDialCodeChange={(code) => setPhoneDialCode(code)}
                                             placeholder="1012345678"
-
                                         />
                                     </div>
                                 </div>
 
                                 {/* Gender Field */}
-                                <div className="flex flex-col items-start p-0 gap-[6px] w-full lg:w-[945px] h-[72px] bg-white dark:bg-zinc-950 shrink-0 mt-[6px]">
-                                    <label className="h-[17px] font-inter font-medium text-[14px] leading-[17px] text-zinc-800 dark:text-zinc-300">
-                                        {t("gender") || "Gender"}
+                                <div className="flex flex-col items-start p-0 gap-1.5 w-full lg:w-[945px] h-[72px] bg-white dark:bg-zinc-950 shrink-0 mt-1.5">
+                                    <label className="h-[17px] font-inter font-medium text-sm leading-[17px] text-zinc-800 dark:text-zinc-300">
+                                        {t("gender")}
                                     </label>
-                                    <div className="box-border flex flex-row items-center p-[16px] gap-[8px] w-full lg:w-[945px] h-[49px] bg-transparent border border-zinc-300 dark:border-zinc-700 rounded-[10px] focus-within:border-primary-600 transition-colors shrink-0">
+                                    <div className="box-border flex flex-row items-center p-4 gap-2 w-full lg:w-[945px] h-12 bg-transparent border border-zinc-300 dark:border-zinc-700 rounded-xl focus-within:border-primary-600 transition-colors shrink-0">
                                         <select
                                             value={gender}
                                             onChange={(e) => setGender(e.target.value as "MALE" | "FEMALE")}
-                                            className="flex-grow bg-transparent border-none outline-none font-inter font-normal text-[14px] leading-[17px] text-zinc-800 dark:text-zinc-100 cursor-pointer appearance-none"
+                                            className="grow bg-transparent border-none outline-none font-inter font-normal text-sm leading-[17px] text-zinc-800 dark:text-zinc-100 cursor-pointer appearance-none"
                                         >
-                                            <option value="MALE" className="dark:bg-zinc-900">{t("male") || "Male"}</option>
-                                            <option value="FEMALE" className="dark:bg-zinc-900">{t("female") || "Female"}</option>
+                                            <option value="MALE" className="dark:bg-zinc-900">{t("male")}</option>
+                                            <option value="FEMALE" className="dark:bg-zinc-900">{t("female")}</option>
                                         </select>
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col sm:flex-row justify-between items-center pt-[60px] pb-0 px-0 gap-[10px] w-full lg:w-[945px] h-auto sm:h-[104px] shrink-0">
+                                <div className="flex flex-col sm:flex-row justify-between items-center pt-16 pb-0 px-0 gap-[10px] w-full lg:w-[945px] h-auto sm:h-[104px] shrink-0">
                                     <button
                                         type="button"
                                         onClick={handleDeleteAccount}
-                                        className="w-[132px] h-[16px] font-sarabun font-medium text-[16px] leading-none text-destructive bg-transparent border-none outline-none cursor-pointer hover:underline p-0 m-0 shrink-0"
+                                        className="w-[132px] h-[16px] font-sarabun font-medium text-base leading-none text-destructive bg-transparent border-none outline-none cursor-pointer hover:underline p-0 m-0 shrink-0"
                                     >
-                                        {t("deleteAccount") || "Delete My Account"}
+                                        {t("deleteAccount")}
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={updateProfileMutation.isPending}
-                                        className="flex flex-row justify-center items-center p-[14px_16px] gap-[10px] w-full sm:w-[228px] h-[44px] bg-primary-600 rounded-[10px] hover:bg-primary-700 hover:opacity-90 transition-opacity border-none outline-none cursor-pointer shrink-0 disabled:opacity-50 mt-6 sm:mt-0"
+                                        className="flex flex-row justify-center items-center px-4 py-3.5 gap-[10px] w-full sm:w-[228px] h-11 bg-primary-600 rounded-xl hover:bg-primary-700 hover:opacity-90 transition-opacity border-none outline-none cursor-pointer shrink-0 disabled:opacity-50 mt-6 sm:mt-0"
                                     >
                                         {updateProfileMutation.isPending ? (
-                                            <Loader2 className="w-[20px] h-[20px] animate-spin text-white shrink-0" />
+                                            <Loader2 className="w-5 h-5 animate-spin text-white shrink-0" />
                                         ) : (
-                                            <span className="w-[97px] h-[16px] font-sarabun font-medium text-[16px] leading-none text-white whitespace-nowrap">
-                                                {t("saveChanges") || "Save Changes"}
+                                            <span className="w-[97px] h-[16px] font-sarabun font-medium text-base leading-none text-white whitespace-nowrap">
+                                                {t("saveChanges")}
                                             </span>
                                         )}
                                     </button>
@@ -434,20 +413,20 @@ export default function AccountSettingsPage() {
                             </form>
                         </>
                     ) : (
-                        <form onSubmit={handleSubmit} className="flex flex-col items-start p-0 gap-[24px] w-full lg:w-[945px] shrink-0">
+                        <form onSubmit={handleSubmit} className="flex flex-col items-start p-0 gap-6 w-full lg:w-[945px] shrink-0">
 
                             {/* Old Password */}
-                            <div className="flex flex-col items-start p-0 gap-[6px] w-full lg:w-[945px] shrink-0">
-                                <label className="font-inter font-medium text-[14px] leading-[17px] text-zinc-800 dark:text-zinc-300">
-                                    {t("currentPassword") || "Old Password"}
+                            <div className="flex flex-col items-start p-0 gap-1.5 w-full lg:w-[945px] shrink-0">
+                                <label className="font-inter font-medium text-sm leading-[17px] text-zinc-800 dark:text-zinc-300">
+                                    {t("currentPassword")}
                                 </label>
-                                <div className="box-border flex flex-row items-center p-[16px] gap-[8px] w-full lg:w-[945px] h-[49px] border border-zinc-300 dark:border-zinc-700 rounded-[10px] focus-within:border-primary-600 transition-colors shrink-0 bg-transparent">
+                                <div className="box-border flex flex-row items-center p-4 gap-2 w-full lg:w-[945px] h-12 border border-zinc-300 dark:border-zinc-700 rounded-xl focus-within:border-primary-600 transition-colors shrink-0 bg-transparent">
                                     <input
                                         type={showCurrentPassword ? "text" : "password"}
                                         value={currentPassword}
                                         onChange={(e) => setCurrentPassword(e.target.value)}
                                         placeholder="********"
-                                        className="w-full bg-transparent border-none outline-none font-inter font-normal text-[14px] leading-[17px] text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400"
+                                        className="w-full bg-transparent border-none outline-none font-inter font-normal text-sm leading-[17px] text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400"
                                         required
                                     />
                                     <button
@@ -464,17 +443,17 @@ export default function AccountSettingsPage() {
                             <div className="w-full lg:w-[945px] border-t border-zinc-200 dark:border-zinc-800 shrink-0 my-1" />
 
                             {/* New Password */}
-                            <div className="flex flex-col items-start p-0 gap-[6px] w-full lg:w-[945px] shrink-0">
-                                <label className="font-inter font-medium text-[14px] leading-[17px] text-zinc-800 dark:text-zinc-300">
-                                    {t("newPassword") || "New Password"}
+                            <div className="flex flex-col items-start p-0 gap-1.5 w-full lg:w-[945px] shrink-0">
+                                <label className="font-inter font-medium text-sm leading-[17px] text-zinc-800 dark:text-zinc-300">
+                                    {t("newPassword")}
                                 </label>
-                                <div className="box-border flex flex-row items-center p-[16px] gap-[8px] w-full lg:w-[945px] h-[49px] border border-zinc-300 dark:border-zinc-700 rounded-[10px] focus-within:border-primary-600 transition-colors shrink-0 bg-transparent">
+                                <div className="box-border flex flex-row items-center p-4 gap-2 w-full lg:w-[945px] h-12 border border-zinc-300 dark:border-zinc-700 rounded-xl focus-within:border-primary-600 transition-colors shrink-0 bg-transparent">
                                     <input
                                         type={showNewPassword ? "text" : "password"}
                                         value={newPassword}
                                         onChange={(e) => setNewPassword(e.target.value)}
                                         placeholder="********"
-                                        className="w-full bg-transparent border-none outline-none font-inter font-normal text-[14px] leading-[17px] text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400"
+                                        className="w-full bg-transparent border-none outline-none font-inter font-normal text-sm leading-[17px] text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400"
                                         required
                                     />
                                     <button
@@ -488,17 +467,17 @@ export default function AccountSettingsPage() {
                             </div>
 
                             {/* Confirm New Password */}
-                            <div className="flex flex-col items-start p-0 gap-[6px] w-full lg:w-[945px] shrink-0">
-                                <label className="font-inter font-medium text-[14px] leading-[17px] text-zinc-800 dark:text-zinc-300">
-                                    {t("confirmPassword") || "Confirm New Password"}
+                            <div className="flex flex-col items-start p-0 gap-1.5 w-full lg:w-[945px] shrink-0">
+                                <label className="font-inter font-medium text-sm leading-[17px] text-zinc-800 dark:text-zinc-300">
+                                    {t("confirmPassword")}
                                 </label>
-                                <div className="box-border flex flex-row items-center p-[16px] gap-[8px] w-full lg:w-[945px] h-[49px] border border-zinc-300 dark:border-zinc-700 rounded-[10px] focus-within:border-primary-600 transition-colors shrink-0 bg-transparent">
+                                <div className="box-border flex flex-row items-center p-4 gap-2 w-full lg:w-[945px] h-12 border border-zinc-300 dark:border-zinc-700 rounded-xl focus-within:border-primary-600 transition-colors shrink-0 bg-transparent">
                                     <input
                                         type={showConfirmPassword ? "text" : "password"}
                                         value={confirmPassword}
                                         onChange={(e) => setConfirmPassword(e.target.value)}
                                         placeholder="********"
-                                        className="w-full bg-transparent border-none outline-none font-inter font-normal text-[14px] leading-[17px] text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400"
+                                        className="w-full bg-transparent border-none outline-none font-inter font-normal text-sm leading-[17px] text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400"
                                         required
                                     />
                                     <button
@@ -512,17 +491,17 @@ export default function AccountSettingsPage() {
                             </div>
 
                             {/* Change Password Button */}
-                            <div className="flex flex-row justify-end items-center pt-[20px] w-full lg:w-[945px] shrink-0">
+                            <div className="flex flex-row justify-end items-center pt-5 w-full lg:w-[945px] shrink-0">
                                 <button
                                     type="submit"
                                     disabled={changePasswordMutation.isPending}
-                                    className="flex flex-row justify-center items-center px-[24px] py-[14px] gap-[10px] w-full sm:w-[228px] h-[48px] bg-primary-600 rounded-[10px] hover:opacity-90 transition-opacity border-none outline-none cursor-pointer shrink-0 disabled:opacity-50"
+                                    className="flex flex-row justify-center items-center px-6 py-3.5 gap-[10px] w-full sm:w-[228px] h-12 bg-primary-600 rounded-xl hover:opacity-90 transition-opacity border-none outline-none cursor-pointer shrink-0 disabled:opacity-50"
                                 >
                                     {changePasswordMutation.isPending ? (
-                                        <Loader2 className="w-[20px] h-[20px] animate-spin text-white shrink-0" />
+                                        <Loader2 className="w-5 h-5 animate-spin text-white shrink-0" />
                                     ) : (
-                                        <span className="font-sarabun font-medium text-[16px] leading-none text-white whitespace-nowrap">
-                                            {t("changePassword") || "Change Password"}
+                                        <span className="font-sarabun font-medium text-base leading-none text-white whitespace-nowrap">
+                                            {t("changePassword")}
                                         </span>
                                     )}
                                 </button>
@@ -535,44 +514,44 @@ export default function AccountSettingsPage() {
             {/* Custom Delete Account Confirmation Modal */}
             {isDeleteModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 animate-fade-in">
-                    <div className="bg-white dark:bg-zinc-900 rounded-[24px] p-[32px] max-w-[440px] w-full flex flex-col items-center relative shadow-2xl text-center gap-[24px]">
+                    <div className="bg-white dark:bg-zinc-900 rounded-3xl p-8 max-w-md w-full flex flex-col items-center relative shadow-2xl text-center gap-6">
                         <button
                             type="button"
                             onClick={() => setIsDeleteModalOpen(false)}
-                            className="absolute top-[16px] right-[16px] text-zinc-400 hover:text-zinc-650 dark:hover:text-zinc-200 cursor-pointer bg-transparent border-none outline-none"
+                            className="absolute top-4 right-4 text-zinc-400 hover:text-zinc-650 dark:hover:text-zinc-200 cursor-pointer bg-transparent border-none outline-none"
                         >
-                            <X className="w-[24px] h-[24px]" strokeWidth={1.5} />
+                            <X className="w-6 h-6" strokeWidth={1.5} />
                         </button>
 
-                        <div className="w-[100px] h-[100px] bg-zinc-50 dark:bg-zinc-800 rounded-full flex items-center justify-center">
+                        <div className="w-24 h-24 bg-zinc-50 dark:bg-zinc-800 rounded-full flex items-center justify-center">
                             <div className="w-[70px] h-[70px] bg-zinc-100 dark:bg-zinc-700 rounded-full flex items-center justify-center">
-                                <Trash2 className="w-[32px] h-[32px] text-zinc-800 dark:text-zinc-300" strokeWidth={1.5} />
+                                <Trash2 className="w-8 h-8 text-zinc-800 dark:text-zinc-300" strokeWidth={1.5} />
                             </div>
                         </div>
 
-                        <div className="flex flex-col gap-[8px]">
-                            <h3 className="font-sarabun font-bold text-[22px] leading-tight text-zinc-800 dark:text-zinc-100 m-0">
-                                {t("deleteModalTitle") || "Are you sure?"}
+                        <div className="flex flex-col gap-2">
+                            <h3 className="font-sarabun font-bold text-xl leading-tight text-zinc-800 dark:text-zinc-100 m-0">
+                                {t("deleteModalTitle")}
                             </h3>
-                            <p className="text-[14px] text-primary-500 font-semibold leading-normal m-0">
-                                {t("deleteModalSubtitle") || "This action cannot be undone."}
+                            <p className="text-sm text-primary-500 font-semibold leading-normal m-0">
+                                {t("deleteModalSubtitle")}
                             </p>
                         </div>
 
-                        <div className="flex flex-row gap-[16px] w-full mt-[8px]">
+                        <div className="flex flex-row gap-4 w-full mt-2">
                             <button
                                 type="button"
                                 onClick={() => setIsDeleteModalOpen(false)}
-                                className="flex-1 h-[48px] border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-300 rounded-[12px] font-sarabun font-semibold text-[15px] transition-colors cursor-pointer outline-none bg-transparent"
+                                className="flex-1 h-12 border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-300 rounded-xl font-sarabun font-semibold text-sm transition-colors cursor-pointer outline-none bg-transparent"
                             >
-                                {t("deleteModalCancel") || "Cancel"}
+                                {t("deleteModalCancel")}
                             </button>
                             <button
                                 type="button"
                                 onClick={handleConfirmDelete}
-                                className="flex-1 h-[48px] bg-red-600 hover:bg-[#B91C1C] text-white rounded-[12px] font-sarabun font-semibold text-[15px] transition-colors cursor-pointer outline-none border-none"
+                                className="flex-1 h-12 bg-red-600 hover:bg-red-700 text-white rounded-xl font-sarabun font-semibold text-sm transition-colors cursor-pointer outline-none border-none"
                             >
-                                {t("deleteModalConfirm") || "Delete"}
+                                {t("deleteModalConfirm")}
                             </button>
                         </div>
                     </div>

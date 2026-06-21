@@ -28,25 +28,48 @@ export const verifyEmail = (data: { email: string; code: string }) =>
         body: JSON.stringify(data),
     });
 // Forgot password
-export const forgotPassword = (email: string, redirectUrl?: string) =>
-    fetchClient<null>("/api/auth/forgot-password", {
+export const forgotPassword = async (email: string, redirectUrl?: string): Promise<string> => {
+    await fetchClient<void>("/api/auth/forgot-password", {
         method: "POST",
-        body: JSON.stringify({
-            email,
-            redirectUrl: redirectUrl ?? `${process.env.NEXT_PUBLIC_APP_URL}/en/reset-password`,
-        }),
+        body: JSON.stringify({ email }),
     });
+    return email;
+};
 
 // Reset password
-export const resetPassword = (data: {
-    token: string;
-    newPassword: string;
-    confirmPassword: string;
-}) =>
-    fetchClient<null>("/api/auth/reset-password", {
+export async function resetPassword(email: string, token: string, newPassword: string): Promise<void>;
+export async function resetPassword(data: { token: string; newPassword: string; confirmPassword: string }): Promise<void>;
+export async function resetPassword(
+    first: string | { token: string; newPassword: string; confirmPassword: string },
+    second?: string,
+    third?: string
+): Promise<void> {
+    let email = "";
+    let token = "";
+    let newPassword = "";
+
+    if (typeof first === "object") {
+        email = (typeof window !== "undefined" && window.localStorage.getItem("reset_email")) || "";
+        token = first.token;
+        newPassword = first.newPassword;
+    } else {
+        email = first;
+        token = second || "";
+        newPassword = third || "";
+    }
+
+    // 1. Verify Reset Code
+    await fetchClient<void>("/api/auth/verifyResetCode", {
         method: "POST",
-        body: JSON.stringify(data),
+        body: JSON.stringify({ resetCode: token })
     });
+
+    // 2. Perform Reset Password
+    await fetchClient<void>("/api/auth/resetPassword", {
+        method: "PUT",
+        body: JSON.stringify({ email, newPassword })
+    });
+}
 
 // Get profile
 export const getProfile = () =>
