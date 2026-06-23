@@ -396,7 +396,7 @@ export function Navbar() {
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:block bg-primary-700 dark:bg-zinc-900 border-t border-transparent dark:border-zinc-800 transition-colors duration-300">
+            <nav className="hidden lg:block bg-primary-700 dark:bg-rose-200 border-t border-transparent dark:border-rose-300/20 transition-colors duration-300">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-row justify-center items-center gap-2 lg:gap-4 h-12">
                         {navLinks.map((link) => {
@@ -408,27 +408,27 @@ export function Navbar() {
                                     key={link.href}
                                     href={link.href}
                                     className={`relative flex flex-row justify-center items-center px-3 gap-2 h-full transition-all ${isActive
-                                        ? "text-rose-200"
-                                        : "text-zinc-50 dark:text-zinc-300 hover:text-rose-200 dark:hover:text-white"
+                                        ? "text-rose-200 dark:text-primary-700"
+                                        : "text-zinc-50 dark:text-rose-900/70 hover:text-rose-200 dark:hover:text-primary-700"
                                         }`}
                                     data-active={isActive}
                                 >
                                     <LinkIcon
                                         className={`w-4 lg:w-5 h-4 lg:h-5 shrink-0 transition-colors ${isActive
-                                            ? "text-rose-200"
-                                            : "text-zinc-50 dark:text-zinc-300"
+                                            ? "text-rose-200 dark:text-primary-700"
+                                            : "text-zinc-50 dark:text-rose-900/70"
                                             }`}
                                         strokeWidth={isActive ? 2 : 1.5}
                                     />
                                     <span
-                                        className={`text-sm lg:text-base font-sarabun whitespace-nowrap transition-colors ${isActive ? "font-bold text-rose-200" : "font-medium"
+                                        className={`text-sm lg:text-base font-sarabun whitespace-nowrap transition-colors ${isActive ? "font-bold text-rose-200 dark:text-primary-700" : "font-medium"
                                             }`}
                                     >
                                         {link.label}
                                     </span>
 
                                     {isActive && (
-                                        <span className="absolute bottom-0 left-0 w-full h-[3px] bg-rose-200 rounded-t-sm" />
+                                        <span className="absolute bottom-0 left-0 w-full h-[3px] bg-rose-200 dark:bg-primary-700 rounded-t-sm" />
                                     )}
                                 </Link>
                             );
