@@ -68,7 +68,7 @@ export function BestSellingSection() {
               type="button"
               onClick={handleSlidePrev}
               aria-label="Previous"
-              className="absolute inset-s-[-19px] top-1/2 -translate-y-1/2 z-10 size-[38px] flex items-center justify-center bg-primary-600 hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-900 rounded-full shadow-[0_0_40px_5px_rgba(0,0,0,0.05)] transition-colors"
+              className="absolute inset-s-[-19px] top-[136px] -translate-y-1/2 z-10 size-[38px] flex items-center justify-center bg-primary-600 hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-900 rounded-full shadow-[0_0_40px_5px_rgba(0,0,0,0.05)] transition-colors"
             >
               <ChevronLeft className="size-5 text-primary-50" />
             </button>
@@ -102,7 +102,7 @@ export function BestSellingSection() {
               type="button"
               onClick={handleSlideNext}
               aria-label="Next"
-              className="absolute inset-e-[-19px] top-1/2 -translate-y-1/2 z-10 size-[38px] flex items-center justify-center bg-primary-600 hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-900 rounded-full shadow-[0_0_40px_5px_rgba(0,0,0,0.05)] transition-colors"
+              className="absolute inset-e-[-19px] top-[136px] -translate-y-1/2 z-10 size-[38px] flex items-center justify-center bg-primary-600 hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-900 rounded-full shadow-[0_0_40px_5px_rgba(0,0,0,0.05)] transition-colors"
             >
               <ChevronRight className="size-5 text-primary-50" />
             </button>

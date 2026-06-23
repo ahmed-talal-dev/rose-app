@@ -42,7 +42,7 @@ export function RelatedProducts({ products }: RelatedProductsProps) {
                 <button
                     type="button"
                     onClick={() => handleScrollSlider("left")}
-                    className="absolute top-[146px] -left-4 z-10 flex h-8 w-8 -translate-y-1/2 cursor-pointer flex-col items-center justify-center rounded-full border-none bg-primary-600 shadow-md transition-colors hover:bg-primary-700 outline-none"
+                    className="absolute top-[162px] -left-4 z-10 flex h-8 w-8 -translate-y-1/2 cursor-pointer flex-col items-center justify-center rounded-full border-none bg-primary-600 shadow-md transition-colors hover:bg-primary-700 outline-none"
                     aria-label="Previous products"
                 >
                     <ChevronLeft className="h-5 w-5 text-white rtl:rotate-180" strokeWidth={2} />
@@ -62,7 +62,7 @@ export function RelatedProducts({ products }: RelatedProductsProps) {
                 <button
                     type="button"
                     onClick={() => handleScrollSlider("right")}
-                    className="absolute top-[146px] -right-4 z-10 flex h-8 w-8 -translate-y-1/2 cursor-pointer flex-col items-center justify-center rounded-full border-none bg-primary-600 shadow-md transition-colors hover:bg-primary-700 outline-none"
+                    className="absolute top-[162px] -right-4 z-10 flex h-8 w-8 -translate-y-1/2 cursor-pointer flex-col items-center justify-center rounded-full border-none bg-primary-600 shadow-md transition-colors hover:bg-primary-700 outline-none"
                     aria-label="Next products"
                 >
                     <ChevronRight className="h-5 w-5 text-white rtl:rotate-180" strokeWidth={2} />
