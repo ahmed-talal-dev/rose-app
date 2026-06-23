@@ -30,8 +30,8 @@ export function MostPopularSection() {
   const { data: occasionsData } = useOccasions({ limit: 6 });
   const defaultOccasionId =
     occasionsData?.data.find((occ) =>
-      occ.title.toLowerCase().includes("anniversary"),
-    )?.id ?? occasionsData?.data[1]?.id;
+      occ.title.toLowerCase().includes("wedding"),
+    )?.id ?? occasionsData?.data[0]?.id;
   const selectedOccasionId = activeOccasionId ?? defaultOccasionId;
   const { data, isLoading, isError } = useProducts({
     occasionId: selectedOccasionId,
