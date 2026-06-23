@@ -67,7 +67,7 @@ export function HeroSlider() {
                 <div className="flex flex-col lg:flex-row justify-between items-stretch gap-4 lg:gap-9 py-4 lg:py-6">
                     <div className="group relative flex flex-col justify-end items-start p-4 sm:p-5 lg:p-6 gap-2 lg:gap-2.5 w-full lg:w-[301px] h-[200px] sm:h-[240px] lg:h-[439px] rounded-2xl overflow-hidden shrink-0">
                         <Image
-                            src="/images/cover.svg"
+                            src="/images/Cover.svg"
                             alt="Special Gifts"
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-500"

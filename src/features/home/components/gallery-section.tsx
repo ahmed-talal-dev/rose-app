@@ -9,7 +9,7 @@ export function GallerySection() {
   // Exact layout style parameters matching the mockup's CSS coordinates
   const images = [
     {
-      src: "/images/cover.svg",
+      src: "/images/Cover.svg",
       style: { left: "0px", top: "0px", width: "418px", height: "617px" },
       alt: "Wedding Gift Box Set",
     },
