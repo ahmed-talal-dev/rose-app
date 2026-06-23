@@ -9,20 +9,46 @@ import { TestimonialsSection } from "@/features/home/components/testimonials-sec
 import { TrustedBySection } from "@/features/home/components/trusted-by-section";
 import { Navbar } from "@/shared/layout/navbar";
 import { Footer } from "@/shared/layout/footer";
+import { ScrollReveal } from "@/shared/components/scroll-reveal";
 
 export default function HomePage() {
     return (
-        <main className="min-h-screen bg-background dark:bg-zinc-800  space-y-4 sm:space-y-6">
+        <main className="min-h-screen bg-background dark:bg-zinc-800 space-y-4 sm:space-y-6 overflow-x-hidden">
             <Navbar />
             <HeroSlider />
-            <OccasionsSection />
-            <FeaturesBar />
-            <BestSellingSection />
-            <MostPopularSection />
-            <AboutSection />
-            <GallerySection />
-            <TestimonialsSection />
-            <TrustedBySection />
+            
+            <ScrollReveal>
+                <OccasionsSection />
+            </ScrollReveal>
+            
+            <ScrollReveal>
+                <FeaturesBar />
+            </ScrollReveal>
+            
+            <ScrollReveal>
+                <BestSellingSection />
+            </ScrollReveal>
+            
+            <ScrollReveal>
+                <MostPopularSection />
+            </ScrollReveal>
+            
+            <ScrollReveal>
+                <AboutSection />
+            </ScrollReveal>
+            
+            <ScrollReveal>
+                <GallerySection />
+            </ScrollReveal>
+            
+            <ScrollReveal>
+                <TestimonialsSection />
+            </ScrollReveal>
+            
+            <ScrollReveal>
+                <TrustedBySection />
+            </ScrollReveal>
+            
             <Footer />
         </main>
     );

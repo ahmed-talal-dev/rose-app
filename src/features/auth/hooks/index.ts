@@ -83,13 +83,14 @@ export const useForgotPassword = () =>
     });
 
 export const useResetPassword = () =>
-    useMutation<
-        unknown,
-        ApiError,
-        { token: string; newPassword: string; confirmPassword: string }
-    >({
-        mutationFn: (data) => resetPassword(data),
-    });
+  useMutation<
+    unknown,
+    ApiError,
+    { email: string; token: string; newPassword: string }
+  >({
+    mutationFn: ({ email, token, newPassword }) =>
+      resetPassword(email, token, newPassword),
+  });
 
 export const useUpdateProfile = () => {
     const queryClient = useQueryClient();

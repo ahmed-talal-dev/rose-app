@@ -166,7 +166,7 @@ export function RegisterForm() {
             });
             toast.error(t("validation.fixErrors"));
           } else {
-            toast.error(err.message || t("validation.registrationFailed"));
+            toast.error(err.message);
           }
         },
       },

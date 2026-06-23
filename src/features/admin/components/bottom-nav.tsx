@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Flower } from "lucide-react";
 import { NAV_ITEMS } from "../constants/dashboard";
 
@@ -8,6 +9,8 @@ interface BottomNavProps {
 }
 
 export function BottomNav({ activeTab, setActiveTab, onPreview }: BottomNavProps) {
+    const t = useTranslations("admin.sidebar");
+
     return (
         <nav className="fixed bottom-0 left-0 right-0 h-23 bg-white dark:bg-zinc-900 border-t border-zinc-50 dark:border-zinc-800 z-50 shadow-lg flex justify-center md:hidden">
             <div className="w-full max-w-107.5 h-full relative flex flex-row items-start p-4 gap-4">
@@ -33,7 +36,7 @@ export function BottomNav({ activeTab, setActiveTab, onPreview }: BottomNavProps
                                 className={`font-sans font-bold text-sm leading-4.75 ${active ? "text-primary-600" : "text-zinc-800 dark:text-zinc-300"
                                     }`}
                             >
-                                {item.label}
+                                {t(item.id)}
                             </span>
                         </button>
                     );

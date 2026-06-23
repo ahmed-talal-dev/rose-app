@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 import { useProducts, useCreateProduct, useUpdateProduct, useDeleteProduct } from "@/features/products/hooks";
 import { useCategories } from "@/features/categories/hooks";
@@ -28,6 +29,7 @@ export function ProductsTab({
     editingProduct,
     setEditingProduct,
 }: ProductsTabProps) {
+    const t = useTranslations("admin.products");
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [activeRowMenuId, setActiveRowMenuId] = useState<string | null>(null);
@@ -63,7 +65,7 @@ export function ProductsTab({
             const res = await uploadMutation.mutateAsync(file);
             return res.url;
         } catch {
-            toast.warning("Image upload failed. Using current image.");
+            toast.warning(t("coverUploadError"));
             return fallback;
         }
     }
@@ -73,7 +75,7 @@ export function ProductsTab({
             const results = await Promise.all(files.map((f) => uploadMutation.mutateAsync(f)));
             return results.map((r) => r.url);
         } catch {
-            toast.warning("Gallery upload failed. Using current images.");
+            toast.warning(t("galleryUploadError"));
             return [fallback];
         }
     }
@@ -113,10 +115,10 @@ export function ProductsTab({
                 categoryId: values.categoryId,
                 occasionIds: [values.occasionId],
             });
-            toast.success("Product added successfully");
+            toast.success(t("successAdd"));
             setView("list");
         } catch (err: unknown) {
-            toast.error(err instanceof Error ? err.message : "Failed to add product");
+            toast.error(err instanceof Error ? err.message : t("addError"));
         }
     }
 
@@ -147,20 +149,20 @@ export function ProductsTab({
                 categoryId: values.categoryId,
                 occasionIds: [values.occasionId],
             });
-            toast.success("Product updated successfully");
+            toast.success(t("successUpdate"));
             setView("list");
         } catch (err: unknown) {
-            toast.error(err instanceof Error ? err.message : "Failed to update product");
+            toast.error(err instanceof Error ? err.message : t("updateError"));
         }
     }
 
     async function handleDelete(prod: Product) {
-        if (!confirm(`Delete "${prod.title}"?`)) return;
+        if (!confirm(t("deleteConfirm", { name: prod.title }))) return;
         try {
             await deleteMutation.mutateAsync(prod.id);
-            toast.success("Product deleted");
+            toast.success(t("successDelete"));
         } catch (err: unknown) {
-            toast.error(err instanceof Error ? err.message : "Failed to delete product");
+            toast.error(err instanceof Error ? err.message : t("deleteError"));
         }
     }
 

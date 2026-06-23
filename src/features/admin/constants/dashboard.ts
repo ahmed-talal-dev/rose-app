@@ -1,9 +1,9 @@
 import {
     LayoutDashboard,
     Package,
-    ReceiptText,
-    ClipboardList,
     CalendarHeart,
+    ClipboardList,
+    ReceiptText,
     CircleDollarSign,
 } from "lucide-react";
 import { StatItem, CategoryItem, OrderStatusItem, RevenueDataPoint, ProductItem, StockItem, StatColor } from "../types/dashboard";
@@ -54,7 +54,9 @@ export const MONTHLY_REVENUE: RevenueDataPoint[] = [
     { month: "Aug", value: 3600 },
     { month: "Sep", value: 4350 },
     { month: "Oct", value: 3550 },
-]; export const WEEKLY_REVENUE: RevenueDataPoint[] = [
+];
+
+export const WEEKLY_REVENUE: RevenueDataPoint[] = [
     { month: "0", value: 300 },
     { month: "Mon", value: 400 },
     { month: "Tue", value: 650 },
@@ -64,6 +66,7 @@ export const MONTHLY_REVENUE: RevenueDataPoint[] = [
     { month: "Sat", value: 720 },
     { month: "Sun", value: 540 },
 ];
+
 export const TOP_PRODUCTS: ProductItem[] = [
     { name: "25 Red Roses | Black Wrap", price: "1,999 EGP", sales: 5011, rank: 1 },
     { name: "Wedding Flower", price: "440 EGP", sales: 1464, rank: 2 },

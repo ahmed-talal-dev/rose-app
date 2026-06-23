@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { ProductItem } from "../types/dashboard";
 
 const getRankStyle = (rank: number) => {
@@ -27,6 +28,10 @@ const getRankStyle = (rank: number) => {
 
 export function TopProductRow({ name, price, sales, rank }: ProductItem) {
     const { bg, weight } = getRankStyle(rank);
+    const t = useTranslations("admin.overview");
+    const tCommon = useTranslations("common");
+
+    const localizedPrice = price.replace(" EGP", ` ${tCommon("currency")}`);
 
     return (
         <div className={`flex justify-between items-center px-2.5 py-1.5 rounded h-8 shrink-0 ${bg}`}>
@@ -35,11 +40,11 @@ export function TopProductRow({ name, price, sales, rank }: ProductItem) {
                     {name}
                 </span>
                 <span className="text-xs text-zinc-400 dark:text-zinc-500 whitespace-nowrap shrink-0 font-normal">
-                    ({price})
+                    ({localizedPrice})
                 </span>
             </div>
             <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200 whitespace-nowrap shrink-0 text-right">
-                {sales.toLocaleString()} Sales
+                {t("sales", { count: sales.toLocaleString() })}
             </span>
         </div>
     );

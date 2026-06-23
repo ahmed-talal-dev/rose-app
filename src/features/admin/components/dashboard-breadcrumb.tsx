@@ -3,6 +3,8 @@
 import { Category } from "@/features/categories/types";
 import { Occasion } from "@/features/occasions/types";
 import { Product } from "@/features/products/types";
+import { capitalize } from "@/shared/lib/utils/string";
+import { useTranslations } from "next-intl";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -24,10 +26,6 @@ interface BreadcrumbProps {
 const SEPARATOR = (
     <span className="text-slate-400 dark:text-zinc-500 font-normal select-none">{"›"}</span>
 );
-
-function capitalize(str: string) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -73,6 +71,7 @@ export function DashboardBreadcrumb({
     onTabChange,
     variant = "subheader",
 }: BreadcrumbProps) {
+    const t = useTranslations("admin");
     const isHeader = variant === "header";
     const textSize = isHeader ? "text-xs" : "text-sm";
 
@@ -82,13 +81,13 @@ export function DashboardBreadcrumb({
                 <>
                     {SEPARATOR}
                     <CrumbLink
-                        label="Categories"
+                        label={t("sidebar.categories")}
                         active={categoriesView === "list"}
                         onClick={() => onTabChange("categories")}
                     />
-                    {categoriesView === "add" && <>{SEPARATOR}<CrumbStatic label="Add Category" /></>}
+                    {categoriesView === "add" && <>{SEPARATOR}<CrumbStatic label={t("categories.addCategory")} /></>}
                     {categoriesView === "edit" && editingCategory && (
-                        <>{SEPARATOR}<CrumbStatic label={`Edit: ${capitalize(editingCategory.title)}`} /></>
+                        <>{SEPARATOR}<CrumbStatic label={`${t("categories.editCategory")}: ${capitalize(editingCategory.title)}`} /></>
                     )}
                 </>
             );
@@ -99,13 +98,13 @@ export function DashboardBreadcrumb({
                 <>
                     {SEPARATOR}
                     <CrumbLink
-                        label="Occasions"
+                        label={t("sidebar.occasions")}
                         active={occasionsView === "list"}
                         onClick={() => onTabChange("occasions")}
                     />
-                    {occasionsView === "add" && <>{SEPARATOR}<CrumbStatic label="Add Occasion" /></>}
+                    {occasionsView === "add" && <>{SEPARATOR}<CrumbStatic label={t("occasions.addOccasion")} /></>}
                     {occasionsView === "edit" && editingOccasion && (
-                        <>{SEPARATOR}<CrumbStatic label={`Edit: ${capitalize(editingOccasion.title)}`} /></>
+                        <>{SEPARATOR}<CrumbStatic label={`${t("occasions.editOccasion")}: ${capitalize(editingOccasion.title)}`} /></>
                     )}
                 </>
             );
@@ -116,13 +115,13 @@ export function DashboardBreadcrumb({
                 <>
                     {SEPARATOR}
                     <CrumbLink
-                        label="Products"
+                        label={t("sidebar.products")}
                         active={productsView === "list"}
                         onClick={() => onTabChange("products")}
                     />
-                    {productsView === "add" && <>{SEPARATOR}<CrumbStatic label="Add Product" /></>}
+                    {productsView === "add" && <>{SEPARATOR}<CrumbStatic label={t("products.addProduct")} /></>}
                     {productsView === "edit" && editingProduct && (
-                        <>{SEPARATOR}<CrumbStatic label={`Edit: ${editingProduct.title}`} /></>
+                        <>{SEPARATOR}<CrumbStatic label={`${t("products.editProduct")}: ${editingProduct.title}`} /></>
                     )}
                 </>
             );
@@ -143,7 +142,7 @@ export function DashboardBreadcrumb({
                 onKeyDown={(e) => e.key === "Enter" && onTabChange("overview")}
                 className="cursor-pointer hover:underline underline-offset-2"
             >
-                Dashboard
+                {t("sidebar.dashboard")}
             </span>
             {renderCrumbs()}
         </nav>

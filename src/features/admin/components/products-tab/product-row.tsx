@@ -1,4 +1,5 @@
 import { Edit, Trash2, MoreVertical } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Product } from "@/features/products/types";
 import { formatStock } from "./types";
 
@@ -19,6 +20,8 @@ export function ProductRow({
     activeRowMenuId,
     setActiveRowMenuId,
 }: ProductRowProps) {
+    const t = useTranslations("admin.products");
+    const tCommon = useTranslations("common");
     const isLowStock = prod.stock <= 10;
     const menuOpen = activeRowMenuId === prod.id;
 
@@ -33,7 +36,7 @@ export function ProductRow({
                 {prod.title}
             </td>
             <td className="px-4 md:px-6 py-3 text-sm font-medium text-zinc-500 dark:text-zinc-400 font-sans whitespace-nowrap">
-                {prod.price} EGP
+                {prod.price} {tCommon("currency")}
             </td>
             <td className={`px-4 md:px-6 py-3 text-sm font-sans whitespace-nowrap ${isLowStock ? "text-red-600 font-bold" : "text-zinc-500 dark:text-zinc-400 font-medium"
                 }`}>
@@ -54,14 +57,14 @@ export function ProductRow({
                         onClick={() => onEdit(prod)}
                         className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors border-none cursor-pointer font-sans bg-blue-50 text-blue-500 hover:bg-blue-100 dark:bg-blue-950/30 dark:text-blue-400 dark:hover:bg-blue-950/50"
                     >
-                        <Edit size={14} /> Edit
+                        <Edit size={14} /> {t("actions.edit")}
                     </button>
                     <button
                         type="button"
                         onClick={() => onDelete(prod)}
                         className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors border-none cursor-pointer font-sans bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950/30 dark:text-red-400 dark:hover:bg-red-950/50"
                     >
-                        <Trash2 size={14} /> Delete
+                        <Trash2 size={14} /> {t("actions.delete")}
                     </button>
                 </div>
 
@@ -81,14 +84,14 @@ export function ProductRow({
                                 onClick={() => { setActiveRowMenuId(null); onEdit(prod); }}
                                 className="flex items-center gap-1.5 px-2.5 py-1.5 text-left rounded-md text-xs font-semibold hover:bg-zinc-50 dark:hover:bg-zinc-700/60 transition-colors border-none bg-transparent cursor-pointer text-blue-500"
                             >
-                                <Edit size={12} /> Edit
+                                <Edit size={12} /> {t("actions.edit")}
                             </button>
                             <button
                                 type="button"
                                 onClick={() => { setActiveRowMenuId(null); onDelete(prod); }}
                                 className="flex items-center gap-1.5 px-2.5 py-1.5 text-left rounded-md text-xs font-semibold hover:bg-zinc-50 dark:hover:bg-zinc-700/60 transition-colors border-none bg-transparent cursor-pointer text-red-600"
                             >
-                                <Trash2 size={12} /> Delete
+                                <Trash2 size={12} /> {t("actions.delete")}
                             </button>
                         </div>
                     )}

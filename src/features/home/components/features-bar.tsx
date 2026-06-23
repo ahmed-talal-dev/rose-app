@@ -14,23 +14,23 @@ export function FeaturesBar() {
     return (
         <section className="w-full">
             <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-col sm:flex-row justify-between items-center sm:items-stretch gap-6 sm:gap-8 px-6 sm:px-8 lg:px-10 py-8 sm:py-10 bg-primary-50 dark:bg-[#3A393E] rounded-2xl">
+                <div className="flex flex-col sm:flex-row justify-between items-center sm:items-stretch gap-6 sm:gap-8 px-6 sm:px-8 lg:px-10 py-8 sm:py-10 bg-primary-50 dark:bg-zinc-800 rounded-2xl">
                     {features.map(({ key, icon: Icon }) => (
                         <div
                             key={key}
                             className="flex flex-row justify-center items-center gap-3 sm:gap-4 w-full sm:w-auto sm:flex-1 lg:w-[299.75px] h-[65px]"
                         >
-                            <div className="flex flex-col justify-center items-center shrink-0 w-[50px] h-[50px] sm:w-[65px] sm:h-[65px] bg-[#A6252A] dark:bg-[#FDCFD4] rounded-[32.5px]">
+                            <div className="flex flex-col justify-center items-center shrink-0 w-[50px] h-[50px] sm:w-[65px] sm:h-[65px] bg-primary-600 dark:bg-rose-200 rounded-[32.5px]">
                                 <Icon
-                                    className="w-8 h-8 sm:w-10 sm:h-10 text-white dark:text-[#3A393E]"
+                                    className="w-8 h-8 sm:w-10 sm:h-10 text-white dark:text-zinc-800"
                                     strokeWidth={1.45833}
                                 />
                             </div>
                             <div className="flex flex-col justify-center items-start gap-1 sm:gap-[5px]">
-                                <p className="text-[16px] sm:text-[18px] lg:text-[20px] font-semibold leading-[100%] text-primary-600 dark:text-[#FDCFD4] font-sarabun">
+                                <p className="text-base sm:text-lg lg:text-xl font-semibold leading-[100%] text-primary-600 dark:text-rose-200 font-sarabun">
                                     {t(`${key}.title`)}
                                 </p>
-                                <p className="text-[12px] sm:text-[14px] font-normal leading-[100%] text-muted-foreground dark:text-[#D1D1D6] font-sarabun">
+                                <p className="text-xs sm:text-sm font-normal leading-[100%] text-muted-foreground dark:text-zinc-300 font-sarabun">
                                     {t(`${key}.subtitle`)}
                                 </p>
                             </div>

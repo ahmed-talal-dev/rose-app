@@ -7,6 +7,7 @@ import { ElementType } from "react";
 
 import { useRouter } from "@/i18n/navigation";
 import { User as UserType } from "@/shared/types";
+import { useTranslations } from "next-intl";
 import { NAV_ITEMS } from "@/features/admin/constants/dashboard";
 import { resolveImageUrl } from "@/shared/lib/utils/resolve-image-url";
 
@@ -46,6 +47,7 @@ interface SidebarProps {
 
 export function Sidebar({ activeTab, setActiveTab, onLogout, onPreview, user }: SidebarProps) {
     const router = useRouter();
+    const t = useTranslations("admin.sidebar");
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const popoverRef = useRef<HTMLDivElement>(null);
 
@@ -83,7 +85,7 @@ export function Sidebar({ activeTab, setActiveTab, onLogout, onPreview, user }: 
                 className="w-full bg-primary-600 hover:bg-primary-700 text-white rounded-xl py-3 text-sm font-semibold flex items-center justify-center gap-1.5 mb-6 transition-colors border-none cursor-pointer shadow-sm shadow-primary-600/10"
             >
                 <Eye size={16} />
-                Preview website
+                {t("preview")}
             </button>
 
             {/* Navigation */}
@@ -91,7 +93,7 @@ export function Sidebar({ activeTab, setActiveTab, onLogout, onPreview, user }: 
                 {NAV_ITEMS.map((item) => (
                     <NavButton
                         key={item.id}
-                        label={item.label}
+                        label={t(item.id)}
                         icon={item.icon}
                         active={activeTab === item.id}
                         onClick={() => setActiveTab(item.id)}
@@ -113,7 +115,7 @@ export function Sidebar({ activeTab, setActiveTab, onLogout, onPreview, user }: 
                             onClick={() => { setIsProfileOpen(false); router.push("/profile"); }}
                         >
                             <User size={15} className="text-zinc-500" />
-                            Account
+                            {t("account")}
                         </button>
                         <button
                             type="button"
@@ -121,7 +123,7 @@ export function Sidebar({ activeTab, setActiveTab, onLogout, onPreview, user }: 
                             onClick={() => { setIsProfileOpen(false); onLogout(); }}
                         >
                             <LogOut size={15} />
-                            Log out
+                            {t("logout")}
                         </button>
                     </div>
                 )}
@@ -129,7 +131,7 @@ export function Sidebar({ activeTab, setActiveTab, onLogout, onPreview, user }: 
                 <div className="flex items-center gap-3 px-1 py-2 rounded-xl">
                     <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 relative bg-zinc-100 border border-zinc-200/60">
                         <Image
-                            src={resolveImageUrl(user?.photo)}
+                            src={resolveImageUrl(user?.photo ?? "")}
                             alt="User Avatar"
                             fill
                             className="object-cover"
@@ -138,7 +140,7 @@ export function Sidebar({ activeTab, setActiveTab, onLogout, onPreview, user }: 
                     </div>
                     <div className="min-w-0 flex-1">
                         <p className="text-[13px] font-bold text-zinc-800 dark:text-zinc-200 truncate leading-none mb-1">
-                            {user ? `${user.firstName} ${user.lastName}` : "Loading..."}
+                            {user ? `${user.firstName} ${user.lastName}` : t("loading")}
                         </p>
                         <p className="text-[11px] text-zinc-400 dark:text-zinc-500 truncate leading-none">
                             {user?.email ?? ""}

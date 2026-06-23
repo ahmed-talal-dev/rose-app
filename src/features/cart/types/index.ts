@@ -24,7 +24,8 @@ export type CartData = {
 };
 
 export type AddToCartInput = {
-    productId: string;
+    productId?: string;
+    product?: string;
     quantity?: number;
 };
 

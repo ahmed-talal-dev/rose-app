@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { RevenueFilter } from "../types/dashboard";
 
 interface RevenueFilterToggleProps {
@@ -6,6 +7,8 @@ interface RevenueFilterToggleProps {
 }
 
 export function RevenueFilterToggle({ filter, onChange }: RevenueFilterToggleProps) {
+    const t = useTranslations("admin.overview");
+
     return (
         <div className="flex items-center gap-2 text-sm shrink-0 font-sans">
             <button
@@ -16,7 +19,7 @@ export function RevenueFilterToggle({ filter, onChange }: RevenueFilterTogglePro
                         : "text-zinc-400 font-normal hover:text-zinc-500"
                     }`}
             >
-                Monthly
+                {t("monthly")}
             </button>
             <button
                 type="button"
@@ -26,7 +29,7 @@ export function RevenueFilterToggle({ filter, onChange }: RevenueFilterTogglePro
                         : "text-zinc-400 font-normal hover:text-zinc-500"
                     }`}
             >
-                Last Week
+                {t("lastWeek")}
             </button>
         </div>
     );

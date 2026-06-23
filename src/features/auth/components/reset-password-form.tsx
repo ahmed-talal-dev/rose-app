@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocale, useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,33 +13,36 @@ import { Label } from "@/shared/ui/label";
 import { Link } from "@/i18n/navigation";
 import { useResetPassword } from "../hooks";
 
-export function ResetPasswordForm() {
+const buildResetPasswordSchema = (t: ReturnType<typeof useTranslations<"auth.resetPassword.form">>) =>
+  z.object({
+    resetCode: z.string().min(6, t("validation.resetCodeMin")),
+    newPassword: z
+      .string()
+      .min(8, t("validation.passwordMin"))
+      .regex(/[A-Z]/, t("validation.passwordUppercase"))
+      .regex(/[0-9]/, t("validation.passwordNumber")),
+    confirmPassword: z.string().min(1, t("validation.confirmRequired")),
+  }).refine((d) => d.newPassword === d.confirmPassword, {
+    message: t("validation.passwordsMismatch"),
+    path: ["confirmPassword"],
+  });
+
+interface ResetPasswordFormProps {
+  email?: string;
+}
+
+export function ResetPasswordForm({ email: emailProp }: ResetPasswordFormProps) {
     const t = useTranslations("auth.resetPassword.form");
     const locale = useLocale();
     const router = useRouter();
     const searchParams = useSearchParams();
+    const email = emailProp || searchParams.get("email") || "";
     const tokenFromUrl = searchParams.get("token") ?? "";
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const { mutate: resetPassword, isPending } = useResetPassword();
 
-    const schema = useMemo(
-        () =>
-            z.object({
-                resetCode: z.string().min(6, t("validation.resetCodeMin") || "Reset code must be 6 digits"),
-                newPassword: z
-                    .string()
-                    .min(8, t("validation.passwordMin"))
-                    .regex(/[A-Z]/, t("validation.passwordUppercase"))
-                    .regex(/[0-9]/, t("validation.passwordNumber")),
-                confirmPassword: z.string().min(1, t("validation.confirmRequired")),
-            }).refine((d) => d.newPassword === d.confirmPassword, {
-                message: t("validation.passwordsMismatch"),
-                path: ["confirmPassword"],
-            }),
-        [t]
-    );
-
+    const schema = buildResetPasswordSchema(t);
     type FormData = z.infer<typeof schema>;
 
     const {
@@ -57,7 +60,7 @@ export function ResetPasswordForm() {
 
     const onSubmit = (data: FormData) => {
         resetPassword(
-            { token: data.resetCode, newPassword: data.newPassword, confirmPassword: data.confirmPassword },
+            { email, token: data.resetCode, newPassword: data.newPassword },
             {
                 onSuccess: () => {
                     toast.success(t("success"));

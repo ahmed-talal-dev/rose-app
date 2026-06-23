@@ -1,3 +1,5 @@
+"use client";
+
 import {
     AreaChart,
     Area,
@@ -6,6 +8,7 @@ import {
     CartesianGrid,
     ReferenceDot,
 } from "recharts";
+import { useTranslations } from "next-intl";
 import { CHART_COLORS, MONTHLY_REVENUE, WEEKLY_REVENUE } from "../constants/dashboard";
 import { RevenueFilter } from "../types/dashboard";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/shared/ui/chart";
@@ -22,6 +25,8 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function RevenueChart({ filter }: RevenueChartProps) {
+    const t = useTranslations("admin.overview");
+    const tCommon = useTranslations("common");
     const data = filter === "monthly" ? MONTHLY_REVENUE : WEEKLY_REVENUE;
 
     return (
@@ -43,6 +48,7 @@ export function RevenueChart({ filter }: RevenueChartProps) {
 
                     <XAxis
                         dataKey="month"
+                        tickFormatter={(v) => t(v) || v}
                         tick={{ fontSize: 10, fill: "#27272A", fontWeight: 700 }}
                         axisLine={false}
                         tickLine={false}
@@ -58,7 +64,7 @@ export function RevenueChart({ filter }: RevenueChartProps) {
                     <ChartTooltip
                         content={
                             <ChartTooltipContent
-                                formatter={(v: unknown) => `${(Number(v) || 0).toLocaleString()} EGP`}
+                                formatter={(v: unknown) => `${(Number(v) || 0).toLocaleString()} ${tCommon("currency")}`}
                             />
                         }
                     />
@@ -82,7 +88,7 @@ export function RevenueChart({ filter }: RevenueChartProps) {
                             stroke="#ffffff"
                             strokeWidth={3}
                             label={{
-                                value: "4500 EGP",
+                                value: `4500 ${tCommon("currency")}`,
                                 position: "top",
                                 fill: CHART_COLORS.primaryStroke,
                                 fontSize: 12,

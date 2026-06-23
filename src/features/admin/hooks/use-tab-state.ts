@@ -22,7 +22,6 @@ interface TabStateReturn {
     products: TabSubState<Product>;
     setRevenueFilter: (f: "monthly" | "weekly") => void;
     handleTabChange: (tab: string) => void;
-    //handler
     handleCategoriesViewChange: (view: SubView, item?: Category | null) => void;
     handleOccasionsViewChange: (view: SubView, item?: Occasion | null) => void;
     handleProductsViewChange: (view: SubView, item?: Product | null) => void;
@@ -32,16 +31,7 @@ interface TabStateReturn {
 
 const LS = {
     activeTab: "admin_active_tab",
-    categoriesView: "admin_categories_view",
-    occasionsView: "admin_occasions_view",
-    productsView: "admin_products_view",
 } as const;
-
-function readLS(key: string, fallback: SubView): SubView {
-    if (typeof window === "undefined") return fallback;
-    const v = localStorage.getItem(key);
-    return v === "list" || v === "add" || v === "edit" ? v : fallback;
-}
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
@@ -52,15 +42,15 @@ export function useTabState(): TabStateReturn {
     const [revenueFilter, setRevenueFilter] = useState<"monthly" | "weekly">("monthly");
 
     const [categories, setCategories] = useState<TabSubState<Category>>({
-        view: readLS(LS.categoriesView, "list"),
+        view: "list",
         editing: null,
     });
     const [occasions, setOccasions] = useState<TabSubState<Occasion>>({
-        view: readLS(LS.occasionsView, "list"),
+        view: "list",
         editing: null,
     });
     const [products, setProducts] = useState<TabSubState<Product>>({
-        view: readLS(LS.productsView, "list"),
+        view: "list",
         editing: null,
     });
 
@@ -70,9 +60,6 @@ export function useTabState(): TabStateReturn {
         setCategories({ view: "list", editing: null });
         setOccasions({ view: "list", editing: null });
         setProducts({ view: "list", editing: null });
-        localStorage.setItem(LS.categoriesView, "list");
-        localStorage.setItem(LS.occasionsView, "list");
-        localStorage.setItem(LS.productsView, "list");
     };
 
     const handleTabChange = (tab: string) => {
@@ -81,13 +68,11 @@ export function useTabState(): TabStateReturn {
         resetAllSubViews();
     };
 
-    // item 
     const handleCategoriesViewChange = (view: SubView, item?: Category | null) => {
         setCategories((prev) => ({
             view,
             editing: item !== undefined ? item : prev.editing,
         }));
-        localStorage.setItem(LS.categoriesView, view);
     };
 
     const handleOccasionsViewChange = (view: SubView, item?: Occasion | null) => {
@@ -95,7 +80,6 @@ export function useTabState(): TabStateReturn {
             view,
             editing: item !== undefined ? item : prev.editing,
         }));
-        localStorage.setItem(LS.occasionsView, view);
     };
 
     const handleProductsViewChange = (view: SubView, item?: Product | null) => {
@@ -103,7 +87,6 @@ export function useTabState(): TabStateReturn {
             view,
             editing: item !== undefined ? item : prev.editing,
         }));
-        localStorage.setItem(LS.productsView, view);
     };
 
     return {

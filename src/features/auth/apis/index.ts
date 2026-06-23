@@ -36,39 +36,20 @@ export const forgotPassword = async (email: string, redirectUrl?: string): Promi
     return email;
 };
 
-// Reset password
-export async function resetPassword(email: string, token: string, newPassword: string): Promise<void>;
-export async function resetPassword(data: { token: string; newPassword: string; confirmPassword: string }): Promise<void>;
 export async function resetPassword(
-    first: string | { token: string; newPassword: string; confirmPassword: string },
-    second?: string,
-    third?: string
+  email: string,
+  token: string,
+  newPassword: string
 ): Promise<void> {
-    let email = "";
-    let token = "";
-    let newPassword = "";
+  await fetchClient<void>("/api/auth/verifyResetCode", {
+    method: "POST",
+    body: JSON.stringify({ resetCode: token }),
+  });
 
-    if (typeof first === "object") {
-        email = (typeof window !== "undefined" && window.localStorage.getItem("reset_email")) || "";
-        token = first.token;
-        newPassword = first.newPassword;
-    } else {
-        email = first;
-        token = second || "";
-        newPassword = third || "";
-    }
-
-    // 1. Verify Reset Code
-    await fetchClient<void>("/api/auth/verifyResetCode", {
-        method: "POST",
-        body: JSON.stringify({ resetCode: token })
-    });
-
-    // 2. Perform Reset Password
-    await fetchClient<void>("/api/auth/resetPassword", {
-        method: "PUT",
-        body: JSON.stringify({ email, newPassword })
-    });
+  await fetchClient<void>("/api/auth/resetPassword", {
+    method: "PUT",
+    body: JSON.stringify({ email, newPassword }),
+  });
 }
 
 // Get profile

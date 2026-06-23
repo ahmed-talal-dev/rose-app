@@ -90,6 +90,7 @@ function mapBackendKeys(obj: JsonValue): JsonValue {
                 }
             }
 
+            mapped[key] = val;
             mapped[newKey] = val;
         }
         return mapped;
@@ -206,7 +207,7 @@ export async function fetchClient<T>(
         if (init.body && typeof init.body === "string") {
             const bodyObj = JSON.parse(init.body);
             init.body = JSON.stringify({
-                product: bodyObj.productId,
+                product: bodyObj.productId || bodyObj.product,
                 quantity: bodyObj.quantity || 1
             });
         }

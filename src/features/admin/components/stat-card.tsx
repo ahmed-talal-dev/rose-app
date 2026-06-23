@@ -1,4 +1,5 @@
 import { ElementType } from "react";
+import { useTranslations } from "next-intl";
 import { STAT_COLOR_CLASSES } from "../constants/dashboard";
 import { StatColor } from "../types/dashboard";
 
@@ -11,6 +12,7 @@ interface StatCardProps {
 
 export function StatCard({ label, value, icon: Icon, color }: StatCardProps) {
     const c = STAT_COLOR_CLASSES[color];
+    const tCommon = useTranslations("common");
 
     const renderValue = () => {
         if (value.endsWith(" EGP")) {
@@ -18,7 +20,7 @@ export function StatCard({ label, value, icon: Icon, color }: StatCardProps) {
             return (
                 <span className="flex items-baseline gap-0.5">
                     <span>{num}</span>
-                    <span className="text-xs font-semibold opacity-80">EGP</span>
+                    <span className="text-xs font-semibold opacity-80">{tCommon("currency")}</span>
                 </span>
             );
         }

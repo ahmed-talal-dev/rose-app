@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useLocale, useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,29 +12,28 @@ import { Link } from "@/i18n/navigation";
 import { type ForgotPasswordSchema } from "../schemas";
 import { useForgotPassword } from "../hooks";
 
+const buildForgotPasswordSchema = (t: ReturnType<typeof useTranslations<"auth.forgotPassword.form">>) =>
+  z.object({
+    email: z.string().min(1, t("validation.emailRequired")).email(t("validation.emailInvalid")),
+  });
+
 export function ForgotPasswordForm() {
   const t = useTranslations("auth.forgotPassword.form");
   const locale = useLocale();
   const { mutate: forgotPassword, isPending, isSuccess } = useForgotPassword();
 
-  const forgotPasswordSchema = useMemo(
-    () =>
-      z.object({
-        email: z
-          .string()
-          .min(1, t("validation.emailRequired"))
-          .email(t("validation.emailInvalid")),
-      }),
-    [t],
-  );
+  const forgotPasswordSchema = buildForgotPasswordSchema(t);
 
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<ForgotPasswordSchema>({
     resolver: zodResolver(forgotPasswordSchema),
   });
+
+  const emailValue = watch("email") || "";
 
   const onSubmit = (data: ForgotPasswordSchema) => {
     forgotPassword(
@@ -79,7 +77,7 @@ export function ForgotPasswordForm() {
         </div>
 
         <Link
-          href="/reset-password"
+          href={`/reset-password?email=${encodeURIComponent(emailValue)}`}
           className="w-full h-10 lg:h-12.25 bg-primary-600 dark:bg-rose-300 hover:bg-primary-700 dark:hover:bg-rose-400 text-white dark:text-zinc-900 font-semibold text-sm lg:text-base rounded-[10px] transition-colors font-sarabun flex items-center justify-center shadow-sm mt-2"
         >
           {t("enterCode")}

@@ -3,12 +3,13 @@ import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ChevronLeft, Image as ImageIcon, Upload, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Product } from "@/features/products/types";
 import { Category } from "@/features/categories/types";
 import { Occasion } from "@/features/occasions/types";
 import { resolveImageUrl } from "@/shared/lib/utils/resolve-image-url";
 import {
-    productSchema,
+    getProductSchema,
     ProductFormInput,
     ProductFormOutput,
     calcPriceAfterDiscount,
@@ -33,22 +34,23 @@ export function ProductFormView({
     occasionsList,
     isPending,
 }: ProductFormViewProps) {
+    const t = useTranslations("admin.products");
     const isEdit = mode === "edit";
 
     // Build schema with dynamic refinement
-    const dynamicSchema = productSchema.superRefine((data, ctx) => {
+    const dynamicSchema = getProductSchema(t).superRefine((data, ctx) => {
         if (!isEdit && !data.coverFile) {
             ctx.addIssue({
                 code: z.ZodIssueCode.custom,
                 path: ["coverFile"],
-                message: "Product cover image is required",
+                message: t("validation.coverRequired"),
             });
         }
         if (!isEdit && (!data.galleryFiles || data.galleryFiles.length === 0)) {
             ctx.addIssue({
                 code: z.ZodIssueCode.custom,
                 path: ["galleryFiles"],
-                message: "Product gallery is required",
+                message: t("validation.galleryRequired"),
             });
         }
     });
@@ -91,26 +93,26 @@ export function ProductFormView({
                         <ChevronLeft size={16} />
                     </button>
                     <h1 className="text-xl md:text-2xl font-bold text-zinc-800 dark:text-zinc-200 font-sans">
-                        {isEdit ? "Edit Product" : "Add New Product"}
+                        {isEdit ? t("editProduct") : t("addProduct")}
                     </h1>
                 </div>
 
                 <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
 
-                    <FormField label="Product title" required error={errors.title?.message}>
+                    <FormField label={t("nameLabel")} required error={errors.title?.message}>
                         <input
                             id="product-title"
                             {...register("title")}
-                            placeholder="Enter product title"
+                            placeholder={t("namePlaceholder")}
                             className={inputCn(!!errors.title)}
                         />
                     </FormField>
 
-                    <FormField label="Description" required error={errors.description?.message}>
+                    <FormField label={t("descriptionLabel")} required error={errors.description?.message}>
                         <textarea
                             id="product-description"
                             {...register("description")}
-                            placeholder="Enter product description"
+                            placeholder={t("descriptionPlaceholder")}
                             rows={4}
                             className={`${inputCn(!!errors.description)} resize-none py-2 h-auto`}
                         />
@@ -118,27 +120,27 @@ export function ProductFormView({
 
                     {/* Price row */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
-                        <FormField label="Price" required error={errors.price?.message}>
+                        <FormField label={t("priceLabel")} required error={errors.price?.message}>
                             <input
                                 id="product-price"
                                 {...register("price")}
                                 type="number"
-                                placeholder="5000"
+                                placeholder={t("pricePlaceholder")}
                                 className={inputCn(!!errors.price)}
                             />
                         </FormField>
 
-                        <FormField label="Discount" error={errors.discountValue?.message}>
+                        <FormField label={t("discountLabel")} error={errors.discountValue?.message}>
                             <input
                                 id="product-discount"
                                 {...register("discountValue")}
                                 type="number"
-                                placeholder="0"
+                                placeholder={t("discountPlaceholder")}
                                 className={inputCn(!!errors.discountValue)}
                             />
                         </FormField>
 
-                        <FormField label="Price after discount">
+                        <FormField label={t("priceAfterDiscount")}>
                             <input
                                 id="product-price-after-discount"
                                 type="text"
@@ -150,12 +152,12 @@ export function ProductFormView({
                         </FormField>
                     </div>
 
-                    <FormField label="Quantity" required error={errors.stock?.message}>
+                    <FormField label={t("stockLabel")} required error={errors.stock?.message}>
                         <input
                             id="product-stock"
                             {...register("stock")}
                             type="number"
-                            placeholder="200"
+                            placeholder={t("stockPlaceholder")}
                             className={inputCn(!!errors.stock)}
                         />
                     </FormField>
@@ -164,22 +166,22 @@ export function ProductFormView({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                         <FileUploadField
                             id="product-cover-image"
-                            label="Product cover image"
+                            label={t("coverLabel")}
                             required={!isEdit}
                             accept="image/*"
                             error={errors.coverFile?.message}
                             onChange={(file) => setValue("coverFile", file, { shouldValidate: true })}
-                            hint={isEdit ? "Leave empty to keep current" : undefined}
+                            hint={isEdit ? t("keepCurrentHint") : undefined}
                         />
                         <FileUploadField
                             id="product-gallery-images"
-                            label="Product gallery"
+                            label={t("galleryLabel")}
                             required={!isEdit}
                             accept="image/*"
                             multiple
                             error={errors.galleryFiles?.message}
                             onChange={(_, files) => setValue("galleryFiles", files, { shouldValidate: true })}
-                            hint={isEdit ? "Leave empty to keep current" : undefined}
+                            hint={isEdit ? t("keepCurrentHint") : undefined}
                         />
                     </div>
 
@@ -194,7 +196,7 @@ export function ProductFormView({
                                     className="flex md:inline-flex items-center justify-center gap-2 px-4 h-9 border border-zinc-200 dark:border-zinc-700 rounded-lg text-xs font-semibold text-blue-500 bg-white dark:bg-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer font-sans w-full md:w-auto"
                                 >
                                     <ImageIcon size={14} />
-                                    View current cover
+                                    {t("viewCurrentCover")}
                                 </a>
                             )}
                             {(editingProduct?.gallery?.length ?? 0) > 0 && (
@@ -205,7 +207,7 @@ export function ProductFormView({
                                     className="flex md:inline-flex items-center justify-center gap-2 px-4 h-9 border border-zinc-200 dark:border-zinc-700 rounded-lg text-xs font-semibold text-blue-500 bg-white dark:bg-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer font-sans w-full md:w-auto"
                                 >
                                     <ImageIcon size={14} />
-                                    View current gallery
+                                    {t("viewCurrentGallery")}
                                 </a>
                             )}
                         </div>
@@ -213,22 +215,24 @@ export function ProductFormView({
 
                     <SelectField
                         id="product-category"
-                        label="Category"
+                        label={t("categoryLabel")}
                         required
                         error={errors.categoryId?.message}
                         value={categoryId ?? ""}
                         onChange={(v) => setValue("categoryId", v, { shouldValidate: true })}
                         options={categoriesList.map((c) => ({ value: c.id, label: c.title }))}
+                        placeholder={t("categorySelect")}
                     />
 
                     <SelectField
                         id="product-occasion"
-                        label="Occasion"
+                        label={t("occasionLabel")}
                         required
                         error={errors.occasionId?.message}
                         value={occasionId ?? ""}
                         onChange={(v) => setValue("occasionId", v, { shouldValidate: true })}
                         options={occasionsList.map((o) => ({ value: o.id, label: o.title }))}
+                        placeholder={t("occasionSelect")}
                     />
 
                     <button
@@ -237,7 +241,7 @@ export function ProductFormView({
                         className="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-zinc-400 disabled:cursor-not-allowed text-white rounded-lg h-10 text-sm font-semibold transition-colors border-none cursor-pointer flex items-center justify-center gap-2 font-sans md:mt-12 mt-6 shadow-sm"
                     >
                         {isPending && <Loader2 size={16} className="animate-spin" />}
-                        {isEdit ? "Update Product" : "Add Product"}
+                        {isEdit ? t("saveChanges") : t("addProduct")}
                     </button>
                 </form>
             </div>
@@ -283,6 +287,7 @@ interface FileUploadFieldProps {
 }
 
 function FileUploadField({ id, label, required, accept, multiple, error, hint, onChange }: FileUploadFieldProps) {
+    const t = useTranslations("admin.products");
     const [displayName, setDisplayName] = useState<string>("");
 
     return (
@@ -290,11 +295,11 @@ function FileUploadField({ id, label, required, accept, multiple, error, hint, o
             <div className={`flex items-center justify-between pl-3 pr-1 py-1 rounded-lg border bg-white dark:bg-zinc-800 h-10 w-full ${error ? "border-red-500" : "border-zinc-200 dark:border-zinc-700"
                 }`}>
                 <span className="text-sm text-zinc-400 dark:text-zinc-500 truncate mr-4">
-                    {displayName || hint || "Choose file..."}
+                    {displayName || hint || t("chooseFile")}
                 </span>
                 <label className="flex items-center gap-1 px-3 py-1 bg-primary-50 text-primary-600 rounded-md text-xs font-semibold cursor-pointer hover:bg-primary-100 transition-colors whitespace-nowrap">
                     <Upload size={14} />
-                    Upload
+                    {t("uploadFile")}
                     <input
                         id={id}
                         type="file"
@@ -304,7 +309,7 @@ function FileUploadField({ id, label, required, accept, multiple, error, hint, o
                         onChange={(e) => {
                             const files = Array.from(e.target.files ?? []);
                             if (files.length > 0) {
-                                setDisplayName(multiple ? `${files.length} file(s) selected` : files[0].name);
+                                setDisplayName(multiple ? t("filesSelected", { count: files.length }) : files[0].name);
                                 onChange(files[0], files);
                             }
                         }}
@@ -323,6 +328,7 @@ interface SelectFieldProps {
     value: string;
     onChange: (v: string) => void;
     options: { value: string; label: string }[];
+    placeholder?: string;
 }
 
 const ChevronDownIcon = () => (
@@ -331,7 +337,8 @@ const ChevronDownIcon = () => (
     </svg>
 );
 
-function SelectField({ id, label, required, error, value, onChange, options }: SelectFieldProps) {
+function SelectField({ id, label, required, error, value, onChange, options, placeholder }: SelectFieldProps) {
+    const t = useTranslations("admin.products");
     return (
         <FormField label={label} required={required} error={error}>
             <div className="relative w-full">
@@ -344,7 +351,7 @@ function SelectField({ id, label, required, error, value, onChange, options }: S
                         : "border-zinc-200 dark:border-zinc-700 focus:border-primary-600"
                         }`}
                 >
-                    <option value="" disabled>Select an option</option>
+                    <option value="" disabled>{placeholder || t("selectOption")}</option>
                     {options.map((opt) => (
                         <option key={opt.value} value={opt.value}>{opt.label}</option>
                     ))}

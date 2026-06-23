@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { COUNTRIES } from "@/shared/ui/phone-input";
 
 
@@ -11,7 +11,7 @@ interface ProfileData {
   photo?: string;
 }
 
-export function useProfileForm() {
+export function useProfileForm(profileData?: ProfileData) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -36,6 +36,12 @@ export function useProfileForm() {
       setPhone(rawPhone);
     }
   };
+
+  useEffect(() => {
+    if (profileData) {
+      initFromProfile(profileData);
+    }
+  }, [profileData]);
 
   const handlePhotoChange = (file: File, onError: () => void) => {
     if (file.size > 5 * 1024 * 1024) {

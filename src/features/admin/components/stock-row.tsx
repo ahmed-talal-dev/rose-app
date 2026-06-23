@@ -1,6 +1,8 @@
+import { useTranslations } from "next-intl";
 import { StockItem } from "../types/dashboard";
 
 export function StockRow({ name, stock }: StockItem) {
+    const t = useTranslations("admin.overview");
     const isLowStock = stock <= 4;
     const textColorClass = isLowStock
         ? "text-red-600 font-bold"
@@ -12,7 +14,7 @@ export function StockRow({ name, stock }: StockItem) {
                 {name}
             </span>
             <span className={`text-sm font-medium whitespace-nowrap ${textColorClass}`}>
-                {stock} Products
+                {t("productsCount", { count: stock })}
             </span>
         </div>
     );

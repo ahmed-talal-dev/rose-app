@@ -1,6 +1,7 @@
 "use client";
 
 import { PieChart, Pie, Cell } from "recharts";
+import { useTranslations } from "next-intl";
 import { ORDER_STATUS } from "../constants/dashboard";
 import { ChartConfig, ChartContainer } from "@/shared/ui/chart";
 
@@ -44,6 +45,7 @@ function LegendRow({ color, label, value, pct }: {
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export function DonutChart() {
+    const t = useTranslations("admin.overview");
     const completed = ORDER_STATUS.find((s) => s.name === "Completed") ?? { value: 216, pct: 33, color: "#00BC7D" };
     const inProgress = ORDER_STATUS.find((s) => s.name === "In progress") ?? { value: 513, pct: 57, color: "#2B7FFF" };
     const canceled = ORDER_STATUS.find((s) => s.name === "Canceled") ?? { value: 19, pct: 10, color: "#DC2626" };
@@ -57,13 +59,8 @@ export function DonutChart() {
     return (
         <div className="w-full h-full flex flex-col items-center justify-between py-6 px-6 gap-6">
 
-            {/* Title */}
-            <h2 className="text-2xl font-semibold text-zinc-800 dark:text-zinc-200 text-center leading-7 w-full">
-                Orders Status
-            </h2>
-
             {/* Donut + badges */}
-            <div className="relative flex items-center justify-center" style={{ width: "200px", height: "200px" }}>
+            <div className="relative flex items-center justify-center mt-10" style={{ width: "200px", height: "200px" }}>
 
                 {/* Donut chart */}
                 <ChartContainer config={chartConfig} className="w-full h-full aspect-square">
@@ -88,7 +85,7 @@ export function DonutChart() {
                     </PieChart>
                 </ChartContainer>
 
-                {/* 33% — Completed —donut */}
+                {/* Completed % badge */}
                 <div
                     className="absolute w-[31.5px] h-[31.5px] bg-zinc-50 dark:bg-zinc-800 rounded-full flex items-center justify-center z-10 select-none"
                     style={{
@@ -102,7 +99,7 @@ export function DonutChart() {
                     </span>
                 </div>
 
-                {/* 10% — Canceled —donut */}
+                {/* Canceled % badge */}
                 <div
                     className="absolute w-[31.5px] h-[31.5px] bg-zinc-50 dark:bg-zinc-800 rounded-full flex items-center justify-center z-10 select-none"
                     style={{
@@ -116,7 +113,7 @@ export function DonutChart() {
                     </span>
                 </div>
 
-                {/* 57% — In progress —donut */}
+                {/* In progress % badge */}
                 <div
                     className="absolute w-[31.5px] h-[31.5px] bg-zinc-50 dark:bg-zinc-800 rounded-full flex items-center justify-center z-10 select-none"
                     style={{
@@ -133,9 +130,9 @@ export function DonutChart() {
 
             {/* Legend */}
             <div className="w-full flex flex-col gap-3.5">
-                <LegendRow color={completed.color} label="Completed" value={completed.value} pct={completed.pct} />
-                <LegendRow color={inProgress.color} label="In progress" value={inProgress.value} pct={inProgress.pct} />
-                <LegendRow color={canceled.color} label="Canceled" value={canceled.value} pct={canceled.pct} />
+                <LegendRow color={completed.color} label={t("completed")} value={completed.value} pct={completed.pct} />
+                <LegendRow color={inProgress.color} label={t("inProgress")} value={inProgress.value} pct={inProgress.pct} />
+                <LegendRow color={canceled.color} label={t("canceled")} value={canceled.value} pct={canceled.pct} />
             </div>
         </div>
     );

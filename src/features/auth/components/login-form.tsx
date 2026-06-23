@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,23 +16,19 @@ import { Link } from "@/i18n/navigation";
 import { type LoginSchema } from "../schemas";
 import { useLogin } from "../hooks";
 
+const buildLoginSchema = (t: ReturnType<typeof useTranslations<"auth.login.form">>) =>
+  z.object({
+    email: z.string().min(1, t("validation.emailRequired")).email(t("validation.emailInvalid")),
+    password: z.string().min(8, t("validation.passwordMin")),
+  });
+
 export function LoginForm() {
   const router = useRouter();
   const t = useTranslations("auth.login.form");
   const [showPassword, setShowPassword] = useState(false);
   const { mutate: login, isPending } = useLogin();
 
-  const loginSchema = useMemo(
-    () =>
-      z.object({
-        email: z
-          .string()
-          .min(1, t("validation.emailRequired"))
-          .email(t("validation.emailInvalid")),
-        password: z.string().min(8, t("validation.passwordMin")),
-      }),
-    [t],
-  );
+  const loginSchema = buildLoginSchema(t);
 
   const {
     register,
@@ -48,8 +44,8 @@ export function LoginForm() {
         toast.success(t("success"));
         router.push("/");
       },
-      onError: (error) => {
-        toast.error(error.message || t("invalidCredentials"));
+      onError: (error: unknown) => {
+        toast.error(error instanceof Error ? error.message : t("invalidCredentials"));
       },
     });
   };

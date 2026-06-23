@@ -11,6 +11,4 @@ export type Testimonial = {
     createdAt: string;
 };
 
-export type TestimonialsParams = PaginationParams & {
-    isApproved?: boolean;
-};
+export type TestimonialsParams = PaginationParams;

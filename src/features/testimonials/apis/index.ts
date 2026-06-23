@@ -3,11 +3,4 @@ import { PaginatedPayload } from "@/shared/types";
 import { Testimonial, TestimonialsParams } from "../types";
 
 export const getTestimonials = (params?: TestimonialsParams) =>
-    fetchClient<PaginatedPayload<Testimonial>>("/api/testimonials", {
-        params: {
-            ...params,
-            isApproved: params?.isApproved !== undefined
-                ? String(params.isApproved)
-                : undefined,
-        },
-    });
+    fetchClient<PaginatedPayload<Testimonial>>("/testimonials", { params });

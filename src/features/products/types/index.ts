@@ -4,15 +4,21 @@ export type DiscountType = "PERCENT" | "FIXED";
 
 export type Product = {
     id: string;
+    _id: string;
     title: string;
     description: string;
     rating: number;
+    rateAvg: number;
     ratings: number;
     stock: number;
+    quantity: number;
     price: number;
+    priceAfterDiscount?: number;
+    discount?: number;
     discountType?: DiscountType;
     discountValue?: number;
     cover: string;
+    imgCover: string;
     gallery: string[];
     categoryId: string;
     subCategoryId?: string;
