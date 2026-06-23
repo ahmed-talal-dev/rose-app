@@ -13,43 +13,45 @@ import { ScrollReveal } from "@/shared/components/scroll-reveal";
 
 export default function HomePage() {
     return (
-        <main className="min-h-screen bg-background dark:bg-zinc-800 space-y-4 sm:space-y-6 overflow-x-hidden">
+        <div className="min-h-screen bg-background dark:bg-zinc-800 flex flex-col">
             <Navbar />
-            <HeroSlider />
-            
-            <ScrollReveal>
-                <OccasionsSection />
-            </ScrollReveal>
-            
-            <ScrollReveal>
-                <FeaturesBar />
-            </ScrollReveal>
-            
-            <ScrollReveal>
-                <BestSellingSection />
-            </ScrollReveal>
-            
-            <ScrollReveal>
-                <MostPopularSection />
-            </ScrollReveal>
-            
-            <ScrollReveal>
-                <AboutSection />
-            </ScrollReveal>
-            
-            <ScrollReveal>
-                <GallerySection />
-            </ScrollReveal>
-            
-            <ScrollReveal>
-                <TestimonialsSection />
-            </ScrollReveal>
-            
-            <ScrollReveal>
-                <TrustedBySection />
-            </ScrollReveal>
-            
-            <Footer />
-        </main>
+            <main className="flex-1 space-y-4 sm:space-y-6 overflow-x-hidden">
+                <HeroSlider />
+                
+                <ScrollReveal>
+                    <OccasionsSection />
+                </ScrollReveal>
+                
+                <ScrollReveal>
+                    <FeaturesBar />
+                </ScrollReveal>
+                
+                <ScrollReveal>
+                    <BestSellingSection />
+                </ScrollReveal>
+                
+                <ScrollReveal>
+                    <MostPopularSection />
+                </ScrollReveal>
+                
+                <ScrollReveal>
+                    <AboutSection />
+                </ScrollReveal>
+                
+                <ScrollReveal>
+                    <GallerySection />
+                </ScrollReveal>
+                
+                <ScrollReveal>
+                    <TestimonialsSection />
+                </ScrollReveal>
+                
+                <ScrollReveal>
+                    <TrustedBySection />
+                </ScrollReveal>
+                
+                <Footer />
+            </main>
+        </div>
     );
 }
